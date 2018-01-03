@@ -18,5 +18,4 @@ public class HomeController extends BaseController{
         modelAndView.getModel().put("url",dbConfigPros.getHost());
         return modelAndView;
     }
-
 }

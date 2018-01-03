@@ -6,6 +6,11 @@ server:
   tomcat:
     uri-encoding: UTF-8
 spring:
+  http:
+    encoding:
+      force: true
+      charset: UTF-8
+      enabled: true
   mvc:
     view:
       suffix: .jsp
@@ -47,3 +52,4 @@ pagehelper:
   reasonable: true
   support-methods-arguments: true
   params: count
+

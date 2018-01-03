@@ -17,7 +17,7 @@ public class BaseApiController {
      * @param object 具体内容
      * @return
      */
-    protected ApiResult CreateApiMsg(boolean success,String msg,String code,Object object){
+    protected ApiResult ApiResult(boolean success,String msg,String code,Object object){
         ApiResult obj = new ApiResult();
         obj.setCode(code);
         obj.setInfo(msg);

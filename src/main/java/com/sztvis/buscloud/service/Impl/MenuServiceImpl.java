@@ -3,13 +3,10 @@ package com.sztvis.buscloud.service.Impl;
 import com.sztvis.buscloud.mapper.MenuMapper;
 import com.sztvis.buscloud.model.domain.Trammenuinfo;
 import com.sztvis.buscloud.model.dto.response.MenuModel;
-import com.sztvis.buscloud.service.MenuService;
+import com.sztvis.buscloud.service.IMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +16,7 @@ import java.util.List;
  * @date 2017/12/29 下午3:36
  */
 @Service
-public class MenuServiceImpl implements MenuService{
+public class MenuServiceImpl implements IMenuService {
 
     @Autowired
     private MenuMapper menuMapper;
@@ -32,7 +29,7 @@ public class MenuServiceImpl implements MenuService{
             menuModel.setCls(lists.get(i).getCls());
             menuModel.setGlyph(lists.get(i).getIcon());
             menuModel.setText(lists.get(i).getMenuname());
-            menuModel.setUri(list.get(i).getUri());
+            menuModel.setUri(lists.get(i).getUrl());
             menuModel.setMenu(GetExtNavDataMenu(lists.get(i).getId()));
             list.add(menuModel);
         }

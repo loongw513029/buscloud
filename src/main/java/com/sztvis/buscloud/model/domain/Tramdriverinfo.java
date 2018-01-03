@@ -7,7 +7,7 @@ public class Tramdriverinfo {
   private Long gender;
   private Long departmentid;
   private Long status;
-
+  private String DriverHeaderImg;
   public Long getId() {
     return id;
   }
@@ -54,5 +54,13 @@ public class Tramdriverinfo {
 
   public void setStatus(Long status) {
     this.status = status;
+  }
+
+  public String getDriverHeaderImg() {
+    return DriverHeaderImg;
+  }
+
+  public void setDriverHeaderImg(String driverHeaderImg) {
+    DriverHeaderImg = driverHeaderImg;
   }
 }
