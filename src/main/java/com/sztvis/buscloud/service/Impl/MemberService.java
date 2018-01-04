@@ -1,5 +1,6 @@
-package com.sztvis.buscloud.service;
+package com.sztvis.buscloud.service.Impl;
 
+import com.sztvis.buscloud.core.helper.CookieHelper;
 import com.sztvis.buscloud.core.TramException;
 import com.sztvis.buscloud.core.helper.SecureHelper;
 import com.sztvis.buscloud.core.helper.StringHelper;
@@ -7,19 +8,24 @@ import com.sztvis.buscloud.mapper.DepartmentMapper;
 import com.sztvis.buscloud.mapper.DeviceMapper;
 import com.sztvis.buscloud.mapper.MemberMapper;
 import com.sztvis.buscloud.model.domain.Tramdepartmentinfo;
-import com.sztvis.buscloud.model.domain.Tramloginlogfo;
 import com.sztvis.buscloud.model.domain.Trammemberinfo;
 import com.sztvis.buscloud.model.dto.AppRoleModel;
 import com.sztvis.buscloud.model.dto.CurrentUserInfo;
 import com.sztvis.buscloud.model.dto.LoginParams;
+import com.sztvis.buscloud.service.IMemberService;
+import com.sztvis.buscloud.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 /**
  * @author longweiqian
  * @company tvis
  * @date 2017/12/28 下午4:55
  */
-public class MemberService {
+@Service
+public class MemberService implements IMemberService{
 
     @Autowired
     private MemberMapper memberMapper;
@@ -37,6 +43,7 @@ public class MemberService {
      * @param loginParams
      * @return
      */
+    @Override
     public CurrentUserInfo Login(LoginParams loginParams){
         if(StringHelper.isEmpty(loginParams.getUsername())||StringHelper.isEmpty(loginParams.getPassword())){
             throw new TramException("参数不完整！");
@@ -64,6 +71,8 @@ public class MemberService {
         currentUserInfo.setAppConf(roleModel);
         //Tramloginlogfo logInfo = new Tramloginlogfo();
         //logInfo.setAccesstoken();
+        String uuid=UUID.randomUUID().toString().replace("-","");
+        //CookieHelper.addCookie();
         redisService.set(loginParams.getUsername(),currentUserInfo);
         return currentUserInfo;
     }

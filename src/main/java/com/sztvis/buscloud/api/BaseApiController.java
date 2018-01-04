@@ -1,6 +1,9 @@
 package com.sztvis.buscloud.api;
 
+import com.sztvis.buscloud.model.dto.CurrentUserInfo;
 import com.sztvis.buscloud.model.dto.response.ApiResult;
+import com.sztvis.buscloud.service.RedisService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 
 /**
@@ -9,6 +12,16 @@ import org.springframework.context.annotation.ComponentScan;
  * @date 2017/12/29 上午11:58
  */
 public class BaseApiController {
+
+    @Autowired
+    private RedisService redisService;
+
+    private CurrentUserInfo CurrentUserInfo;
+
+    protected CurrentUserInfo getCurrentUserInfo() {
+        //redisService.get()
+        return CurrentUserInfo;
+    }
     /**
      * 公共返回函数
      * @param success 数据是否成功

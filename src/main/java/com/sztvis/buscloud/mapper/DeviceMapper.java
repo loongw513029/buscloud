@@ -1,5 +1,6 @@
 package com.sztvis.buscloud.mapper;
 
+import com.sztvis.buscloud.model.domain.Tramdeviceinfo;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -23,5 +24,8 @@ public interface DeviceMapper {
 
     @Select("select DeviceCode from TramDeviceInfo where DepartmentId in(select Id from TramDepartmentInfo where Id=#{departmentId} or ParentId=#{departmentId})")
     List<String> GetDeviceCodesByDepartmentId(Long departmentId);
+
+    @Select("select * from TramDeviceInfo where lineId=#{lineId}")
+    List<Tramdeviceinfo> GetDevicesByLineId(long lineId);
 
 }

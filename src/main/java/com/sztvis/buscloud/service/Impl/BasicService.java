@@ -1,10 +1,12 @@
-package com.sztvis.buscloud.service;
+package com.sztvis.buscloud.service.Impl;
 
 import com.sztvis.buscloud.core.helper.StringHelper;
 import com.sztvis.buscloud.mapper.DeviceMapper;
 import com.sztvis.buscloud.mapper.MemberMapper;
 import com.sztvis.buscloud.model.domain.Trammemberinfo;
+import com.sztvis.buscloud.service.IBasicService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -13,7 +15,8 @@ import java.util.List;
  * @company tvis
  * @date 2017/12/28 下午5:49
  */
-public class BasicService {
+@Service
+public class BasicService implements IBasicService{
 
     @Autowired
     private DeviceMapper deviceMapper;
@@ -25,7 +28,8 @@ public class BasicService {
      * @param userId 用户Id
      * @return
      */
-    public List<String> GetDeviceScopeByUserId(Long userId){
+    @Override
+    public List<String> GetDeviceScopeByUserId(long userId){
         Trammemberinfo user = memberMapper.getMemberById(userId);
         List<Long> LineIds= null;
         if(!StringHelper.isEmpty(user.getManagescope())){

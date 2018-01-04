@@ -1,6 +1,6 @@
 html {
     height: 100%;
-    background: #1da028;
+    background: #428bca;
     min-width: 1200px;
     overflow: hidden
 }
@@ -17,13 +17,12 @@ html {
     padding: 0 15px;
     height: 100%;
     width: 230px;
-    border-right: 1px solid #198b25;
     line-height: 60px
 }
 
 #pf-hd .pf-logo img {
-    vertical-align: middle;
-    margin-left: -10px
+   vertical-align: middle;
+    margin-left: -10px;
 }
 
 #pf-hd .pf-logo .system-name {
@@ -44,7 +43,13 @@ html {
     height: 60px;
     color: #fff;
     padding: 0 15px;
-    border-right: 1px solid #198b25
+    position: relative;
+}
+#pf-hd .pf-nav .pf-nav-item:hover{
+    background: url('../images/main/top_userbg.png?1464007598')
+}
+#pf-hd .pf-nav .pf-nav-item:hover .dropdownmenu {
+    display: block
 }
 
 #pf-hd .pf-nav .pf-nav-item a {
@@ -78,7 +83,6 @@ html {
     float: left;
     height: 60px;
     width: 625px;
-    overflow: hidden
 }
 
 #pf-hd .pf-nav-prev,#pf-hd .pf-nav-next {
@@ -157,6 +161,16 @@ html {
     border: 1px solid #e1e1e1;
     box-shadow: 1px 1px 2px #ddd
 }
+.dropdownmenu{
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 60px;
+    background: #fff;
+    z-index: 111;
+    border: 1px solid #e1e1e1;
+    box-shadow: 1px 1px 2px #ddd
+}
 
 #pf-hd .pf-user .pf-user-panel li {
     height: 30px;
@@ -164,7 +178,16 @@ html {
     font-size: 13px;
     padding: 0 15px
 }
-
+.dropdownmenu li{
+    height: 30px;
+    line-height: 30px;
+    font-size: 13px;
+    padding: 0 16px
+}
+#pf-hd .pf-nav .pf-nav-item .dropdownmenu li a.chinditem{
+    color: #000;
+    text-decoration: none
+}
 #pf-hd .pf-user .pf-user-panel li a {
     color: #000;
     text-decoration: none
@@ -235,7 +258,6 @@ html {
     padding: 0 20px;
     height: 49px;
     line-height: 49px;
-    color: #2d4112;
     background: #e3e3e3;
     border-bottom: 1px solid #bdbdbd;
     font-size: 16px

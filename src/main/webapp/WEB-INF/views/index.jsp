@@ -1,4 +1,5 @@
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,6 +7,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>车辆云管理</title>
     <link href="/css/base.css" rel="stylesheet">
+    <link href="/fonts/iconfonts.css" rel="stylesheet">
     <link href="/css/platform.css" rel="stylesheet">
     <link rel="stylesheet" href="/easyui/uimaker/easyui.css">
 </head>
@@ -13,183 +15,81 @@
 <div class="container">
     <div id="pf-hd">
         <div class="pf-logo">
-            <img src="images/main/main_logo.png" alt="logo">
+            <img src="/images/logo.png" alt="logo" width="100%">
         </div>
-
+        <!--头部菜单-->
         <div class="pf-nav-wrap">
             <div class="pf-nav-ww">
                 <ul class="pf-nav">
-                    <li class="pf-nav-item home current" data-menu="sys-manage">
-                        <a href="javascript:;">
-                            <span class="iconfont">&#xe63f;</span>
-                            <span class="pf-nav-title">系统管理</span>
-                        </a>
-                    </li>
-                    <li class="pf-nav-item project" data-menu="org-manage">
-                        <a href="javascript:;">
-                            <span class="iconfont">&#xe60d;</span>
-                            <span class="pf-nav-title">组织管理</span>
-                        </a>
-                    </li>
-                    <li class="pf-nav-item static" data-menu="main-data">
-                        <a href="javascript:;">
-                            <span class="iconfont">&#xe61e;</span>
-                            <span class="pf-nav-title">主数据</span>
-                        </a>
-                    </li>
-                    <li class="pf-nav-item manger" data-menu="supplier-mange">
-                        <a href="javascript:;">
-                            <span class="iconfont">&#xe620;</span>
-                            <span class="pf-nav-title">供应商管理</span>
-                        </a>
-                    </li>
-
-                    <li class="pf-nav-item manger" data-menu="supplier-dev">
-                        <a href="javascript:;">
-                            <span class="iconfont">&#xe625;</span>
-                            <span class="pf-nav-title">供应商开发</span>
-                        </a>
-                    </li>
-
-                    <li class="pf-nav-item manger" data-menu="pur-source">
-                        <a href="javascript:;">
-                            <span class="iconfont">&#xe64b;</span>
-                            <span class="pf-nav-title">采购寻源</span>
-                        </a>
-                    </li>
-
-                    <li class="pf-nav-item manger" data-menu="contract-mange">
-                        <a href="javascript:;">
-                            <span class="iconfont">&#xe64c;</span>
-                            <span class="pf-nav-title">合同管理</span>
-                        </a>
-                    </li>
+                    <c:forEach items="${navs}" var="item">
+                        <li class="pf-nav-item" data-menu="sys-manage">
+                            <a href="javascript:;" _href="${item.getUri()}">
+                                <span class="iconfont">${item.getGlyph()}</span>
+                                <span class="pf-nav-title">${item.getText()}</span>
+                            </a>
+                            <ul class="dropdownmenu">
+                                <c:forEach items="${item.getMenu()}" var="item2">
+                                    <li>
+                                        <a href="javascript:;" _href="${item2.getUri()}" class="chinditem">${item2.getText()}</a>
+                                    </li>
+                                </c:forEach>
+                            </ul>
+                        </li>
+                    </c:forEach>
                 </ul>
             </div>
-            <a href="javascript:;" class="pf-nav-prev disabled iconfont">&#xe606;</a>
-            <a href="javascript:;" class="pf-nav-next iconfont">&#xe607;</a>
         </div>
-
-
-
+        <!--头部右侧用户布局-->
         <div class="pf-user">
             <div class="pf-user-photo">
                 <img src="images/main/user.png" alt="">
             </div>
             <h4 class="pf-user-name ellipsis">uimaker</h4>
-            <i class="iconfont xiala">&#xe607;</i>
-
+            <i class="iconfont xiala">&#xf0170;</i>
             <div class="pf-user-panel">
                 <ul class="pf-user-opt">
                     <li>
                         <a href="javascript:;">
-                            <i class="iconfont">&#xe60d;</i>
+                            <i class="iconfont">&#xf00ec;</i>
                             <span class="pf-opt-name">用户信息</span>
                         </a>
                     </li>
                     <li class="pf-modify-pwd">
                         <a href="http://www.uimaker.com">
-                            <i class="iconfont">&#xe634;</i>
+                            <i class="iconfont">&#xf00c9;</i>
                             <span class="pf-opt-name">修改密码</span>
                         </a>
                     </li>
                     <li class="pf-logout">
                         <a href="login.html">
-                            <i class="iconfont">&#xe60e;</i>
+                            <i class="iconfont">&#xf0204;</i>
                             <span class="pf-opt-name">退出</span>
                         </a>
                     </li>
                 </ul>
             </div>
         </div>
-
     </div>
-
     <div id="pf-bd">
+        <!--左侧设备列表-->
         <div id="pf-sider">
             <h2 class="pf-model-name">
-                <span class="iconfont">&#xe64a;</span>
-                <span class="pf-name">组织管理</span>
+                <span class="iconfont">&#xf00fd;</span>
+                <span class="pf-name">车辆列表</span>
                 <span class="toggle-icon"></span>
             </h2>
+            <ul id="easyui-tree" class="easyui-tree">
 
-            <ul class="sider-nav">
-                <li class="current">
-                    <a href="javascript:;">
-                        <span class="iconfont sider-nav-icon">&#xe620;</span>
-                        <span class="sider-nav-title">供应商组织</span>
-                        <i class="iconfont">&#xe642;</i>
-                    </a>
-                    <ul class="sider-nav-s">
-                        <li class="active"><a href="#">供应商组织1</a></li>
-                        <li><a href="#">供应商组织2</a></li>
-                        <li><a href="#">供应商组织3</a></li>
-                        <li><a href="#">供应商组织4</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="javascript:;">
-                        <span class="iconfont sider-nav-icon">&#xe625;</span>
-                        <span class="sider-nav-title">采购组织</span>
-                        <i class="iconfont">&#xe642;</i>
-                    </a>
-                    <ul class="sider-nav-s">
-                        <li class="active"><a href="#">供应商组织1</a></li>
-                        <li><a href="#">供应商组织2</a></li>
-                        <li><a href="#">供应商组织3</a></li>
-                        <li><a href="#">供应商组织4</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="javascript:;">
-                        <span class="iconfont sider-nav-icon">&#xe62f;</span>
-                        <span class="sider-nav-title">专家库</span>
-                        <i class="iconfont">&#xe642;</i>
-                    </a>
-                    <ul class="sider-nav-s">
-                        <li class="active"><a href="#">供应商组织1</a></li>
-                        <li><a href="#">供应商组织2</a></li>
-                        <li><a href="#">供应商组织3</a></li>
-                        <li><a href="#">供应商组织4</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="javascript:;">
-                        <span class="iconfont sider-nav-icon">&#xe647;</span>
-                        <span class="sider-nav-title">注册供应商</span>
-                        <i class="iconfont">&#xe642;</i>
-                    </a>
-                    <ul class="sider-nav-s">
-                        <li class="active"><a href="#">供应商组织1</a></li>
-                        <li><a href="#">供应商组织2</a></li>
-                        <li><a href="#">供应商组织3</a></li>
-                        <li><a href="#">供应商组织4</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="javascript:;">
-                        <span class="iconfont sider-nav-icon">&#xe611;</span>
-                        <span class="sider-nav-title">RFI动态信息</span>
-                        <i class="iconfont">&#xe642;</i>
-                    </a>
-                </li>
-                <li>
-                    <a href="javascript:;">
-                        <span class="iconfont sider-nav-icon">&#xe633;</span>
-                        <span class="sider-nav-title">资质过期</span>
-                        <i class="iconfont">&#xe642;</i>
-                    </a>
-                </li>
             </ul>
         </div>
-
+        <!--标签s-->
         <div id="pf-page">
             <div class="easyui-tabs1" style="width:100%;height:100%;">
                 <div title="首页" style="padding:10px 5px 5px 10px;">
                     <iframe class="page-iframe" src="workbench.html" frameborder="no"   border="no" height="100%" width="100%" scrolling="auto"></iframe>
                 </div>
                 <div title="采购组织" style="padding:10px 5px 5px 10px;" data-options="closable:true">
-                    <iframe class="page-iframe" src="index.html" frameborder="no"   border="no" height="100%" width="100%" scrolling="auto"></iframe>
+                    <iframe class="page-iframe" src="errs.html" frameborder="no"   border="no" height="100%" width="100%" scrolling="auto"></iframe>
                 </div>
                 <div title="基本信息" data-options="closable:true" style="padding:10px 5px 5px 10px;">
                     <iframe class="page-iframe" src="basic_info.html" frameborder="no"   border="no" height="100%" width="100%" scrolling="auto"></iframe>
@@ -209,26 +109,21 @@
 
     <div id="pf-ft">
         <div class="system-name">
-            <i class="iconfont">&#xe6fe;</i>
-            <span>信息管理系统&nbsp;v1.0</span>
+            <i class="iconfont">&#xf02bc;</i>
+            <span>车辆云管理&nbsp;v2.0</span>
         </div>
         <div class="copyright-name">
-            <span>CopyRight&nbsp;2016&nbsp;&nbsp;uimaker.com&nbsp;版权所有</span>
-            <i class="iconfont" >&#xe6ff;</i>
+            <span>CopyRight&nbsp;2018&nbsp;&nbsp;深圳特维视科技有限公司&nbsp;版权所有</span>
+            <i class="iconfont" >&#xf01a9;</i>
         </div>
     </div>
 </div>
-
-
 
 <script type="text/javascript" src="/easyui/jquery.min.js"></script>
 <script type="text/javascript" src="/easyui/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="/web/main.js"></script>
 <!--[if IE 7]>
 <script type="text/javascript">
-    $(function(){
-        Tram.Init();
-    });
     $(window).resize(function(){
         $('#pf-bd').height($(window).height()-76);
     }).resize();
@@ -250,39 +145,37 @@
         $('.tabs-panels').height($("#pf-page").height()-46);
         $('.panel-body').height($("#pf-page").height()-76)
     }).resize();
-
     var page = 0,
         pages = ($('.pf-nav').height() / 70) - 1;
-
     if(pages === 0){
         $('.pf-nav-prev,.pf-nav-next').hide();
     }
-    $(document).on('click', '.pf-nav-prev,.pf-nav-next', function(){
-
-
-        if($(this).hasClass('disabled')) return;
-        if($(this).hasClass('pf-nav-next')){
-            page++;
-            $('.pf-nav').stop().animate({'margin-top': -70*page}, 200);
-            if(page == pages){
-                $(this).addClass('disabled');
-                $('.pf-nav-prev').removeClass('disabled');
-            }else{
-                $('.pf-nav-prev').removeClass('disabled');
-            }
-
-        }else{
-            page--;
-            $('.pf-nav').stop().animate({'margin-top': -70*page}, 200);
-            if(page == 0){
-                $(this).addClass('disabled');
-                $('.pf-nav-next').removeClass('disabled');
-            }else{
-                $('.pf-nav-next').removeClass('disabled');
-            }
-
-        }
-    })
+//    $(document).on('click', '.pf-nav-prev,.pf-nav-next', function(){
+//
+//
+//        if($(this).hasClass('disabled')) return;
+//        if($(this).hasClass('pf-nav-next')){
+//            page++;
+//            $('.pf-nav').stop().animate({'margin-top': -70*page}, 200);
+//            if(page == pages){
+//                $(this).addClass('disabled');
+//                $('.pf-nav-prev').removeClass('disabled');
+//            }else{
+//                $('.pf-nav-prev').removeClass('disabled');
+//            }
+//
+//        }else{
+//            page--;
+//            $('.pf-nav').stop().animate({'margin-top': -70*page}, 200);
+//            if(page == 0){
+//                $(this).addClass('disabled');
+//                $('.pf-nav-next').removeClass('disabled');
+//            }else{
+//                $('.pf-nav-next').removeClass('disabled');
+//            }
+//
+//        }
+//    })
 
     // setTimeout(function(){
     //    $('.tabs-panels').height($("#pf-page").height()-46);

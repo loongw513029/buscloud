@@ -11,7 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class LoginController extends BaseController{
 
     @RequestMapping("")
-    public ModelAndView Login(@RequestBody LoginParams loginParams){
+    public ModelAndView Login(){
         ModelAndView model = new ModelAndView("login");
 
         return model;

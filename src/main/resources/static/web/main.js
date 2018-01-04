@@ -47,6 +47,7 @@ var mainPlatform = {
         $(document).on('click', '.pf-notice-item', function() {
             $('#pf-page').find('iframe').eq(0).attr('src', 'backend/notice.html')
         });
+
     },
 
     render: function(menu){
@@ -66,6 +67,18 @@ var mainPlatform = {
 
         $('iframe').attr('src', current.href);
         $('#pf-sider').html(html.join(''));
+    },
+    addTab:function(title,url){
+        if($(".easyui-tabs1").tabs('exists',title)){
+            $(".easyui-tabs1").tabs('select',title);
+        }else{
+            var content = '<iframe class="page-iframe" src="'+url+'" frameborder="no"   border="no" height="100%" width="100%" scrolling="auto">';
+            $(".easyui-tabs1").tabs('add',{
+               title:title,
+               content:content,
+               closable:true
+            });
+        }
     }
 
 };
