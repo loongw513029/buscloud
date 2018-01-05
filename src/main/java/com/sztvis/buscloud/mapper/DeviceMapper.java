@@ -2,6 +2,7 @@ package com.sztvis.buscloud.mapper;
 
 import com.sztvis.buscloud.model.domain.Tramdeviceinfo;
 import org.apache.ibatis.annotations.Select;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -10,6 +11,7 @@ import java.util.List;
  * @company tvis
  * @date 2017/12/28 下午5:40
  */
+@Repository
 public interface DeviceMapper {
 
 

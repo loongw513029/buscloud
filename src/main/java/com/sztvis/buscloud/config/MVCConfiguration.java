@@ -3,14 +3,15 @@ package com.sztvis.buscloud.config;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
-import com.sztvis.buscloud.core.ErrorInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.nio.charset.Charset;
@@ -23,7 +24,7 @@ import java.util.List;
  * @date 2018/1/3 下午5:52
  */
 @Configuration
-public class CustomMVCConfiguration extends WebMvcConfigurerAdapter {
+public class MVCConfiguration extends WebMvcConfigurerAdapter {
     @Bean
     public HttpMessageConverter<String> responseBodyConverter() {
         StringHttpMessageConverter converter = new StringHttpMessageConverter(
@@ -59,7 +60,14 @@ public class CustomMVCConfiguration extends WebMvcConfigurerAdapter {
         // 多个拦截器组成一个拦截器链
         // addPathPatterns 用于添加拦截规则
         // excludePathPatterns 用户排除拦截
-        registry.addInterceptor(new ErrorInterceptor()).addPathPatterns("/**");
+        registry.addInterceptor(new TramInterceptor()).addPathPatterns("/**");
         super.addInterceptors(registry);
+    }
+
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController( "/" ).setViewName( "forward:/index.jsp" );
+        registry.setOrder( Ordered.HIGHEST_PRECEDENCE );
+        super.addViewControllers( registry );
     }
 }

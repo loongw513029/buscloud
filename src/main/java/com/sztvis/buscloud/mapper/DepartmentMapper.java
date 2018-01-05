@@ -44,4 +44,5 @@ public interface DepartmentMapper {
      */
     @Select("select * from TramDepartmentInfo where parentId=#{parentId}")
     List<Tramdepartmentinfo> GetDepartmentsByParentId(long parentId);
+
 }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -14,15 +15,14 @@ import java.util.List;
  * @date 2018/1/4 上午11:40
  */
 @RestController
-@RequestMapping("/api/tree")
+@RequestMapping("/api/v1/tree")
 public class TreeController extends BaseApiController {
 
     @Autowired
     private TreeService treeService;
 
     @RequestMapping("/list")
-    public TreeModel GetTreeList(){
-        long userId=getCurrentUserInfo().getId();
+    public TreeModel GetTreeList(long userId){
         return treeService.GetTreeList(userId);
     }
 }

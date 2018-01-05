@@ -7,7 +7,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>车辆云管理</title>
     <link href="/css/base.css" rel="stylesheet">
-    <link href="/fonts/iconfonts.css" rel="stylesheet">
+    <link href="/fonts/iconfont.css" rel="stylesheet">
     <link href="/css/platform.css" rel="stylesheet">
     <link rel="stylesheet" href="/easyui/uimaker/easyui.css">
 </head>
@@ -23,14 +23,14 @@
                 <ul class="pf-nav">
                     <c:forEach items="${navs}" var="item">
                         <li class="pf-nav-item" data-menu="sys-manage">
-                            <a href="javascript:;" _href="${item.getUri()}">
+                            <a href="javascript:;" _href="${item.getUri()}" class="nav-item" title="${item.getMenu().size()==0?item.getText():item.getMenu().get(0).getText()}">
                                 <span class="iconfont">${item.getGlyph()}</span>
                                 <span class="pf-nav-title">${item.getText()}</span>
                             </a>
                             <ul class="dropdownmenu">
                                 <c:forEach items="${item.getMenu()}" var="item2">
                                     <li>
-                                        <a href="javascript:;" _href="${item2.getUri()}" class="chinditem">${item2.getText()}</a>
+                                        <a href="javascript:;" _href="${item2.getUri()}" class="chinditem nav-item" title="${item2.getText()}">${item2.getText()}</a>
                                     </li>
                                 </c:forEach>
                             </ul>
@@ -78,30 +78,16 @@
                 <span class="pf-name">车辆列表</span>
                 <span class="toggle-icon"></span>
             </h2>
-            <ul id="easyui-tree" class="easyui-tree">
+            <div class="loading"><img src="/images/loading.gif" /> <br/>数据加载中</div>
+            <ul id="easyui-tree" class="easyui-tree" checkbox="true" data-options="lines:true">
 
             </ul>
         </div>
         <!--标签s-->
         <div id="pf-page">
             <div class="easyui-tabs1" style="width:100%;height:100%;">
-                <div title="首页" style="padding:10px 5px 5px 10px;">
-                    <iframe class="page-iframe" src="workbench.html" frameborder="no"   border="no" height="100%" width="100%" scrolling="auto"></iframe>
-                </div>
-                <div title="采购组织" style="padding:10px 5px 5px 10px;" data-options="closable:true">
-                    <iframe class="page-iframe" src="errs.html" frameborder="no"   border="no" height="100%" width="100%" scrolling="auto"></iframe>
-                </div>
-                <div title="基本信息" data-options="closable:true" style="padding:10px 5px 5px 10px;">
-                    <iframe class="page-iframe" src="basic_info.html" frameborder="no"   border="no" height="100%" width="100%" scrolling="auto"></iframe>
-                </div>
-                <div title="供应商" data-options="closable:true" style="padding:10px 5px 5px 10px;">
-                    <iframe class="page-iframe" src="providers.html" frameborder="no"   border="no" height="100%" width="100%" scrolling="auto"></iframe>
-                </div>
-                <div title="业务流程" data-options="closable:true" style="padding:10px 5px 5px 10px;">
-                    <iframe class="page-iframe" src="process.html" frameborder="no"   border="no" height="100%" width="100%" scrolling="auto"></iframe>
-                </div>
-                <div title="表单管理" data-options="closable:true" style="padding:10px 5px 5px 10px;">
-                    <iframe class="page-iframe" src="providers1.html" frameborder="no"   border="no" height="100%" width="100%" scrolling="auto"></iframe>
+                <div title="系统首页" style="padding:10px 5px 5px 10px;">
+                    <iframe class="page-iframe" src="console.html" frameborder="no"   border="no" height="100%" width="100%" scrolling="auto"></iframe>
                 </div>
             </div>
         </div>
@@ -121,6 +107,9 @@
 
 <script type="text/javascript" src="/easyui/jquery.min.js"></script>
 <script type="text/javascript" src="/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/dist/jquery.cookie.js"></script>
+<script type="text/javascript" src="/layer/layer.js"></script>
+<script type="text/javascript" src="/web/common.js"></script>
 <script type="text/javascript" src="/web/main.js"></script>
 <!--[if IE 7]>
 <script type="text/javascript">

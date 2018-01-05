@@ -27,32 +27,25 @@
             <div class="lg-zone">
                 <div class="lg-box">
                     <div class="lg-label"><h4>用户登录</h4></div>
-                    <div class="alert alert-error">
+                    <div class="alert alert-error hide">
                         <i class="iconfont">&#xf02bc;</i>
                         <span>请输入用户名</span>
                     </div>
                     <form>
                         <div class="lg-username input-item clearfix">
                             <i class="iconfont">&#xf00ec;</i>
-                            <input type="text" placeholder="账号/邮箱">
+                            <input type="text" placeholder="账号/邮箱" name="username">
                         </div>
                         <div class="lg-password input-item clearfix">
                             <i class="iconfont">&#xf00c9;</i>
-                            <input type="password" placeholder="请输入密码">
-                        </div>
-                        <div class="lg-check clearfix">
-                            <div class="input-item">
-                                <i class="iconfont">&#xf0103;</i>
-                                <input type="text" placeholder="验证码">
-                            </div>
-                            <span class="check-code">XD34F</span>
+                            <input type="password" placeholder="请输入密码" name="password">
                         </div>
                         <div class="tips clearfix">
-                            <label><input type="checkbox" checked="checked">记住用户名</label>
+                            <label><input type="checkbox" checked="checked" name="getpwd">记住用户名</label>
                             <a href="javascript:;" class="forget-pwd">忘记密码？</a>
                         </div>
                         <div class="enter">
-                            <a href="javascript:;" class="supplier" onClick="javascript:window.location='main.html'">登 录</a>
+                            <a href="javascript:;" class="supplier">登 录</a>
                         </div>
                     </form>
                 </div>
@@ -61,10 +54,12 @@
         </div>
     </div>
 </div>
-
+<script type="text/javascript" src="/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/layer/layer.js"></script>
+<script type="text/javascript" src="/dist/jquery.cookie.js"></script>
+<script type="text/javascript" src="/web/common.js"></script>
+<script type="text/javascript" src="/web/login.js"></script>
 </body>
 </html>
 
-<script type="text/javascript">
 
-</script>

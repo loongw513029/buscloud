@@ -3,6 +3,7 @@ package com.sztvis.buscloud.service.Impl;
 import com.sztvis.buscloud.model.domain.Tramdepartmentinfo;
 import com.sztvis.buscloud.model.domain.Tramdeviceinfo;
 import com.sztvis.buscloud.model.domain.Tramlineinfo;
+import com.sztvis.buscloud.model.dto.response.TreeAttributeModel;
 import com.sztvis.buscloud.model.dto.response.TreeModel;
 import com.sztvis.buscloud.service.IDepartmentService;
 import com.sztvis.buscloud.service.IDeviceService;
@@ -37,7 +38,9 @@ public class TreeService implements ITreeService {
         treeModel.setId(departmentinfo.getId());
         treeModel.setState("open");
         treeModel.setIconCls("tree-department");
-        treeModel.getAttributes().setState(false);
+        TreeAttributeModel m2=new TreeAttributeModel();
+        m2.setState(false);
+        treeModel.setAttributes(m2);
         treeModel.setChildren(this.GetChindDepartmentList(departmentinfo.getId()));
         return  treeModel;
     }

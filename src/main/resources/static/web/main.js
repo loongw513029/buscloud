@@ -8,6 +8,7 @@ var mainPlatform = {
 
     bindEvent: function(){
         var self = this;
+        var userInfo = User.GetUserInfo();
         // 顶部大菜单单击事件
         $(document).on('click', '.pf-nav-item', function() {
             $('.pf-nav-item').removeClass('current');
@@ -28,8 +29,16 @@ var mainPlatform = {
             layer.confirm('您确定要退出吗？', {
                 icon: 4,
                 title: '确定退出' //按钮
-            }, function(){
-                location.href= 'login.html';
+            }, function(index){
+                Http.Ajax({
+                    url:'/api/v1/account/loginout',
+                    type:'get'
+                },function (result) {
+                    if(result.success)
+                        location.href= '/login';
+                },function (error) {
+
+                })
             });
         });
         //左侧菜单收起
@@ -47,7 +56,25 @@ var mainPlatform = {
         $(document).on('click', '.pf-notice-item', function() {
             $('#pf-page').find('iframe').eq(0).attr('src', 'backend/notice.html')
         });
+        $(document).on('click','.nav-item',function () {
+            var text = $(this).attr("title");
+            var url = $(this).attr("_href");
+            mainPlatform.addTab(text,url);
+        });
 
+        $.ajax({
+            url:"/api/v1/tree/list?userId="+userInfo.id,
+            type:"get",
+            beforeSend:function () {
+                $(".loading").show();
+            },
+            success:function (data) {
+                $(".loading").hide();
+                $('#easyui-tree').tree({
+                    data: data
+                });
+            }
+        })
     },
 
     render: function(menu){

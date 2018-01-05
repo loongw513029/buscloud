@@ -3,8 +3,13 @@ package com.sztvis.buscloud.api;
 import com.sztvis.buscloud.model.dto.CurrentUserInfo;
 import com.sztvis.buscloud.model.dto.response.ApiResult;
 import com.sztvis.buscloud.service.RedisService;
+import jdk.nashorn.internal.objects.Global;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.web.bind.annotation.ModelAttribute;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author longweiqian
@@ -12,6 +17,10 @@ import org.springframework.context.annotation.ComponentScan;
  * @date 2017/12/29 上午11:58
  */
 public class BaseApiController {
+
+    public BaseApiController(){
+
+    }
 
     @Autowired
     private RedisService redisService;
@@ -38,4 +47,11 @@ public class BaseApiController {
         obj.setSuccess(success);
         return obj;
     }
+
+    @ModelAttribute
+    public final void Init(HttpServletRequest request,HttpServletResponse response){
+
+    }
+
+
 }

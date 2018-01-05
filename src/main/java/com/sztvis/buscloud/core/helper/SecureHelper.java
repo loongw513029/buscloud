@@ -33,7 +33,7 @@ public class SecureHelper {
         }
         // 将摘要转为字符串
         String rs = byte2hex(digesta);
-        return rs;
+        return rs.toLowerCase();
     }
 
     /**

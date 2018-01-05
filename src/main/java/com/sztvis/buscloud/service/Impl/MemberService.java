@@ -35,8 +35,6 @@ public class MemberService implements IMemberService{
     private DeviceMapper deviceMapper;
     @Autowired
     private BasicService basicService;
-    @Autowired
-    private RedisService redisService;
 
     /**
      * 登录
@@ -71,9 +69,6 @@ public class MemberService implements IMemberService{
         currentUserInfo.setAppConf(roleModel);
         //Tramloginlogfo logInfo = new Tramloginlogfo();
         //logInfo.setAccesstoken();
-        String uuid=UUID.randomUUID().toString().replace("-","");
-        //CookieHelper.addCookie();
-        redisService.set(loginParams.getUsername(),currentUserInfo);
-        return currentUserInfo;
+                return currentUserInfo;
     }
 }

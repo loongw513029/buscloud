@@ -8,12 +8,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/login")
-public class LoginController extends BaseController{
+public class LoginController{
 
     @RequestMapping("")
     public ModelAndView Login(){
         ModelAndView model = new ModelAndView("login");
-
         return model;
     }
+
 }

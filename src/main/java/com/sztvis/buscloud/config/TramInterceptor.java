@@ -1,8 +1,13 @@
-package com.sztvis.buscloud.core;
+package com.sztvis.buscloud.config;
 
+import com.sztvis.buscloud.model.dto.CurrentUserInfo;
+import com.sztvis.buscloud.service.RedisService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+import redis.clients.jedis.ShardedJedis;
+import redis.clients.jedis.ShardedJedisPool;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,7 +19,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 
 @Controller
-public class ErrorInterceptor implements HandlerInterceptor{
+public class TramInterceptor implements HandlerInterceptor{
+
     /**
      * preHandle方法是进行处理器拦截用的，顾名思义，该方法将在Controller处理之前进行调用，SpringMVC中的Interceptor拦截器是链式的，可以同时存在
      * 多个Interceptor，然后SpringMVC会根据声明的前后顺序一个接一个的执行，而且所有的Interceptor中的preHandle方法都会在
@@ -24,8 +30,22 @@ public class ErrorInterceptor implements HandlerInterceptor{
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-        System.out.println(">>>MyInterceptor1>>>>>>>在请求处理之前进行调用（Controller方法调用之前）");
-        return true;// 只有返回true才会继续向下执行，返回false取消当前请求
+        String url=request.getRequestURL().toString();
+        System.out.println(url);
+        if (url.endsWith("/login")||url.contains("api/v1/account/login")) {
+            return true;
+        }
+        //进入到RestController
+        if (url.contains("/api/")) {
+            return true;
+        }
+        //进入普通Controller
+        Object obj = request.getSession().getAttribute("user");
+        if (obj == null || !(obj instanceof CurrentUserInfo)) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return false;
+        }
+        return true;
     }
 
     /**

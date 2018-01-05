@@ -7,12 +7,14 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author longweiqian
  * @company tvis
  * @date 2017/12/27 下午6:17
  */
+@Repository
 public interface MemberMapper {
 
     /**

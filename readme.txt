@@ -18,7 +18,7 @@ MySql:
     网站: SpringMvc
     数据持久层： MyBatis3 注解式 CDRU
     缓存: MongoDb/Redis
-    前端：Extjs5 or bootstrap+Angualr4 未决定？
+    前端：EasyUI
 
 服务器：
     nginx代理

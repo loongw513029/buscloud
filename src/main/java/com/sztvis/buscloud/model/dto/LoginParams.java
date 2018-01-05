@@ -3,7 +3,10 @@ package com.sztvis.buscloud.model.dto;
 public class LoginParams {
     private String username;
     private String password;
-    private String clientod;
+    private String clientid;
+    /**
+     * 登录类型 1：安卓 2：IOS 3：Web
+     */
     private Integer logintype;
 
     public String getUsername() {
@@ -21,12 +24,12 @@ public class LoginParams {
     public void setPassword(String password) {
         this.password = password;
     }
-    public String getClientod() {
-        return clientod;
+    public String getClientId() {
+        return clientid;
     }
 
-    public void setClientod(String clientod) {
-        this.clientod = clientod;
+    public void setClientId(String clientid) {
+        this.clientid = clientid;
     }
 
     public Integer getLogintype() {

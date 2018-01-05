@@ -1,5 +1,7 @@
 package com.sztvis.buscloud.mapper;
 
+import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
 /**
@@ -7,6 +9,8 @@ import java.util.List;
  * @company tvis
  * @date 2017/12/28 下午5:32
  */
+
+@Repository
 public interface BasicMapper {
 
 

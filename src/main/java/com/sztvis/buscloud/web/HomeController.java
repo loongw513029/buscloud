@@ -1,6 +1,5 @@
 package com.sztvis.buscloud.web;
 
-import com.sztvis.buscloud.DbConfigPros;
 import com.sztvis.buscloud.service.IMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
