@@ -30,4 +30,7 @@ public interface DeviceMapper {
     @Select("select * from TramDeviceInfo where lineId=#{lineId}")
     List<Tramdeviceinfo> GetDevicesByLineId(long lineId);
 
+    @Select("select count(Id) from TramDeviceInfo where deviceStatus=#{state} and departmentId in #{departments}")
+    Integer GetDeviceCount(int state,List<Long> departments);
+
 }

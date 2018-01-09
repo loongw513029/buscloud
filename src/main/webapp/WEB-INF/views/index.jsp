@@ -6,10 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>车辆云管理</title>
+    <link rel="stylesheet" href="/easyui/uimaker/easyui.css">
     <link href="/css/base.css" rel="stylesheet">
     <link href="/fonts/iconfont.css" rel="stylesheet">
     <link href="/css/platform.css" rel="stylesheet">
-    <link rel="stylesheet" href="/easyui/uimaker/easyui.css">
+
 </head>
 <body>
 <div class="container">
@@ -87,7 +88,7 @@
         <div id="pf-page">
             <div class="easyui-tabs1" style="width:100%;height:100%;">
                 <div title="系统首页" style="padding:10px 5px 5px 10px;">
-                    <iframe class="page-iframe" src="console.html" frameborder="no"   border="no" height="100%" width="100%" scrolling="auto"></iframe>
+                    <iframe class="page-iframe" src="/welcome" frameborder="no"   border="no" height="100%" width="100%" scrolling="auto"></iframe>
                 </div>
             </div>
         </div>

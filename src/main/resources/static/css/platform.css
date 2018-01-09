@@ -480,3 +480,22 @@ html {
     display: none;
     font-size: 12px;
 }
+.tree-department,.tree-child-department{
+    background: url('/images/icon-org.png') no-repeat;
+}
+.tree-customline{
+    background: url('/images/icon-line.png') no-repeat;
+}
+.device-nvr-online{
+    background: url('/images/icon-device-nvr-online.png') no-repeat
+}
+.device-dvr-online{
+    background: url('/images/icon-device-dvr-online.png') no-repeat
+}
+.device-offline{
+    background: url('/images/icon-device-offline.png') no-repeat
+}
+.tree-node{
+    height: 21px;
+    line-height: 21px;
+}

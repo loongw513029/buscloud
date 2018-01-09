@@ -26,10 +26,7 @@ var mainPlatform = {
         });
 
         $(document).on('click', '.pf-logout', function() {
-            layer.confirm('您确定要退出吗？', {
-                icon: 4,
-                title: '确定退出' //按钮
-            }, function(index){
+            TramDalog.Confirm("您确定要退出吗",['确定','取消'],function(){
                 Http.Ajax({
                     url:'/api/v1/account/loginout',
                     type:'get'
@@ -71,6 +68,8 @@ var mainPlatform = {
             success:function (data) {
                 $(".loading").hide();
                 $('#easyui-tree').tree({
+                    lines: true,
+                    animate: true,
                     data: data
                 });
             }

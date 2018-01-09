@@ -33,4 +33,10 @@ public class DepartmentService implements IDepartmentService {
         return departmentMapper.GetDepartmentsByParentId(departmentId);
     }
 
+    @Override
+    public List<Long> GetDepartmentIdsByUserId(long userId) {
+        long departmentId = departmentMapper.GetDepartmentIdsByUserId(userId).getId();
+        return departmentMapper.GetPartmentIdsByDepartmentId(departmentId);
+    }
+
 }

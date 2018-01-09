@@ -24,4 +24,6 @@ public interface IDepartmentService {
      */
     List<Tramdepartmentinfo> GetParentsByParentId(long departmentId);
 
+    List<Long> GetDepartmentIdsByUserId(long userId);
+
 }

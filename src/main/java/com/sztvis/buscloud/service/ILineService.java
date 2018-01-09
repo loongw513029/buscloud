@@ -12,4 +12,6 @@ import java.util.List;
 public interface ILineService {
 
     List<Tramlineinfo> GetLinesByDepartmentId(long departmentId);
+
+    List<Long> GetLineIdsByUserId(long userId);
 }

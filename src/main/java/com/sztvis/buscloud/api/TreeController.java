@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,7 +23,9 @@ public class TreeController extends BaseApiController {
     private TreeService treeService;
 
     @RequestMapping("/list")
-    public TreeModel GetTreeList(long userId){
-        return treeService.GetTreeList(userId);
+    public List<TreeModel> GetTreeList(long userId){
+        List<TreeModel> list=new ArrayList<>();
+        list.add(treeService.GetTreeList(userId));
+        return list;
     }
 }

@@ -45,4 +45,12 @@ public interface DepartmentMapper {
     @Select("select * from TramDepartmentInfo where parentId=#{parentId}")
     List<Tramdepartmentinfo> GetDepartmentsByParentId(long parentId);
 
+    /**
+     *
+     * @param departmentId
+     * @return
+     */
+    @Select("select Id from TramDepartmentInfo where Id=#{departmentId} and parentId=#{departmentId}")
+    List<Long> GetPartmentIdsByDepartmentId(long departmentId);
+
 }

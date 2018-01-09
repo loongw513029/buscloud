@@ -1,0 +1,39 @@
+package com.sztvis.buscloud.service.Impl;
+
+import com.sztvis.buscloud.mapper.DeviceMapper;
+import com.sztvis.buscloud.mapper.LineMapper;
+import com.sztvis.buscloud.model.dto.WelcomeModel;
+import com.sztvis.buscloud.service.IHomeService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+/**
+ * @author longweiqian
+ * @company tvis
+ * @date 2018/1/9 上午9:49
+ */
+@Service
+public class HomeService implements IHomeService {
+
+    @Autowired
+    private DeviceMapper deviceMapper;
+    @Autowired
+    private DepartmentService departmentService;
+    @Autowired
+    private LineMapper lineMapper;
+
+    @Override
+    public WelcomeModel GetWelcomeData(long userId) {
+        WelcomeModel model =new WelcomeModel();
+        List<Long> departmentIds = departmentService.GetDepartmentIdsByUserId(userId);
+        Integer deviceNum = deviceMapper.GetDeviceCount(1,departmentIds);
+        Integer onlineNum = deviceMapper.GetDeviceCount(-1,departmentIds);
+        model.setTotelNum(deviceNum);
+        model.setOnlineNum(onlineNum);
+        model.setLineNum(lineMapper.GetLineIdsByDepartmentIds(departmentIds));
+
+        return null;
+    }
+}

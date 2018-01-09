@@ -16,4 +16,8 @@ public interface LineMapper {
 
     @Select("select * from TramLineInfo where deparentId=#{departmentId} order by sort asc")
     List<Tramlineinfo> GetLinesByDepartmentId(long departmentId);
+
+    @Select("select count(Id) from TramLineInfo where deparentId in #{departmentId}")
+    Integer GetLineIdsByDepartmentIds(List<Long> departmentId);
+
 }

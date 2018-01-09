@@ -23,4 +23,9 @@ public class LineService implements ILineService {
     public List<Tramlineinfo> GetLinesByDepartmentId(long departmentId) {
         return lineMapper.GetLinesByDepartmentId(departmentId);
     }
+
+    @Override
+    public List<Long> GetLineIdsByUserId(long userId) {
+        return null;
+    }
 }

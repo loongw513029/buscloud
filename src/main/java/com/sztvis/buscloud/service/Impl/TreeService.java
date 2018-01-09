@@ -69,7 +69,7 @@ public class TreeService implements ITreeService {
             model.setId(dlist.get(i).getId());
             model.setText(dlist.get(i).getLinename());
             model.setChecked(false);
-            model.setIconCls("tree-line");
+            model.setIconCls("tree-customline");
             model.setChildren(this.GetChindDevicesByLineId(dlist.get(i).getId()));
             list.add(model);
         }
@@ -85,7 +85,7 @@ public class TreeService implements ITreeService {
             model.setId(dlist.get(i).getId());
             model.setText(dlist.get(i).getDevicecode());
             model.setChecked(false);
-            model.setIconCls("tree-line");
+            model.setIconCls("device-nvr-online");
             list.add(model);
         }
         return list;
