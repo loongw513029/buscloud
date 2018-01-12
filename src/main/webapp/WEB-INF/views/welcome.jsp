@@ -230,7 +230,7 @@
                     <div class="chart0-item">
                         <div class="item-inner">
                             <div class="item-content">
-                                <div class="content-hd">货源风险</div>
+                                <div class="content-hd">车辆故障趋势图</div>
                                 <div class="chart-chart" id="chart0"></div>
                             </div>
                         </div>
@@ -238,7 +238,7 @@
                     <div class="chart0-item">
                         <div class="item-inner">
                             <div class="item-content">
-                                <div class="content-hd">交货准确率</div>
+                                <div class="content-hd">不安全行为趋势图</div>
                                 <div class="chart-chart" id="chart1"></div>
                             </div>
                         </div>

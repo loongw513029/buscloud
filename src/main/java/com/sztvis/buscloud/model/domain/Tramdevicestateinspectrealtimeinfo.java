@@ -11,17 +11,18 @@ public class Tramdevicestateinspectrealtimeinfo {
   private String cputemp;
   private String mermoryuserate;
   private String disktemp;
-  private String gpsstate;
-  private String canstate;
-  private String internerstate;
-  private String gpssignelstate;
+  private boolean gpsstate;
+  private boolean canstate;
+  private boolean internetstate;
+  private boolean gpssignelstate;
   private Double simbalance;
-  private String gpsinspectstate;
-  private String caninspectstate;
-  private String behaviorinspectstate;
-  private String radarinspectstate;
-  private String adasinspectstate;
-  private String timingstate;
+  private boolean gpsinspectstate;
+  private boolean caninspectstate;
+  private boolean behaviorinspectstate;
+  private boolean radarinspectstate;
+  private boolean adasinspectstate;
+  private boolean timingstate;
+  private String deviceCode;
 
   public Long getId() {
     return id;
@@ -103,35 +104,35 @@ public class Tramdevicestateinspectrealtimeinfo {
     this.disktemp = disktemp;
   }
 
-  public String getGpsstate() {
+  public boolean isGpsstate() {
     return gpsstate;
   }
 
-  public void setGpsstate(String gpsstate) {
+  public void setGpsstate(boolean gpsstate) {
     this.gpsstate = gpsstate;
   }
 
-  public String getCanstate() {
+  public boolean isCanstate() {
     return canstate;
   }
 
-  public void setCanstate(String canstate) {
+  public void setCanstate(boolean canstate) {
     this.canstate = canstate;
   }
 
-  public String getInternerstate() {
-    return internerstate;
+  public boolean isInternetstate() {
+    return internetstate;
   }
 
-  public void setInternerstate(String internerstate) {
-    this.internerstate = internerstate;
+  public void setInternetstate(boolean internetstate) {
+    this.internetstate = internetstate;
   }
 
-  public String getGpssignelstate() {
+  public boolean isGpssignelstate() {
     return gpssignelstate;
   }
 
-  public void setGpssignelstate(String gpssignelstate) {
+  public void setGpssignelstate(boolean gpssignelstate) {
     this.gpssignelstate = gpssignelstate;
   }
 
@@ -143,51 +144,71 @@ public class Tramdevicestateinspectrealtimeinfo {
     this.simbalance = simbalance;
   }
 
-  public String getGpsinspectstate() {
+  public boolean isGpsinspectstate() {
     return gpsinspectstate;
   }
 
-  public void setGpsinspectstate(String gpsinspectstate) {
+  public void setGpsinspectstate(boolean gpsinspectstate) {
     this.gpsinspectstate = gpsinspectstate;
   }
 
-  public String getCaninspectstate() {
+  public boolean isCaninspectstate() {
     return caninspectstate;
   }
 
-  public void setCaninspectstate(String caninspectstate) {
+  public void setCaninspectstate(boolean caninspectstate) {
     this.caninspectstate = caninspectstate;
   }
 
-  public String getBehaviorinspectstate() {
+  public boolean isBehaviorinspectstate() {
     return behaviorinspectstate;
   }
 
-  public void setBehaviorinspectstate(String behaviorinspectstate) {
+  public void setBehaviorinspectstate(boolean behaviorinspectstate) {
     this.behaviorinspectstate = behaviorinspectstate;
   }
 
-  public String getRadarinspectstate() {
+  public boolean isRadarinspectstate() {
     return radarinspectstate;
   }
 
-  public void setRadarinspectstate(String radarinspectstate) {
+  public void setRadarinspectstate(boolean radarinspectstate) {
     this.radarinspectstate = radarinspectstate;
   }
 
-  public String getAdasinspectstate() {
+  public boolean isAdasinspectstate() {
     return adasinspectstate;
   }
 
-  public void setAdasinspectstate(String adasinspectstate) {
+  public void setAdasinspectstate(boolean adasinspectstate) {
     this.adasinspectstate = adasinspectstate;
   }
 
-  public String getTimingstate() {
+  public boolean isTimingstate() {
     return timingstate;
   }
 
-  public void setTimingstate(String timingstate) {
+  public void setTimingstate(boolean timingstate) {
     this.timingstate = timingstate;
   }
+
+  public String getDeviceCode() {
+    return deviceCode;
+  }
+
+  public void setDeviceCode(String deviceCode) {
+    this.deviceCode = deviceCode;
+  }
+
+  public boolean isOnlineState() {
+    return onlineState;
+  }
+
+  public void setOnlineState(boolean onlineState) {
+    this.onlineState = onlineState;
+  }
+
+  private boolean onlineState;
+
+
 }

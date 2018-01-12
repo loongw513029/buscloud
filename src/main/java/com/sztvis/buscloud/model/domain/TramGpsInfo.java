@@ -1,17 +1,17 @@
 package com.sztvis.buscloud.model.domain;
 
-public class Tramgpsinfo {
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.Date;
+
+@Document(collection = "TramGpsInfo")
+public class TramGpsInfo {
+  @Id
   private Long id;
-  private String guid;
   private Long deviceid;
   private String devicecode;
-  private java.sql.Timestamp updatetime;
-  private Long year;
-  private Long month;
-  private Long day;
-  private Long hour;
-  private Long minute;
-  private Long second;
+  private Date updatetime;
   private String longitude;
   private String latitude;
   private Double speed;
@@ -24,14 +24,6 @@ public class Tramgpsinfo {
 
   public void setId(Long id) {
     this.id = id;
-  }
-
-  public String getGuid() {
-    return guid;
-  }
-
-  public void setGuid(String guid) {
-    this.guid = guid;
   }
 
   public Long getDeviceid() {
@@ -50,60 +42,12 @@ public class Tramgpsinfo {
     this.devicecode = devicecode;
   }
 
-  public java.sql.Timestamp getUpdatetime() {
+  public Date getUpdatetime() {
     return updatetime;
   }
 
-  public void setUpdatetime(java.sql.Timestamp updatetime) {
+  public void setUpdatetime(Date updatetime) {
     this.updatetime = updatetime;
-  }
-
-  public Long getYear() {
-    return year;
-  }
-
-  public void setYear(Long year) {
-    this.year = year;
-  }
-
-  public Long getMonth() {
-    return month;
-  }
-
-  public void setMonth(Long month) {
-    this.month = month;
-  }
-
-  public Long getDay() {
-    return day;
-  }
-
-  public void setDay(Long day) {
-    this.day = day;
-  }
-
-  public Long getHour() {
-    return hour;
-  }
-
-  public void setHour(Long hour) {
-    this.hour = hour;
-  }
-
-  public Long getMinute() {
-    return minute;
-  }
-
-  public void setMinute(Long minute) {
-    this.minute = minute;
-  }
-
-  public Long getSecond() {
-    return second;
-  }
-
-  public void setSecond(Long second) {
-    this.second = second;
   }
 
   public String getLongitude() {

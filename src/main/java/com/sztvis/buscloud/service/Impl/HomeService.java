@@ -1,5 +1,6 @@
 package com.sztvis.buscloud.service.Impl;
 
+import com.sztvis.buscloud.core.DateUtil;
 import com.sztvis.buscloud.mapper.DeviceMapper;
 import com.sztvis.buscloud.mapper.LineMapper;
 import com.sztvis.buscloud.model.dto.WelcomeModel;
@@ -28,12 +29,20 @@ public class HomeService implements IHomeService {
     public WelcomeModel GetWelcomeData(long userId) {
         WelcomeModel model =new WelcomeModel();
         List<Long> departmentIds = departmentService.GetDepartmentIdsByUserId(userId);
-        Integer deviceNum = deviceMapper.GetDeviceCount(1,departmentIds);
-        Integer onlineNum = deviceMapper.GetDeviceCount(-1,departmentIds);
+        Integer deviceNum = deviceMapper.getDeviceCount(1,departmentIds);
+        Integer onlineNum = deviceMapper.getDeviceCount(-1,departmentIds);
         model.setTotelNum(deviceNum);
         model.setOnlineNum(onlineNum);
         model.setLineNum(lineMapper.GetLineIdsByDepartmentIds(departmentIds));
+        Integer todayNum = deviceMapper.getOnlinePrecent(departmentIds, DateUtil.GetSystemDate("yyyy-MM-dd",0));
+        Integer fiveNum = deviceMapper.getOnlinePrecent(departmentIds,DateUtil.GetSystemDate("yyyy-MM-dd",-5));
+        Double todayPrecent = Math.floor(todayNum/deviceNum),
+                fivePrecent = Math.floor(fiveNum/deviceNum);
+        model.setTodayPrecent(new Double(todayPrecent).intValue());
+        model.setFiveDayPrecent(new Double(fivePrecent).byteValue());
+        Integer unsafeNum = deviceMapper.getUnSafeCountByDepartmentIds(departmentIds,DateUtil.GetSystemDate("yyyy-MM-dd",0));
+        model.setUnsafeNum(unsafeNum);
 
-        return null;
+        return model;
     }
 }

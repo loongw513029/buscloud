@@ -1,6 +1,11 @@
 package com.sztvis.buscloud.model.domain;
 
-public class Tramdevicehealthinfo {
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection = "TramDeviceHealthInfo")
+public class TramDeviceHealthInfo {
+  @Id
   private Long id;
   private String devicecode;
   private java.sql.Timestamp updatetime;

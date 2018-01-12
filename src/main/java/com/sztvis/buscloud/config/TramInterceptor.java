@@ -32,7 +32,7 @@ public class TramInterceptor implements HandlerInterceptor{
             throws Exception {
         String url=request.getRequestURL().toString();
         System.out.println(url);
-        if (url.endsWith("/login")||url.contains("api/v1/account/login")) {
+        if (url.endsWith("/login")||url.contains("api/v1/account/login")||url.endsWith("/error")) {
             return true;
         }
         //进入到RestController

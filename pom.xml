@@ -22,6 +22,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+		<spring.boot>1.5.9.RELEASE</spring.boot>
 	</properties>
 
 	<dependencies>
@@ -80,9 +81,9 @@
 		</dependency>
 		<!--mongodb driver-->
 		<dependency>
-			<groupId>org.mongodb</groupId>
-			<artifactId>mongodb-driver</artifactId>
-			<version>3.2.0</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-mongodb</artifactId>
+			<version>${spring.boot}</version>
 		</dependency>
 		<!--Redis-->
 		<dependency>

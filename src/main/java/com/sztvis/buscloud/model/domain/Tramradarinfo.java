@@ -1,6 +1,11 @@
 package com.sztvis.buscloud.model.domain;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection = "TramRadarInfo")
 public class Tramradarinfo {
+  @Id
   private Long id;
   private String guid;
   private Long deviceid;

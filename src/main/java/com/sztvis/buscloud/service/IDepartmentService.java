@@ -1,5 +1,6 @@
 package com.sztvis.buscloud.service;
 
+import com.sztvis.buscloud.model.domain.TramCanInfo;
 import com.sztvis.buscloud.model.domain.Tramdepartmentinfo;
 
 import java.util.List;
@@ -24,6 +25,12 @@ public interface IDepartmentService {
      */
     List<Tramdepartmentinfo> GetParentsByParentId(long departmentId);
 
+    /**
+     * 获得机构Id
+     * @param userId 用户id
+     * @return
+     */
     List<Long> GetDepartmentIdsByUserId(long userId);
+
 
 }

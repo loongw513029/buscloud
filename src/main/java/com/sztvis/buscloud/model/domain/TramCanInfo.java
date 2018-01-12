@@ -1,17 +1,17 @@
 package com.sztvis.buscloud.model.domain;
 
-public class Tramcaninfo {
-  private Long id;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.io.Serializable;
+import java.util.List;
+
+@Document(collection = "TramCanInfo")
+public class TramCanInfo implements Serializable{
   private String guid;
   private Long deviceid;
   private String devicecode;
-  private java.sql.Timestamp updatetime;
-  private Long year;
-  private Long month;
-  private Long day;
-  private Long hour;
-  private Long minute;
-  private Long second;
+  private String updatetime;
   private String batteryvoltage;
   private String batterycurrent;
   private String busstall;
@@ -39,15 +39,9 @@ public class Tramcaninfo {
   private String tirenumber2;
   private String outcartemperature;
   private String incartemperature;
-  private java.sql.Timestamp createtime;
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
+  private String createtime;
+  private ElectricCanInfo electricCanInfo;
+  private List<TramCanActinfo> acts;
 
   public String getGuid() {
     return guid;
@@ -73,60 +67,12 @@ public class Tramcaninfo {
     this.devicecode = devicecode;
   }
 
-  public java.sql.Timestamp getUpdatetime() {
+  public String getUpdatetime() {
     return updatetime;
   }
 
-  public void setUpdatetime(java.sql.Timestamp updatetime) {
+  public void setUpdatetime(String updatetime) {
     this.updatetime = updatetime;
-  }
-
-  public Long getYear() {
-    return year;
-  }
-
-  public void setYear(Long year) {
-    this.year = year;
-  }
-
-  public Long getMonth() {
-    return month;
-  }
-
-  public void setMonth(Long month) {
-    this.month = month;
-  }
-
-  public Long getDay() {
-    return day;
-  }
-
-  public void setDay(Long day) {
-    this.day = day;
-  }
-
-  public Long getHour() {
-    return hour;
-  }
-
-  public void setHour(Long hour) {
-    this.hour = hour;
-  }
-
-  public Long getMinute() {
-    return minute;
-  }
-
-  public void setMinute(Long minute) {
-    this.minute = minute;
-  }
-
-  public Long getSecond() {
-    return second;
-  }
-
-  public void setSecond(Long second) {
-    this.second = second;
   }
 
   public String getBatteryvoltage() {
@@ -345,11 +291,27 @@ public class Tramcaninfo {
     this.incartemperature = incartemperature;
   }
 
-  public java.sql.Timestamp getCreatetime() {
+  public String getCreatetime() {
     return createtime;
   }
 
-  public void setCreatetime(java.sql.Timestamp createtime) {
+  public void setCreatetime(String createtime) {
     this.createtime = createtime;
+  }
+
+  public ElectricCanInfo getElectricCanInfo() {
+    return electricCanInfo;
+  }
+
+  public void setElectricCanInfo(ElectricCanInfo electricCanInfo) {
+    this.electricCanInfo = electricCanInfo;
+  }
+
+  public List<TramCanActinfo> getActs() {
+    return acts;
+  }
+
+  public void setActs(List<TramCanActinfo> acts) {
+    this.acts = acts;
   }
 }

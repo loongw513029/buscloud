@@ -1,7 +1,7 @@
 package com.sztvis.buscloud.service.Impl;
 
 import com.sztvis.buscloud.model.domain.Tramdepartmentinfo;
-import com.sztvis.buscloud.model.domain.Tramdeviceinfo;
+import com.sztvis.buscloud.model.domain.TramDeviceInfo;
 import com.sztvis.buscloud.model.domain.Tramlineinfo;
 import com.sztvis.buscloud.model.dto.response.TreeAttributeModel;
 import com.sztvis.buscloud.model.dto.response.TreeModel;
@@ -78,7 +78,7 @@ public class TreeService implements ITreeService {
 
     private List<TreeModel> GetChindDevicesByLineId(long lineId){
         List<TreeModel> list=new ArrayList<>();
-        List<Tramdeviceinfo> dlist = iDeviceService.GetDevicesByLineId(lineId);
+        List<TramDeviceInfo> dlist = iDeviceService.GetDevicesByLineId(lineId);
         for(int i=0;i<dlist.size();i++){
             TreeModel model =new TreeModel();
             model.setState("open");

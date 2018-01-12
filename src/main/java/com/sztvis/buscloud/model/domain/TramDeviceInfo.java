@@ -1,6 +1,6 @@
 package com.sztvis.buscloud.model.domain;
 
-public class Tramdeviceinfo {
+public class TramDeviceInfo {
   private Long id;
   private String guid;
   private Long busid;

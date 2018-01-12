@@ -39,7 +39,12 @@ public class RedisUtil {
         try {
             jedis = jedisPool.getResource();
             return jedis.get(key);
-        } finally {
+        }
+        catch (Exception ex){
+            Exception e = ex;
+            return null;
+        }
+        finally {
             //返还到连接池
             jedis.close();
         }
