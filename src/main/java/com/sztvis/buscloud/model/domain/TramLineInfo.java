@@ -1,15 +1,17 @@
 package com.sztvis.buscloud.model.domain;
 
-public class Tramlineinfo {
-  private Long id;
-  private String guid;
+import java.util.UUID;
+
+public class TramLineInfo {
+  private Long id = 0L;
+  private String guid = UUID.randomUUID().toString().replace("-","");
   private String linecode;
   private String linename;
-  private Long deparentid;
-  private Double lineupmileage;
-  private Double linedownmileage;
-  private Long upsitenum;
-  private Long downsitenum;
+  private Long departmentid;
+  private Double lineupmileage = 0D;
+  private Double linedownmileage = 0D;
+  private Long upsitenum = 0L;
+  private Long downsitenum = 0L;
   private java.sql.Timestamp upstarttime;
   private java.sql.Timestamp downstarttime;
   private java.sql.Timestamp upendtime;
@@ -57,11 +59,11 @@ public class Tramlineinfo {
   }
 
   public Long getDeparentid() {
-    return deparentid;
+    return departmentid;
   }
 
-  public void setDeparentid(Long deparentid) {
-    this.deparentid = deparentid;
+  public void setDeparentid(Long departmentid) {
+    this.departmentid = departmentid;
   }
 
   public Double getLineupmileage() {

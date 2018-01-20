@@ -1,6 +1,6 @@
 package com.sztvis.buscloud.model.domain;
 
-public class Tramroleinfo {
+public class TramRoleInfo {
   private Long id;
   private String rolename;
   private String remark;

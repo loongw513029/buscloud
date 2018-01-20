@@ -1,13 +1,14 @@
 package com.sztvis.buscloud.mapper;
 
+import com.sztvis.buscloud.mapper.provider.MemberProvider;
 import com.sztvis.buscloud.model.domain.Tramloginlogfo;
-import com.sztvis.buscloud.model.domain.Trammemberinfo;
+import com.sztvis.buscloud.model.domain.TramMemberInfo;
 import com.sztvis.buscloud.model.dto.CurrentUserInfo;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import com.sztvis.buscloud.model.dto.MemberViewModel;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * @author longweiqian
@@ -23,7 +24,7 @@ public interface MemberMapper {
      * @return
      */
     @Select("select * from tramMemberInfo where username=#{username}")
-    Trammemberinfo getMemberByUsername(String username);
+    TramMemberInfo getMemberByUsername(String username);
 
     /**
      * get memberinfo poco by id
@@ -31,21 +32,21 @@ public interface MemberMapper {
      * @return
      */
     @Select("select * from tramMemberInfo where Id=#{Id}")
-    Trammemberinfo getMemberById(Long Id);
+    TramMemberInfo getMemberById(Long Id);
 
     /**
      * insert one rows memberinfo data
      * @param memberInfo
      */
-    @Insert("insert into tramMemberInfo(Guid,UserName,PassWord,PassWordSalt,OwnershipId,RoleId,RoleLv,ManageScope,Status,RealName,Code,Phone,Photo,CreateTime)values(#{Guid},#{UserName},#{PassWord},#{PassWordSalt},#{OwnershipId},#{RoleId},#{RoleLv},#{ManageScope},#{Status},#{RealName},#{Code},#{Phone},#{Photo},#{CreateTime})")
-    void Insert(Trammemberinfo memberInfo);
+    @Insert("insert into tramMemberInfo(Guid,UserName,PassWord,PassWordSalt,OwnershipId,RoleId,RoleLv,ManageScope,Status,RealName,Code,Phone,Photo,CreateTime)values(#{guid},#{username},#{password},#{passwordsalt},#{ownershipid},#{roleid},#{rolelv},#{managescope},#{status},#{realname},#{code},#{phone},#{photo},#{createtime})")
+    void Insert(TramMemberInfo memberInfo);
 
     /**
      * edit memberinfo
      * @param trammemberinfo
      */
-    @Update("update trammemberinfo set UserName=#{UserName}, OwnershipId=#{OwnershipId}, RoleId=#{RoleId}, RoleLv=#{RoleLv}, ManageScope=#{ManageScope}, Status=#{Status}, RealName=#{RealName}, Code=#{Code}, Phone=#{Phone},Photo=#{Photo} where Id=#{Id}")
-    void Update(Trammemberinfo trammemberinfo);
+    @Update("update trammemberinfo set UserName=#{username}, OwnershipId=#{ownershipid}, RoleId=#{roleid}, RoleLv=#{rolelv}, ManageScope=#{managescope}, Status=#{status}, RealName=#{realname}, Code=#{code}, Phone=#{phone},Photo=#{photo} where Id=#{id}")
+    void Update(TramMemberInfo trammemberinfo);
 
     /**
      * modify memberpwd by Id
@@ -70,4 +71,19 @@ public interface MemberMapper {
     @Insert("insert into TramLoginLogInfo(UserId,LoginTime,LoginType,ClientId,ClientIp,AccessToken,RefreshToken)values(#{UserId},#{LoginTime},#{LoginType},#{ClientId},#{ClientIp},#{AccessToken},#{RefreshToken})")
     void InsertLoginLog(Tramloginlogfo loginLogInfo);
 
+    /**
+     *
+     * @param departmentIds
+     * @param departments
+     * @param username
+     * @return
+     */
+    @SelectProvider(type = MemberProvider.class,method = "getUserListSQL")
+    List<MemberViewModel> getUserList(@Param("departmentIds") String departmentIds, @Param("departments") List<Long> departments, @Param("username") String username);
+
+    @Delete("delete from TramMemberInfo where id in (#{userIds})")
+    void remove(String userIds);
+
+    @Select("select count(Id) from TramMemberInfo where username=#{username}")
+    int getCountByUsername(String username);
 }

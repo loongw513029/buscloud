@@ -7,77 +7,83 @@ import java.util.List;
 
 public class PageBean<T> implements Serializable {
 
-    private static final long serialVersionUID = 8656597559014685635L;
-    private long total;//总记录数
-    private List<T> list;//结果集
-    private int pageNum;//第几页
-    private int pageSize;//每页记录数
-    private int pages;//总页数
+    private Integer currentPage = 1;
+    private Integer pageSize = 10;
+    private Integer totalNum;
+    private Integer isMore;
+    private Integer totalPage;
 
-    public long getTotal() {
-        return total;
+    public Integer getCurrentPage() {
+        return currentPage;
     }
 
-    public void setTotal(long total) {
-        this.total = total;
+    public void setCurrentPage(Integer currentPage) {
+        this.currentPage = currentPage;
     }
 
-    public List<T> getList() {
-        return list;
-    }
-
-    public void setList(List<T> list) {
-        this.list = list;
-    }
-
-    public int getPageNum() {
-        return pageNum;
-    }
-
-    public void setPageNum(int pageNum) {
-        this.pageNum = pageNum;
-    }
-
-    public int getPageSize() {
+    public Integer getPageSize() {
         return pageSize;
     }
 
-    public void setPageSize(int pageSize) {
+    public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
     }
 
-    public int getPages() {
-        return pages;
+    public Integer getTotalNum() {
+        return totalNum;
     }
 
-    public void setPages(int pages) {
-        this.pages = pages;
+    public void setTotalNum(Integer totalNum) {
+        this.totalNum = totalNum;
     }
 
-    public int getSize() {
-        return size;
+    public Integer getIsMore() {
+        return isMore;
     }
 
-    public void setSize(int size) {
-        this.size = size;
+    public void setIsMore(Integer isMore) {
+        this.isMore = isMore;
     }
 
-    private int size;//当前页的数量<=pagesize,该属性来自ArrayList<>的size属性
-
-    /**
-     * 包装Page对象，因为直接返回Page对象，在JSON处理以及其他情况下会被当成List来处理
-     * @param list page结果
-     */
-
-    public PageBean(List<T> list){
-        if(list instanceof Page){
-            Page<T> page = (Page<T>) list;
-            this.pageNum = page.getPageNum();
-            this.pageSize = page.getPageSize();
-            this.total = page.getTotal();
-            this.pages = page.getPages();
-            this.list = page;
-            this.size = page.size();
-        }
+    public Integer getTotalPage() {
+        return totalPage;
     }
+
+    public void setTotalPage(Integer totalPage) {
+        this.totalPage = totalPage;
+    }
+
+    public Integer getStartIndex() {
+        return startIndex;
+    }
+
+    public void setStartIndex(Integer startIndex) {
+        this.startIndex = startIndex;
+    }
+
+    public List<T> getItems() {
+        return items;
+    }
+
+    public void setItems(List<T> items) {
+        this.items = items;
+    }
+
+    private Integer startIndex;
+    private List<T> items;
+
+    public PageBean(){
+        super();
+    }
+
+    public PageBean(Integer currentPage,Integer pageSize,Integer totalNum){
+        super();
+        this.currentPage = currentPage;
+        this.pageSize = pageSize;
+        this.totalNum = totalNum;
+        this.totalPage = (this.totalNum+this.pageSize-1)/this.pageSize;
+        this.startIndex = (this.currentPage-1)*this.pageSize;
+        this.isMore = this.currentPage>=this.totalPage?0:1;
+    }
+
 }

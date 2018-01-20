@@ -2,6 +2,7 @@ package com.sztvis.buscloud.api;
 
 import com.sztvis.buscloud.model.dto.response.ApiResult;
 import com.sztvis.buscloud.model.dto.response.MenuModel;
+import com.sztvis.buscloud.model.entity.StatusCodeEnum;
 import com.sztvis.buscloud.service.IMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +29,6 @@ public class MenuController extends BaseApiController{
     public ApiResult GetExtNavData(){
         Long ParentId = 0L;
         List<MenuModel> data = menuService.GetExtNavDataMenu(ParentId);
-        return ApiResult(true,"导航菜单获得成功","200",data);
+        return ApiResult(true,"导航菜单获得成功", StatusCodeEnum.Success,data);
     }
 }

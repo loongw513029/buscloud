@@ -1,21 +1,27 @@
 package com.sztvis.buscloud.model.domain;
 
-public class Tramdepartmentinfo {
-  private Long id;
-  private String guid;
+import com.sztvis.buscloud.core.DateUtil;
+
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.UUID;
+
+public class TramDepartmentInfo {
+  private Long id=0L;
+  private String guid = UUID.randomUUID().toString();
   private String code;
   private String departmentname;
-  private Long departmenttype;
+  private Long departmenttype=1L;
   private Long parentid;
   private String contactname;
   private String contactphone;
-  private Long sort;
+  private Long sort=1L;
   private Long islookcan;
   private Long ishavevedio;
-  private Long orgtype;
+  private Long orgtype=1L;
   private String appname;
   private String remark;
-  private java.sql.Timestamp createtime;
+  private java.sql.Timestamp createtime = new Timestamp(System.currentTimeMillis());
 
   public Long getId() {
     return id;

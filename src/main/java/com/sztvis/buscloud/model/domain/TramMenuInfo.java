@@ -1,6 +1,6 @@
 package com.sztvis.buscloud.model.domain;
 
-public class Trammenuinfo {
+public class TramMenuInfo {
   private Long id;
   private String menuname;
   private String icon;

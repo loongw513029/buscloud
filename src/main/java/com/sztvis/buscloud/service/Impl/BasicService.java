@@ -8,12 +8,17 @@ import com.sztvis.buscloud.mapper.BasicMapper;
 import com.sztvis.buscloud.mapper.DeviceMapper;
 import com.sztvis.buscloud.mapper.MemberMapper;
 import com.sztvis.buscloud.model.domain.TramBasicInfo;
-import com.sztvis.buscloud.model.domain.Trammemberinfo;
+import com.sztvis.buscloud.model.domain.TramMemberInfo;
+import com.sztvis.buscloud.model.domain.TramMenuInfo;
+import com.sztvis.buscloud.model.domain.TramRoleInfo;
+import com.sztvis.buscloud.model.dto.ComboTreeModel;
+import com.sztvis.buscloud.model.dto.response.RoleViewModel;
 import com.sztvis.buscloud.service.IBasicService;
 import com.sztvis.buscloud.util.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,7 +45,7 @@ public class BasicService implements IBasicService{
      */
     @Override
     public List<String> GetDeviceScopeByUserId(long userId){
-        Trammemberinfo user = memberMapper.getMemberById(userId);
+        TramMemberInfo user = memberMapper.getMemberById(userId);
         List<Long> LineIds= null;
         if(!StringHelper.isEmpty(user.getManagescope())){
             LineIds =StringHelper.StringsToLongs(user.getManagescope().split(","));
@@ -69,5 +74,62 @@ public class BasicService implements IBasicService{
     @Override
     public TramBasicInfo getBasicInfoByCustomId(int customId) {
         return this.basicMapper.getBasicInfoByCustomId(customId);
+    }
+
+    @Override
+    public List<ComboTreeModel> getRoleList() {
+        return this.getRoleTreeData(0);
+    }
+
+    @Override
+    public List<ComboTreeModel> getMenuList() {
+        return this.getMenuTreeData(0);
+    }
+
+    @Override
+    public RoleViewModel getRoleInfo(long id) {
+        return this.basicMapper.getRoleInfo(id);
+    }
+
+    @Override
+    public void saveAndUpdateRole(RoleViewModel model) {
+        TramRoleInfo roleInfo = new TramRoleInfo();
+        roleInfo.setRolename(model.getRolename());
+        roleInfo.setRemark(model.getRemark());
+        roleInfo.setParentid(model.getParentId());
+        roleInfo.setId(model.getId());
+        if(model.getId() == 0){
+            this.basicMapper.insertRoleInfo(roleInfo);
+        }else{
+            this.basicMapper.updateRoleInfo(roleInfo);
+        }
+        this.basicMapper.deleteRoelRelInfo(roleInfo.getId());
+        this.basicMapper.insertRoleRelInfo(roleInfo.getId(),model.getRoleIds());
+    }
+
+    private List<ComboTreeModel> getRoleTreeData(long parentId){
+        List<TramRoleInfo> list = this.basicMapper.getRoleList(parentId);
+        List<ComboTreeModel> list2 = new ArrayList<>();
+        for(TramRoleInfo r:list){
+            ComboTreeModel comboTreeModel = new ComboTreeModel();
+            comboTreeModel.setId(new Long(r.getId()).intValue());
+            comboTreeModel.setText(r.getRolename());
+            comboTreeModel.setChildren(this.getRoleTreeData(r.getId()));
+            list2.add(comboTreeModel);
+        }
+        return list2;
+    }
+
+    private List<ComboTreeModel> getMenuTreeData(long parentId){
+        List<TramMenuInfo> list = this.basicMapper.getMenuList(parentId);
+        List<ComboTreeModel> list2 = new ArrayList<>();
+        for(TramMenuInfo r:list){
+            ComboTreeModel comboTreeModel = new ComboTreeModel();
+            comboTreeModel.setId(new Long(r.getId()).intValue());
+            comboTreeModel.setText(r.getMenuname());
+            comboTreeModel.setChildren(this.getMenuTreeData(r.getId()));
+            list2.add(comboTreeModel);
+        }
+        return list2;
     }
 }

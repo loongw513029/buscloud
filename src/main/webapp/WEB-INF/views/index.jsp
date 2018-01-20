@@ -32,6 +32,15 @@
                                 <c:forEach items="${item.getMenu()}" var="item2">
                                     <li>
                                         <a href="javascript:;" _href="${item2.getUri()}" class="chinditem nav-item" title="${item2.getText()}">${item2.getText()}</a>
+                                        <ul class="threemenu">
+                                            <c:forEach items="${item2.getMenu()}" var="item3">
+                                                <li>
+                                                    <a href="javascript:;" _href="${item3.getUri()}" class="chinditem nav-item" title="${item3.getText()}">
+                                                        ${item3.getText()}
+                                                    </a>
+                                                </li>
+                                            </c:forEach>
+                                        </ul>
                                     </li>
                                 </c:forEach>
                             </ul>

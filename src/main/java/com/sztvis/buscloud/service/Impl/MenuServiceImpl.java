@@ -1,7 +1,7 @@
 package com.sztvis.buscloud.service.Impl;
 
 import com.sztvis.buscloud.mapper.MenuMapper;
-import com.sztvis.buscloud.model.domain.Trammenuinfo;
+import com.sztvis.buscloud.model.domain.TramMenuInfo;
 import com.sztvis.buscloud.model.dto.response.MenuModel;
 import com.sztvis.buscloud.service.IMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class MenuServiceImpl implements IMenuService {
 
     public List<MenuModel> GetExtNavDataMenu(Long ParentId){
         List<MenuModel> list = new ArrayList<>();
-        List<Trammenuinfo> lists = menuMapper.GetMenus(ParentId);
+        List<TramMenuInfo> lists = menuMapper.GetMenus(ParentId);
         for(int i =0;i<lists.size();i++){
             MenuModel menuModel=new MenuModel();
             menuModel.setCls(lists.get(i).getCls());

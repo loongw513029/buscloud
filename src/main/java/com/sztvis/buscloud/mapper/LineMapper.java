@@ -1,7 +1,10 @@
 package com.sztvis.buscloud.mapper;
 
-import com.sztvis.buscloud.model.domain.Tramlineinfo;
-import org.apache.ibatis.annotations.Select;
+import com.sztvis.buscloud.mapper.provider.LineProvider;
+import com.sztvis.buscloud.model.domain.TramLineInfo;
+import com.sztvis.buscloud.model.dto.ComboTreeModel;
+import com.sztvis.buscloud.model.dto.LineViewModel;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,10 +17,25 @@ import java.util.List;
 @Repository
 public interface LineMapper {
 
-    @Select("select * from TramLineInfo where deparentId=#{departmentId} order by sort asc")
-    List<Tramlineinfo> GetLinesByDepartmentId(long departmentId);
+    @Select("select * from TramLineInfo where departmentId=#{departmentId} order by sort asc")
+    List<TramLineInfo> GetLinesByDepartmentId(long departmentId);
 
-    @Select("select count(Id) from TramLineInfo where deparentId in #{departmentId}")
+    @Select("select count(Id) from TramLineInfo where departmentId in #{departmentId}")
     Integer GetLineIdsByDepartmentIds(List<Long> departmentId);
+
+    @SelectProvider(type = LineProvider.class,method = "getListSQL")
+    List<LineViewModel> getList(@Param("departments") List<Long> departments, @Param("linename") String lineName, @Param("departmentId") long departmentId);
+
+    @Select("select * from TramLineInfo where id=#{id}")
+    TramLineInfo getLineInfo(long id);
+
+    @SelectProvider(type = LineProvider.class,method = "getLineTreeSQL")
+    List<ComboTreeModel> getLineTreeList(@Param("departments") List<Long> departments);
+
+    @Insert("insert into TramLineInfo(guid,linecode,linename,departmentid,lineupmileage,linedownmileage,upsitenum,downsitenum)values(#{guid},#{linecode},#{lienname},#{departmentid},#{lineupmileage},#{linedownmileage},#{upsitenum},#{downsitenum})")
+    void saveLine(TramLineInfo lineInfo);
+
+    @Update("update TramLineInfo set linecode=#{linecode},linename=#{linename},departmentid=#{departmentid},")
+    void updateLine(TramLineInfo lineInfo);
 
 }

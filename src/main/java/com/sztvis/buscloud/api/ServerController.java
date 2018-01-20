@@ -11,6 +11,7 @@ import com.sztvis.buscloud.model.dto.api.HealthModel;
 import com.sztvis.buscloud.model.dto.response.ApiResult;
 import com.sztvis.buscloud.model.dto.service.SaveAlarmQuery;
 import com.sztvis.buscloud.model.entity.DeviceStateFiled;
+import com.sztvis.buscloud.model.entity.StatusCodeEnum;
 import com.sztvis.buscloud.service.IBasicService;
 import com.sztvis.buscloud.service.ICanService;
 import com.sztvis.buscloud.service.IDeviceService;
@@ -97,12 +98,12 @@ public class ServerController extends BaseApiController{
         HealthModel healthModel = JSON.parseObject(apiModel.getMsgInfo().toString(),HealthModel.class);
         TramDeviceInfo deviceInfo = this.iDeviceService.getDeviceInfoByCode(healthModel.getCode());
         if(deviceInfo == null)
-            return ApiResult(false,"不存在编号为"+healthModel.getCode()+"的设备","404",null);
+            return ApiResult(false,"不存在编号为"+healthModel.getCode()+"的设备", StatusCodeEnum.DataNotFound,null);
         TramDeviceHealthInfo healthInfo = new TramDeviceHealthInfo();
         healthInfo.setDevicecode(healthModel.getCode());
         healthInfo.setUpdatetime(new Timestamp(System.currentTimeMillis()));
         this.iDeviceService.AddDeviceHealthInfo(healthInfo);
-        return  ApiResult(true,"设备"+healthModel.getCode()+"心跳增加成功!","200",null);
+        return  ApiResult(true,"设备"+healthModel.getCode()+"心跳增加成功!",StatusCodeEnum.Success,null);
     }
 
     /**
@@ -114,7 +115,7 @@ public class ServerController extends BaseApiController{
         GpsModel gpsModel = JSON.parseObject(apiModel.getMsgInfo().toString(),GpsModel.class);
         TramDeviceInfo deviceInfo = this.iDeviceService.getDeviceInfoByCode(gpsModel.getCode());
         if(deviceInfo == null)
-            return ApiResult(false,"不存在编号为"+gpsModel.getCode()+"的设备","404",null);
+            return ApiResult(false,"不存在编号为"+gpsModel.getCode()+"的设备",StatusCodeEnum.DataNotFound,null);
         TramGpsInfo gpsInfo = new TramGpsInfo();
         gpsInfo.setDevicecode(gpsModel.getCode());
         gpsInfo.setDeviceid(deviceInfo.getId());
@@ -125,7 +126,7 @@ public class ServerController extends BaseApiController{
         gpsInfo.setSpeed(gpsModel.getSpeed());
         gpsInfo.setUpdatetime(DateUtil.StringToDate(gpsModel.getUpdateTime(),"yyyy-MM-dd HH:mm:ss"));
         this.iGpsService.saveGpsInfo(gpsInfo);
-        return  ApiResult(true,"设备"+gpsModel.getCode()+"Gps增加成功!","200",null);
+        return  ApiResult(true,"设备"+gpsModel.getCode()+"Gps增加成功!",StatusCodeEnum.Success,null);
     }
 
     /**
@@ -137,7 +138,7 @@ public class ServerController extends BaseApiController{
         CanModel canModel = JSON.parseObject(apiModel.getMsgInfo().toString(),CanModel.class);
         TramDeviceInfo deviceInfo = this.iDeviceService.getDeviceInfoByCode(canModel.getCode());
         if(deviceInfo == null)
-            return ApiResult(false,"不存在编号为"+canModel.getCode()+"的设备","404",null);
+            return ApiResult(false,"不存在编号为"+canModel.getCode()+"的设备",StatusCodeEnum.DataNotFound,null);
         String updateTime = canModel.getUpdateTime().replace("T"," ");
         String[] arr=updateTime.split("\\.");
         updateTime=arr[0];
@@ -199,10 +200,10 @@ public class ServerController extends BaseApiController{
                     this.iCanService.AddCanActInfo(updateTime,deviceInfo.getDevicecode(),acts);
                 }
             }
-            this.iDeviceService.UpdateRealTimeInspect(deviceInfo.getDevicecode(), DeviceStateFiled.CanState,1);
-            return  ApiResult(true,"设备"+deviceInfo.getDevicecode()+"Can增加成功!","200",null);
+            //this.iDeviceService.UpdateRealTimeInspect(deviceInfo.getDevicecode(), DeviceStateFiled.CanState,1);
+            return  ApiResult(true,"设备"+deviceInfo.getDevicecode()+"Can增加成功!",StatusCodeEnum.Success,null);
         }catch (Exception ex){
-            return  ApiResult(false,"设备"+deviceInfo.getDevicecode()+"Can增加失败!","500",ex.getMessage());
+            return  ApiResult(false,"设备"+deviceInfo.getDevicecode()+"Can增加失败!",StatusCodeEnum.Error,ex.getMessage());
         }
     }
 

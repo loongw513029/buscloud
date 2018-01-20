@@ -1,5 +1,10 @@
 var mainPlatform = {
-
+    signleArray:function(){
+        return ['/can/preview'];
+    },
+    multiArray:function () {
+        return ['/video/preview'];
+    },
     init: function(){
 
         this.bindEvent();
@@ -58,7 +63,6 @@ var mainPlatform = {
             var url = $(this).attr("_href");
             mainPlatform.addTab(text,url);
         });
-
         $.ajax({
             url:"/api/v1/tree/list?userId="+userInfo.id,
             type:"get",
@@ -70,12 +74,38 @@ var mainPlatform = {
                 $('#easyui-tree').tree({
                     lines: true,
                     animate: true,
-                    data: data
+                    data: data,
+                    onCheck:function (node,checked) {
+                        if(checked){
+                            var index = mainPlatform.getCurrentIframeIndex();
+                            var src = $('.page-iframe:eq('+index+')').attr("src");
+                            if($.inArray(src,mainPlatform.signleArray())>=0) {
+                                window.frames[index].Can.TransferData(node.id);
+                            }
+                        }
+                    },
+                    onBeforeCheck:function (node,checked) {
+                        if(checked) {
+                            var index = mainPlatform.getCurrentIframeIndex();
+                            var src = $('.page-iframe:eq(' + index + ')').attr("src");
+                            if ($.inArray(src, mainPlatform.signleArray()) >= 0) {
+                                var tree = $('#easyui-tree').tree('getRoot');
+                                $('#easyui-tree').tree('uncheck', tree.target);
+                            }
+                        }
+                        return true;
+                    }
                 });
             }
         })
     },
-
+    /**
+     *
+     * @returns {jQuery}
+     */
+    getCurrentIframeIndex:function(){
+      return $('.tabs-panels>div:visible').index();
+    },
     render: function(menu){
         var current,
             html = ['<h2 class="pf-model-name"><span class="pf-sider-icon"></span><span class="pf-name">'+ menu.title +'</span></h2>'];

@@ -1,7 +1,11 @@
 package com.sztvis.buscloud.mapper;
 
-import com.sztvis.buscloud.model.domain.Tramdepartmentinfo;
-import org.apache.ibatis.annotations.Select;
+import com.sztvis.buscloud.core.SimpleSelectInLangDriver;
+import com.sztvis.buscloud.mapper.provider.DepartmentProvider;
+import com.sztvis.buscloud.model.domain.TramDepartmentInfo;
+import com.sztvis.buscloud.model.dto.ComboTreeModel;
+import com.sztvis.buscloud.model.dto.response.DepartmentViewModel;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -13,21 +17,22 @@ import java.util.List;
  */
 @Repository
 public interface DepartmentMapper {
+
     /**
      * Get DepartmentInfo by Id
      * @param Id
      * @return
      */
     @Select("select Id,Guid,Code,DepartmentName,DepartmentType,ParentId,ContactPhone,Sort,IsLookCan,IsHaveVedio,OrgType,AppName,Remark,CreateTime from TramDepartmentInfo where Id=#{Id}")
-    Tramdepartmentinfo GetDepartmentInfo(Long Id);
+    TramDepartmentInfo GetDepartmentInfo(Long Id);
 
     /**
      *
      * @param departmentIds
      * @return
      */
-    @Select("select * from TramDepartmentInfo where Id in #{departmentIds}")
-    List<Tramdepartmentinfo> GetDepartmentList(List<Long> departmentIds);
+    @SelectProvider(type = DepartmentProvider.class,method = "GetListByDepartmentsSQL")
+    List<TramDepartmentInfo> GetDepartmentList(List<Long> departmentIds);
 
     /**
      *
@@ -35,7 +40,7 @@ public interface DepartmentMapper {
      * @return
      */
     @Select("select * from TramDepartmentInfo a left join TramMemberInfo b on a.Id=b.OwnershipId where b.id=#{userId}")
-    Tramdepartmentinfo GetDepartmentIdsByUserId(long userId);
+    TramDepartmentInfo GetDepartmentIdsByUserId(long userId);
 
     /**
      * 根据父Id获得机构列表
@@ -43,14 +48,33 @@ public interface DepartmentMapper {
      * @return
      */
     @Select("select * from TramDepartmentInfo where parentId=#{parentId}")
-    List<Tramdepartmentinfo> GetDepartmentsByParentId(long parentId);
+    List<TramDepartmentInfo> GetDepartmentsByParentId(long parentId);
 
     /**
      *
      * @param departmentId
      * @return
      */
-    @Select("select Id from TramDepartmentInfo where Id=#{departmentId} and parentId=#{departmentId}")
+    @Select("select Id from TramDepartmentInfo where Id=#{departmentId} or parentId=#{departmentId}")
     List<Long> GetPartmentIdsByDepartmentId(long departmentId);
+
+    /**
+     *
+     * @param text
+     * @return
+     */
+    @SelectProvider(type = DepartmentProvider.class,method = "GetDepartmentListSQL")
+    List<DepartmentViewModel> GetList(@Param("text") String text, @Param("departments") List<Long> departments);
+
+    @Insert("insert into TramDepartmentInfo(id,guid,code,departmentname,departmenttype,parentid,contactname,contactphone,sort,islookcan,ishavevedio,orgtype,appname,remark,createtime)values(#{id},#{guid},#{code},#{departmentname},#{departmenttype},#{parentid},#{contactname},#{contactphone},#{sort},#{islookcan},#{ishavevedio},#{orgtype},#{appname},#{remark},#{createtime})")
+    void insertDepartment(TramDepartmentInfo info);
+
+    @Delete("delete from TramDepartmentInfo where id in(#{departmentIds})")
+    void removeDepartment(String departmentIds);
+
+    @Update("update TramDepartmentInfo set code=#{code},departmentname=#{departmentname},departmenttype=#{departmenttype},parentid=#{parentid},contactname=#{contactname},contactphone=#{contactphone},sort=#{sort},islookcan=#{islookcan},ishavevedio=#{ishavevedio},appname=#{appname},remark=#{remark} where id=#{id}")
+    void updateDepartment(TramDepartmentInfo departmentInfo);
+
+
 
 }

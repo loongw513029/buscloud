@@ -1,10 +1,10 @@
 package com.sztvis.buscloud.mapper;
 
+import com.sztvis.buscloud.mapper.provider.DeviceSqlProvider;
 import com.sztvis.buscloud.model.domain.TramDeviceInfo;
 import com.sztvis.buscloud.model.domain.Tramdevicestateinspectrealtimeinfo;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import com.sztvis.buscloud.model.dto.DeviceViewModel;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -59,4 +59,13 @@ public interface DeviceMapper {
 
     @Insert("insert into tramdevicestateinspectrealtimeinfo(deviceid,videotape,video,harddisk,sdcard,cpuuserate,cputemp,mermoryuserate,disktemp,gpsstate,canstate,internetstate,gpssignelstate,simbalance,gpsinspectstate,caninspectstate,behaviorinspectstate,radarinspectstate,adasinspectstate,timingstate,deviceCode)values(#{deviceid},#{videotape},#{video},#{harddisk},#{sdcard},#{cpuuserate},#{cputemp},#{mermoryuserate},#{disktemp},#{gpsstate},#{canstate},#{internetstate},#{gpssignelstate},#{simbalance},#{gpsinspectstate},#{caninspectstate},#{behaviorinspectstate},#{radarinspectstate},#{adasinspectstate},#{timingstate},#{deviceCode})")
     void insertRealtimeInspect(Tramdevicestateinspectrealtimeinfo info);
+
+    @SelectProvider(type = DeviceSqlProvider.class,method = "getWebListSQL")
+    List<DeviceViewModel> getBusList(@Param("departments") List<Long> departments,
+                                     @Param("devicetype") int devicetype,
+                                     @Param("departmentId") long departmentId,
+                                     @Param("lineId") long lineId,
+                                     @Param("status") int status,
+                                     @Param("keywords") String keywords
+                                     );
 }

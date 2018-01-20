@@ -4,7 +4,9 @@ import com.sztvis.buscloud.mapper.DeviceMapper;
 import com.sztvis.buscloud.model.domain.TramDeviceInfo;
 import com.sztvis.buscloud.model.domain.TramDeviceHealthInfo;
 import com.sztvis.buscloud.model.domain.Tramdevicestateinspectrealtimeinfo;
+import com.sztvis.buscloud.model.dto.DeviceViewModel;
 import com.sztvis.buscloud.model.entity.DeviceStateFiled;
+import com.sztvis.buscloud.service.IDepartmentService;
 import com.sztvis.buscloud.service.IDeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -25,6 +27,8 @@ public class DeviceService implements IDeviceService {
     private DeviceMapper deviceMapper;
     @Autowired
     private MongoTemplate mongoTemplate;
+    @Autowired
+    private IDepartmentService iDepartmentService;
 
     @Override
     public TramDeviceInfo getDeviceInfoByCode(String deviceCode) {
@@ -68,6 +72,13 @@ public class DeviceService implements IDeviceService {
             this.deviceMapper.insertRealtimeInspect(info);
         }
         this.deviceMapper.updateRealtimeInspect(deviceCode,filed.getValue(),value);
+    }
+
+    @Override
+    public List<DeviceViewModel> getList(long userId, int devicetype, long departmentId, long lineId, int status, String keywords) {
+
+        List<Long> departments = this.iDepartmentService.GetDepartmentIdsByUserId(userId);
+        return this.deviceMapper.getBusList(departments,devicetype,departmentId,lineId,status,keywords);
     }
 
 

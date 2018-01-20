@@ -1,6 +1,8 @@
 package com.sztvis.buscloud.service;
 
 import com.sztvis.buscloud.model.domain.TramBasicInfo;
+import com.sztvis.buscloud.model.dto.ComboTreeModel;
+import com.sztvis.buscloud.model.dto.response.RoleViewModel;
 
 import java.util.List;
 
@@ -30,4 +32,25 @@ public interface IBasicService {
      * @return
      */
     TramBasicInfo getBasicInfoByCustomId(int customId);
+
+    /**
+     *
+     * @return
+     */
+    List<ComboTreeModel> getRoleList();
+
+    List<ComboTreeModel> getMenuList();
+
+    /**
+     * get single role info
+     * @param id
+     * @return
+     */
+    RoleViewModel getRoleInfo(long id);
+
+    /**
+     *
+     * @param model
+     */
+    void saveAndUpdateRole(RoleViewModel model);
 }

@@ -5,18 +5,15 @@ import com.sztvis.buscloud.core.TramException;
 import com.sztvis.buscloud.model.dto.CurrentUserInfo;
 import com.sztvis.buscloud.model.dto.LoginParams;
 import com.sztvis.buscloud.model.dto.response.ApiResult;
+import com.sztvis.buscloud.model.entity.StatusCodeEnum;
 import com.sztvis.buscloud.service.IMemberService;
-import com.sztvis.buscloud.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import redis.clients.jedis.ShardedJedis;
-import redis.clients.jedis.ShardedJedisPool;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.lang.reflect.Method;
 import java.util.UUID;
 
 /**
@@ -30,8 +27,6 @@ public class AccountController extends BaseApiController{
 
     @Autowired
     private IMemberService iMemberService;
-    @Autowired
-    private RedisService redisService;
     @Autowired
     private RedisUtil redisUtil;
     /**
@@ -50,10 +45,10 @@ public class AccountController extends BaseApiController{
             if(loginParams.getLogintype()==3) {
                 httpSession.setAttribute("user",userInfo);
             }
-            return ApiResult(true,"登录成功","200",userInfo);
+            return ApiResult(true,"登录成功", StatusCodeEnum.Success,userInfo);
         }
         catch (TramException ex){
-            return ApiResult(false,ex.getMessage(),"501",null);
+            return ApiResult(false,ex.getMessage(),StatusCodeEnum.Error,null);
         }
     }
 
@@ -70,6 +65,6 @@ public class AccountController extends BaseApiController{
         }catch (Exception ex){
 
         }
-        return ApiResult(true,"退出登录登录","200",null);
+        return ApiResult(true,"退出登录登录",StatusCodeEnum.Success,null);
     }
 }

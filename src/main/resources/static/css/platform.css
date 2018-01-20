@@ -51,6 +51,12 @@ html {
 #pf-hd .pf-nav .pf-nav-item:hover .dropdownmenu {
     display: block
 }
+.dropdownmenu li{
+    position: relative;
+}
+.dropdownmenu li:hover{
+    background: url('../images/main/top_userbg.png?1464007598')
+}
 
 #pf-hd .pf-nav .pf-nav-item a {
     display: block;
@@ -498,4 +504,18 @@ html {
 .tree-node{
     height: 21px;
     line-height: 21px;
+}
+#pf-hd .pf-nav .pf-nav-item:hover .dropdownmenu li:hover  .threemenu{
+    display: block
+}
+
+.threemenu{
+    position: absolute;
+    left: 85px;
+    width: 86px;
+    background: #ffffff;
+    top: -1px;
+    border: 1px solid #e1e1e1;
+    box-shadow: 1px 1px 2px #ddd;
+    display: none;
 }

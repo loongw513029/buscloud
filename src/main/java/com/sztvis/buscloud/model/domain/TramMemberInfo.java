@@ -1,21 +1,24 @@
 package com.sztvis.buscloud.model.domain;
 
-public class Trammemberinfo {
-  private Long id;
-  private String guid;
+import java.sql.Timestamp;
+import java.util.UUID;
+
+public class TramMemberInfo {
+  private Long id=0L;
+  private String guid = UUID.randomUUID().toString().replace("-","");
   private String username;
   private String password;
   private String passwordsalt;
   private Long ownershipid;
   private Long roleid;
-  private Long rolelv;
+  private Long rolelv=0L;
   private String managescope;
   private Long status;
   private String realname;
   private String code;
   private String phone;
   private String photo;
-  private java.sql.Timestamp createtime;
+  private java.sql.Timestamp createtime = new Timestamp(System.currentTimeMillis());
 
   public Long getId() {
     return id;

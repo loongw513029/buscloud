@@ -1,13 +1,9 @@
 package com.sztvis.buscloud.config;
 
 import com.sztvis.buscloud.model.dto.CurrentUserInfo;
-import com.sztvis.buscloud.service.RedisService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-import redis.clients.jedis.ShardedJedis;
-import redis.clients.jedis.ShardedJedisPool;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

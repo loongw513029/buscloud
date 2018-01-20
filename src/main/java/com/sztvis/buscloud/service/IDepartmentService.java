@@ -1,7 +1,9 @@
 package com.sztvis.buscloud.service;
 
-import com.sztvis.buscloud.model.domain.TramCanInfo;
-import com.sztvis.buscloud.model.domain.Tramdepartmentinfo;
+import com.sztvis.buscloud.model.domain.TramDepartmentInfo;
+import com.sztvis.buscloud.model.domain.TramDeviceInfo;
+import com.sztvis.buscloud.model.dto.ComboTreeModel;
+import com.sztvis.buscloud.model.dto.response.DepartmentViewModel;
 
 import java.util.List;
 
@@ -16,14 +18,14 @@ public interface IDepartmentService {
      * @param userId
      * @return
      */
-    Tramdepartmentinfo GetParentPartmentIdsByUserId(long userId);
+    TramDepartmentInfo GetParentPartmentIdsByUserId(long userId);
 
     /**
      * 获得机构列表
      * @param departmentId
      * @return
      */
-    List<Tramdepartmentinfo> GetParentsByParentId(long departmentId);
+    List<TramDepartmentInfo> GetParentsByParentId(long departmentId);
 
     /**
      * 获得机构Id
@@ -31,6 +33,35 @@ public interface IDepartmentService {
      * @return
      */
     List<Long> GetDepartmentIdsByUserId(long userId);
+
+    List<DepartmentViewModel> GetList(long userId, String text);
+
+    /**
+     * 获得机构信息
+     * @param id
+     * @return
+     */
+    TramDepartmentInfo getDepartmentInfo(long id);
+
+    /**
+     * 根据用户id获得所有机构下拉列表
+     * @param userId
+     * @return
+     */
+    List<ComboTreeModel> getComboTreeListData(long userId);
+
+    /**
+     * 增加机构信息
+     * @param departmentInfo
+     */
+    void addDepartmentInfo(TramDepartmentInfo departmentInfo);
+
+    /**
+     * 删除机构
+     * @param departmentIds
+     */
+    void removeDepartmentInfo(String departmentIds);
+
 
 
 }

@@ -1,8 +1,8 @@
 package com.sztvis.buscloud.service.Impl;
 
-import com.sztvis.buscloud.model.domain.Tramdepartmentinfo;
+import com.sztvis.buscloud.model.domain.TramDepartmentInfo;
 import com.sztvis.buscloud.model.domain.TramDeviceInfo;
-import com.sztvis.buscloud.model.domain.Tramlineinfo;
+import com.sztvis.buscloud.model.domain.TramLineInfo;
 import com.sztvis.buscloud.model.dto.response.TreeAttributeModel;
 import com.sztvis.buscloud.model.dto.response.TreeModel;
 import com.sztvis.buscloud.service.IDepartmentService;
@@ -33,7 +33,7 @@ public class TreeService implements ITreeService {
     @Override
     public TreeModel GetTreeList(long userId) {
         TreeModel treeModel=new TreeModel();
-        Tramdepartmentinfo departmentinfo = iDepartmentService.GetParentPartmentIdsByUserId(userId);
+        TramDepartmentInfo departmentinfo = iDepartmentService.GetParentPartmentIdsByUserId(userId);
         treeModel.setText(departmentinfo.getDepartmentname());
         treeModel.setId(departmentinfo.getId());
         treeModel.setState("open");
@@ -46,7 +46,7 @@ public class TreeService implements ITreeService {
     }
     private List<TreeModel> GetChindDepartmentList(long departmentId){
         List<TreeModel> list=new ArrayList<>();
-        List<Tramdepartmentinfo> dlist = iDepartmentService.GetParentsByParentId(departmentId);
+        List<TramDepartmentInfo> dlist = iDepartmentService.GetParentsByParentId(departmentId);
         for(int i=0;i<dlist.size();i++){
             TreeModel model =new TreeModel();
             model.setState("open");
@@ -62,7 +62,7 @@ public class TreeService implements ITreeService {
 
     private List<TreeModel> GetChildLineList(long departmentId){
         List<TreeModel> list=new ArrayList<>();
-        List<Tramlineinfo> dlist = iLineService.GetLinesByDepartmentId(departmentId);
+        List<TramLineInfo> dlist = iLineService.GetLinesByDepartmentId(departmentId);
         for(int i=0;i<dlist.size();i++){
             TreeModel model =new TreeModel();
             model.setState("open");

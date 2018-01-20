@@ -2,6 +2,7 @@ package com.sztvis.buscloud.service;
 
 import com.sztvis.buscloud.model.domain.TramDeviceInfo;
 import com.sztvis.buscloud.model.domain.TramDeviceHealthInfo;
+import com.sztvis.buscloud.model.dto.DeviceViewModel;
 import com.sztvis.buscloud.model.entity.DeviceStateFiled;
 
 import java.util.List;
@@ -53,4 +54,16 @@ public interface IDeviceService {
      * @param value
      */
     void UpdateRealTimeInspect(String deviceCode, DeviceStateFiled filed, Object value);
+
+    /**
+     * 获得设备列表
+     * @param userId
+     * @param devicetype
+     * @param departmentId
+     * @param lineId
+     * @param status
+     * @param keywords
+     * @return
+     */
+    List<DeviceViewModel> getList(long userId,int devicetype,long departmentId,long lineId,int status,String keywords);
 }
