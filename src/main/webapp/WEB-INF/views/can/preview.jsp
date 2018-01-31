@@ -107,7 +107,7 @@
         </div>
     </div>
     <div class="station-info-wrap" id="detail-info">
-        <h3 id="line-info">线路:250 车牌号:N131</h3>
+        <h3 id="line-info">线路:250 自编号:N131</h3>
         <div class="station-info clearfix">
             <div class="prev-station arrive">
                 <i class="icon-station"></i><label id="prev-station" data-toggle="tooltip" title=""></label>

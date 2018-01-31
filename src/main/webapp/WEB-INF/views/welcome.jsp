@@ -21,7 +21,7 @@
             <div class="right-zone">
                 <div class="inform item-box">
                     <div class="inform-hd">
-                        <label>通知公告</label>
+                        <label>报警通知</label>
                         <a href="javascript:;">更多<span>&gt;</span></a>
                     </div>
                     <ul>
@@ -59,7 +59,7 @@
                 </div>
                 <div class="price item-box">
                     <div class="inform-hd">
-                        <label>公开竞价</label>
+                        <label>维保信息</label>
                         <a href="javascript:;">更多<span>&gt;</span></a>
                     </div>
                     <ul>
@@ -348,8 +348,8 @@
     </div>
 
 </div>
-<script type="text/javascript" src="../custom/jquery.min.js"></script>
-<script type="text/javascript" src="../custom/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/easyui/jquery.easyui.min.js"></script>
 <!-- <script type="text/javascript" src="js/menu.js"></script> -->
 <script type="text/javascript" src="js/echarts-all.js"></script>
 

@@ -61,7 +61,7 @@ public interface MemberMapper {
      * @param Id
      * @return
      */
-    @Select("select a.Id,a.UserName,a.RoleId,b.RoleName,a.Phone,a.Photo,a.RealName,a.OwnershipId as DepartmentId,c.DepartmentType,a.RoleLv,a.ManageScope from TramMemberInfo as a left join TramRoleInfo as b on a.RoleId=b.Id left join TramDepartmentInfo as c on b.DepartmentId = c.Id where a.Id=#{Id}")
+    @Select("select a.Id,a.guid as uuid,a.UserName,a.RoleId,b.RoleName,a.Phone,a.Photo,a.RealName,a.OwnershipId as DepartmentId,c.DepartmentType,a.RoleLv,a.ManageScope from TramMemberInfo as a left join TramRoleInfo as b on a.RoleId=b.Id left join TramDepartmentInfo as c on b.DepartmentId = c.Id where a.Id=#{Id}")
     CurrentUserInfo GetCurrentUserInfo(Long Id);
 
     /**

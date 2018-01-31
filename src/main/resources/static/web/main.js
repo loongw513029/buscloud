@@ -1,3 +1,4 @@
+var stompClient = null;
 var mainPlatform = {
     signleArray:function(){
         return ['/can/preview'];
@@ -8,6 +9,7 @@ var mainPlatform = {
     init: function(){
 
         this.bindEvent();
+        this.initWebSocket();
         // this.render(menu['home']);
     },
 
@@ -27,7 +29,7 @@ var mainPlatform = {
         $(document).on('click', '.sider-nav li', function() {
             $('.sider-nav li').removeClass('current');
             $(this).addClass('current');
-            $('iframe').attr('src', $(this).data('src'));
+            //$('iframe').attr('src', $(this).data('src'));
         });
 
         $(document).on('click', '.pf-logout', function() {
@@ -82,9 +84,15 @@ var mainPlatform = {
                             if($.inArray(src,mainPlatform.signleArray())>=0) {
                                 window.frames[index].Can.TransferData(node.id);
                             }
+                            if($.inArray(src,mainPlatform.multiArray())>=0){
+                                var nodes = $('#easyui-tree').tree('getSelected');
+                                window.frames[index].TMap.ReviceParentAlarm(nodes);
+                            }
                         }
                     },
                     onBeforeCheck:function (node,checked) {
+                        if(!node.attributes.isdevice)
+                            return false;
                         if(checked) {
                             var index = mainPlatform.getCurrentIframeIndex();
                             var src = $('.page-iframe:eq(' + index + ')').attr("src");
@@ -97,7 +105,9 @@ var mainPlatform = {
                     }
                 });
             }
-        })
+        });
+        
+        
     },
     /**
      *
@@ -135,6 +145,19 @@ var mainPlatform = {
                closable:true
             });
         }
+    },
+    initWebSocket:function () {
+        var socket = new SockJS("/endpointWisely");
+        stompClient = Stomp.over(socket);
+        stompClient.connect({},function (frame) {
+            //所有消息
+            stompClient.subscribe('/topic/getResponse',function (response) {
+                
+            });
+            stompClient.subscribe('/user/'+userId+'/msg',function (response) {
+                
+            });
+        })
     }
 
 };

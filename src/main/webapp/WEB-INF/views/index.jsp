@@ -10,7 +10,6 @@
     <link href="/css/base.css" rel="stylesheet">
     <link href="/fonts/iconfont.css" rel="stylesheet">
     <link href="/css/platform.css" rel="stylesheet">
-
 </head>
 <body>
 <div class="container">
@@ -106,7 +105,7 @@
     <div id="pf-ft">
         <div class="system-name">
             <i class="iconfont">&#xf02bc;</i>
-            <span>车辆云管理&nbsp;v2.0</span>
+            <span>车辆云管理&nbsp;v3.0 Build20180125</span>
         </div>
         <div class="copyright-name">
             <span>CopyRight&nbsp;2018&nbsp;&nbsp;深圳特维视科技有限公司&nbsp;版权所有</span>
@@ -118,11 +117,14 @@
 <script type="text/javascript" src="/easyui/jquery.min.js"></script>
 <script type="text/javascript" src="/easyui/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="/dist/jquery.cookie.js"></script>
+<script type="text/javascript" src="/dist/sockjs.min.js"></script>
+<script type="text/javascript" src="/dist/stomp.min.js"></script>
 <script type="text/javascript" src="/layer/layer.js"></script>
 <script type="text/javascript" src="/web/common.js"></script>
 <script type="text/javascript" src="/web/main.js"></script>
 <!--[if IE 7]>
 <script type="text/javascript">
+    var userId = '${user.uuid}';
     $(window).resize(function(){
         $('#pf-bd').height($(window).height()-76);
     }).resize();

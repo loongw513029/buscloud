@@ -13,11 +13,11 @@
 <table id="table" style="margin-top: 10px"></table>
 <div id="toolbar" style="padding:5px;height:auto">
     <div style="margin-bottom:5px">
-        <a href="javascript:;" class="easyui-linkbutton fl" iconCls="icon-add" plain="true" onclick="Line.AddLine()">增加</a>
+        <a href="javascript:;" class="easyui-linkbutton fl" iconCls="icon-add" plain="true" onclick="Device.AddBus()">增加</a>
         <div class="datagrid-btn-separator"></div>
-        <a href="javascript:;" class="easyui-linkbutton fl" iconCls="icon-edit" plain="true" onclick="Line.EditLine()">编辑</a>
+        <a href="javascript:;" class="easyui-linkbutton fl" iconCls="icon-edit" plain="true" onclick="Device.EditBus()">编辑</a>
         <div class="datagrid-btn-separator"></div>
-        <a href="javascript:;" class="easyui-linkbutton fl" iconCls="icon-save" plain="true" onclick="Line.RemoveLine()" style="margin-right: 10px">删除</a>
+        <a href="javascript:;" class="easyui-linkbutton fl" iconCls="icon-save" plain="true" onclick="Device.RemoveBus()" style="margin-right: 10px">删除</a>
         <input class="easyui-text" style="width:130px" id="departmentId">
         <input class="easyui-text" style="width:130px" id="devicetype">
         <input class="easyui-text" style="width:130px" id="lineId">

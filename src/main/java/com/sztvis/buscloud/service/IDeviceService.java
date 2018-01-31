@@ -1,8 +1,8 @@
 package com.sztvis.buscloud.service;
 
-import com.sztvis.buscloud.model.domain.TramDeviceInfo;
-import com.sztvis.buscloud.model.domain.TramDeviceHealthInfo;
-import com.sztvis.buscloud.model.dto.DeviceViewModel;
+import com.sztvis.buscloud.model.domain.*;
+import com.sztvis.buscloud.model.dto.*;
+import com.sztvis.buscloud.model.dto.api.HVNVRModel;
 import com.sztvis.buscloud.model.entity.DeviceStateFiled;
 
 import java.util.List;
@@ -27,6 +27,14 @@ public interface IDeviceService {
      * @return
      */
     TramDeviceInfo getDeviceInfoById(long Id);
+
+    /**
+     * 根据设备编码查询设备id
+     * @param deviceCode
+     * @return
+     */
+    long getDeviceIdByCode(String deviceCode);
+
     /**
      * 根据线路获得设备列表
      * @param lineId
@@ -50,10 +58,11 @@ public interface IDeviceService {
     /**
      * 修改实时巡检表数据，无该设备的巡检数据则新增一条
      * @param deviceCode
-     * @param field
+     * @param filed
      * @param value
+     * @Param fieldtype 字段类型 1:String,2:Double,3:Boolean
      */
-    void UpdateRealTimeInspect(String deviceCode, DeviceStateFiled filed, Object value);
+    void UpdateRealTimeInspect(String deviceCode, DeviceStateFiled filed, Object value,int fieldtype);
 
     /**
      * 获得设备列表
@@ -66,4 +75,88 @@ public interface IDeviceService {
      * @return
      */
     List<DeviceViewModel> getList(long userId,int devicetype,long departmentId,long lineId,int status,String keywords);
+
+    /**
+     *  车辆信息编辑模型
+     * @param id
+     * @return
+     */
+    BusAndDeviceViewModel getDeviceViewModel(long id);
+
+    /**
+     * 司机下拉列表数据
+     * @param departmentid
+     * @return
+     */
+    List<ComboTreeModel> getDriverComboList(long departmentid);
+
+    /**
+     * 保存车辆设备通道信息
+     * @param model
+     */
+    void saveDeviceInfo(BusAndDeviceViewModel model);
+
+
+    List<Long> getBusIdsByDeviceIds(String deviceIds);
+
+    /**
+     * 删除设备信息
+     * @param deviceIds
+     */
+    void removeDeviceInfo(String deviceIds);
+
+    /**
+     * 添加雷达数据
+     * @param radarInfo
+     */
+    void insertRadarInfo(TramRadarInfo radarInfo);
+
+    /**
+     * 添加NVR状态数据
+     * @param deviceStatusInfo
+     */
+    void insertDeviceStatusInfo(TramDeviceStatusInfo deviceStatusInfo);
+
+    /**
+     * 修改设备的NVR巡检实时状态信息，或产生报警
+     * @param deviceInfo
+     * @param hvnvrModel
+     */
+    void updateDeviceNvrStatus(TramDeviceInfo deviceInfo, HVNVRModel hvnvrModel);
+
+    /**
+     * 获得设备的实时巡检数据
+     * @param deviceid
+     * @return
+     */
+    TramDeviceStateInspectRealtimeInfo getDeviceStateInspectRealTimeInfo(long deviceid);
+
+    /**
+     * 获得最后一条调度信息
+     * @param deviceid
+     * @return
+     */
+    TramDispatchInfo getLastDispatchInfo(long deviceid);
+
+    /**
+     * 地图上车辆列表
+     * @param devices
+     * @return
+     */
+    List<MapDeviceViewModel> getMapDeviceList(String devices);
+
+    DeviceViewModel getDeviceConfig(long id);
+
+    /**
+     * 获得巡检列表
+     * @param userid 用户id
+     * @param departmentid 机构id
+     * @param lineid 线路id
+     * @param type 状态类型
+     * @param keywords 设备自编码
+     * @return
+     */
+    List<DeviceInspectViewModel> getDeviceInspectList(long userid,long departmentid,long lineid,int type,String keywords);
+
+
 }

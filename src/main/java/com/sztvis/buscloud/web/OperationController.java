@@ -1,6 +1,8 @@
 package com.sztvis.buscloud.web;
 
 import com.sztvis.buscloud.model.domain.TramLineInfo;
+import com.sztvis.buscloud.model.dto.BusAndDeviceViewModel;
+import com.sztvis.buscloud.service.IDeviceService;
 import com.sztvis.buscloud.service.ILineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +20,9 @@ public class OperationController  extends BaseController{
 
     @Autowired
     private ILineService iLineService;
+
+    @Autowired
+    private IDeviceService iDeviceService;
 
     @RequestMapping("/line")
     public ModelAndView lineView(){
@@ -40,5 +45,21 @@ public class OperationController  extends BaseController{
     public ModelAndView bus(){
         ModelAndView modelAndView = new ModelAndView("/operation/bus");
         return modelAndView;
+    }
+
+    @RequestMapping("/busfrom")
+    public ModelAndView getDeviceInfo(long id){
+        ModelAndView modelAndView = new ModelAndView("/operation/busfrom");
+        BusAndDeviceViewModel model = new BusAndDeviceViewModel();
+        if(id != 0)
+            model = this.iDeviceService.getDeviceViewModel(id);
+        modelAndView.getModel().put("obj",model);
+        return modelAndView;
+    }
+
+    @RequestMapping("/alarm")
+    public ModelAndView alarm(){
+        ModelAndView modelAndView = new ModelAndView("/operation/basic");
+        return  modelAndView;
     }
 }

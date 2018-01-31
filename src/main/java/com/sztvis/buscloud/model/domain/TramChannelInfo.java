@@ -1,11 +1,11 @@
 package com.sztvis.buscloud.model.domain;
 
-public class Tramchannelinfo {
+public class TramChannelInfo {
   private Long id;
   private Long deviceid;
-  private Long no;
+  private int no;
   private String channelname;
-  private String supportptz;
+  private boolean supportptz;
 
   public Long getId() {
     return id;
@@ -23,14 +23,6 @@ public class Tramchannelinfo {
     this.deviceid = deviceid;
   }
 
-  public Long getNo() {
-    return no;
-  }
-
-  public void setNo(Long no) {
-    this.no = no;
-  }
-
   public String getChannelname() {
     return channelname;
   }
@@ -39,11 +31,20 @@ public class Tramchannelinfo {
     this.channelname = channelname;
   }
 
-  public String getSupportptz() {
+  public int getNo() {
+    return no;
+  }
+
+  public void setNo(int no) {
+    this.no = no;
+  }
+
+  public boolean isSupportptz() {
     return supportptz;
   }
 
-  public void setSupportptz(String supportptz) {
+  public void setSupportptz(boolean supportptz) {
     this.supportptz = supportptz;
   }
 }
+

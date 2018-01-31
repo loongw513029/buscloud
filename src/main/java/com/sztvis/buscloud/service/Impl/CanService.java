@@ -172,8 +172,12 @@ public class CanService implements ICanService {
             alarmInfo.setSpeed(query.getSpeed());
             alarmInfo.setDistance(query.getDistance());
             alarmInfo.setBrake(query.isBrake());
+            alarmInfo.setDepartmentId(deviceInfo.getDepartmentid());
             alarmInfo.setState(basicInfo.isEnable()?1:0);
-            alarmInfo.setLocation(gpsInfo.getLongitude()+","+gpsInfo.getLatitude());
+            alarmInfo.setPath("");
+            alarmInfo.setSystemInsertTime(new Timestamp(System.currentTimeMillis()));
+            if(gpsInfo!=null)
+                alarmInfo.setLocation(gpsInfo.getLongitude()+","+gpsInfo.getLatitude());
             this.alarmMapper.SaveAlarmInfo(alarmInfo);
             //返回主键Id
             long alarmId = alarmInfo.getId();
@@ -226,5 +230,53 @@ public class CanService implements ICanService {
         query.addCriteria(new Criteria("devicecode").is(deviceCode));
         query.with(new Sort(new Sort.Order(Sort.Direction.DESC,"updatetime")));
         return this.mongoTemplate.findOne(query,TramCanInfo.class);
+    }
+
+    public SaveAlarmQuery getAlarmQuery(String deviceCode,long deviceId,String updateTime,int type,String value,String extras,String path){
+        SaveAlarmQuery query = new SaveAlarmQuery();
+        String[] extraArray = extras.split(",");
+        TramGpsInfo gpsInfo = this.iGpsService.getLastGpsInfo(deviceCode,updateTime);
+        if(extraArray ==null||extraArray.length ==0){
+            query.setSpeed(0D);
+            query.setDistance(0L);
+            query.setBrake(false);
+        }else{
+            query.setSpeed(Double.valueOf(extraArray[0]));
+            query.setDistance(Double.valueOf(extraArray[1]));
+            query.setBrake(extraArray[2]=="2");
+        }
+        query.setAlarmTime(updateTime);
+        query.setAlarmType(type);
+        query.setDeviceCode(deviceCode);
+        query.setPath(path);
+        query.setDeviceId(deviceId);
+         query.setValue(value);
+         return query;
+    }
+
+    @Override
+    public boolean IsBarke(String deviceCode) {
+        TramCanInfo canInfo = this.getLastCanInfo(deviceCode);
+        boolean fag = false;
+        for(TramCanActinfo c:canInfo.getActs()){
+            if(c.getCustomId() == 42){
+                fag = c.getValue() == "2";
+                break;
+            }
+        }
+        return fag;
+    }
+
+    @Override
+    public boolean IsPark(String deviceCode) {
+        TramCanInfo canInfo = this.getLastCanInfo(deviceCode);
+        boolean fag = false;
+        for(TramCanActinfo c:canInfo.getActs()){
+            if(c.getCustomId() == 43){
+                fag = c.getValue() == "2";
+                break;
+            }
+        }
+        return fag;
     }
 }

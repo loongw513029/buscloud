@@ -1,8 +1,11 @@
 package com.sztvis.buscloud.mapper;
 
+import com.sztvis.buscloud.mapper.provider.BasicProvider;
 import com.sztvis.buscloud.model.domain.TramBasicInfo;
 import com.sztvis.buscloud.model.domain.TramRoleInfo;
 import com.sztvis.buscloud.model.domain.TramMenuInfo;
+import com.sztvis.buscloud.model.dto.BasicViewModel;
+import com.sztvis.buscloud.model.dto.ComboTreeModel;
 import com.sztvis.buscloud.model.dto.response.RoleViewModel;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
@@ -48,4 +51,10 @@ public interface BasicMapper {
 
     @Delete("delete from tramrolemenurelinfo where roleId=#{roleId}")
     void deleteRoelRelInfo(long roleId);
+
+    @Select("select id,alarmname as text from TramBasicInfo where parentid=#{parentId} and type=0 and isEnable=1")
+    List<ComboTreeModel> getAlarmTypeListByParentId(long parentId);
+
+    @SelectProvider(type = BasicProvider.class,method = "getBasicList")
+    List<BasicViewModel> getBasicList(@Param("type") int type,@Param("keywords") String keywords);
 }

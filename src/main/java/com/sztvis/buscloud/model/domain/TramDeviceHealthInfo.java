@@ -9,7 +9,7 @@ public class TramDeviceHealthInfo {
   private Long id;
   private String devicecode;
   private java.sql.Timestamp updatetime;
-
+  private String location;
   public Long getId() {
     return id;
   }
@@ -32,5 +32,13 @@ public class TramDeviceHealthInfo {
 
   public void setUpdatetime(java.sql.Timestamp updatetime) {
     this.updatetime = updatetime;
+  }
+
+  public String getLocation() {
+    return location;
+  }
+
+  public void setLocation(String location) {
+    this.location = location;
   }
 }

@@ -18,18 +18,20 @@
     <tr>
         <td class="kv-label">线路代码:</td>
         <td height="35" class="kv-content">
-            <input type="text" id="username" value="${obj.linecode}">
+            <input type="text" id="linecode" value="${obj.linecode}">
         </td>
         <td class="kv-label">线路名称</td>
         <td class="kv-content">
-            <input type="text" id="realname" value="${obj.linename}">
+            <input type="text" id="linename" value="${obj.linename}">
         </td>
     </tr>
     <tr>
         <td class="kv-label">所属机构:</td>
         <td height="35" class="kv-content">
             <input id="departmentid"  class="esayui-combotree">
+            <input type="hidden" id="hdDepartmentId" value="${obj.departmentid}" />
         </td>
+
         <td class="kv-label"></td>
         <td class="kv-content">
         </td>

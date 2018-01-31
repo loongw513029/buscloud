@@ -8,6 +8,7 @@ var Http=function(){
                 type:obj.type,
                 data:obj.data,
                 cache:obj.cache,
+                contentType:obj.ctype,
                 beforeSend:function (request) {
                     request.setRequestHeader("timespan",Date.parse(new Date())/1000);
                     request.setRequestHeader("access_token",token);
@@ -108,8 +109,28 @@ var TramDalog=function(){
                 ,yes:callback1
             });
         },
+        OpenIframeAndNoBtn:function(width,height,url){
+            layer.open({
+                type: 2 //Page层类型
+                ,title:false
+                ,area: [width+'px', height+'px']
+                ,shade: 0.6 //遮罩透明度
+                ,anim: 2 //0-6的动画形式，-1不开启
+                ,content: url
+            });
+        },
         CloseLayer:function () {
             layer.close();
+        }
+    }
+}();
+var Main =function () {
+    return {
+        toggleTree:function () {
+            $("#pf-bd").find(".toggle-icon").toggleClass("toggle");
+            setTimeout(function(){
+                $(window).resize();
+            },300)
         }
     }
 }();

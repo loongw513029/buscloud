@@ -6,6 +6,7 @@ public class TramAlarmInfo {
   private Long id;
   private Long deviceId;
   private String deviceCode;
+  private long departmentId;
   private Timestamp updateTime;
   private long parentAlarmType;
   private long alarmType;
@@ -15,6 +16,7 @@ public class TramAlarmInfo {
   private boolean isBrake;
   private String alarmVideoPath;
   private String location;
+  private String path;
   private int state;
 
   public Long getId() {
@@ -131,5 +133,19 @@ public class TramAlarmInfo {
 
   private Timestamp systemInsertTime;
 
+  public long getDepartmentId() {
+    return departmentId;
+  }
 
+  public void setDepartmentId(long departmentId) {
+    this.departmentId = departmentId;
+  }
+
+  public String getPath() {
+    return path;
+  }
+
+  public void setPath(String path) {
+    this.path = path;
+  }
 }

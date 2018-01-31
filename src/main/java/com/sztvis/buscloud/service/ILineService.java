@@ -22,4 +22,17 @@ public interface ILineService {
     TramLineInfo getLineInfo(long Id);
 
     List<ComboTreeModel> getLineTreeList(long userId);
+
+    /**
+     * 保存线路
+     * @param lineViewModel
+     */
+
+    void saveAndUpdateLine(LineViewModel lineViewModel);
+
+    /**
+     * 删除线路
+     * @param lineIds
+     */
+    void removeLines(String lineIds);
 }

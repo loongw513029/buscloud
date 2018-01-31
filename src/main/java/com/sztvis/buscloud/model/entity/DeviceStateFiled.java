@@ -10,7 +10,8 @@ public enum  DeviceStateFiled {
     CPUUseRate("CPUUseRate"),CPUTemp("CPUTemp"),MemoryUseRate("MemoryUseRate"),DiskTemp("DiskTemp"),GpsState("GpsState"),
     CanState("CanState"),InternetState("InternetState"),GpsSignelState("GpsSignelState"),SIMBalance("SIMBalance"),
     GpsInspectState("GpsInspectState"),CanInspectState("CanInspectState"),BehaviorInspectState("BehaviorInspectState"),
-    RadarInspectState("RadarInspectState"),AdasInspectState("AdasInspectState"),TimingState("TimingState"),OnlineState("OnlineState");
+    RadarInspectState("RadarInspectState"),AdasInspectState("AdasInspectState"),TimingState("TimingState"),OnlineState("OnlineState"),
+    SurplusDiskSize("SurplusDiskSize"),SurplusSdcardSize("SurplusSdcardSize");
     private DeviceStateFiled(String value){
         this.value = value;
     }

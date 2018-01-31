@@ -1,5 +1,8 @@
 package com.sztvis.buscloud.core;
 
+import java.security.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -662,5 +665,20 @@ public class DateUtil {
         date = DateUtil.StringToDate(DateUtil.getDate(date));
         long time = Math.abs(date.getTime() - otherDate.getTime());
         return (int)time/(24 * 60 * 60 * 1000);
+    }
+
+    public static String getTimestampStr(String timeStr) throws ParseException
+    {
+        //2018-01-16T07:13:04.0376751+08:00
+        String str="";
+        try
+        {
+            String[] timeArr = timeStr.split("\\.");
+            return timeArr[0].replace("T"," ");
+        }
+        catch(Exception e)
+        {
+            return str;
+        }
     }
 }

@@ -35,7 +35,10 @@ public interface LineMapper {
     @Insert("insert into TramLineInfo(guid,linecode,linename,departmentid,lineupmileage,linedownmileage,upsitenum,downsitenum)values(#{guid},#{linecode},#{lienname},#{departmentid},#{lineupmileage},#{linedownmileage},#{upsitenum},#{downsitenum})")
     void saveLine(TramLineInfo lineInfo);
 
-    @Update("update TramLineInfo set linecode=#{linecode},linename=#{linename},departmentid=#{departmentid},")
+    @Update("update TramLineInfo set linecode=#{linecode},linename=#{linename},departmentid=#{departmentid},lineupmileage=#{lineupmileage},linedownmileage=#{linedownmileage},upsitenum=#{upsitenum},downsitenum=#{downsitenum} where id=#{id}")
     void updateLine(TramLineInfo lineInfo);
+
+    @Delete("delete from TramLineInfo where id in (#{lineIds})")
+    void removeLine(String lineIds);
 
 }

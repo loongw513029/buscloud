@@ -7,7 +7,7 @@ public class TramLineInfo {
   private String guid = UUID.randomUUID().toString().replace("-","");
   private String linecode;
   private String linename;
-  private Long departmentid;
+  private Long departmentid =0L;
   private Double lineupmileage = 0D;
   private Double linedownmileage = 0D;
   private Long upsitenum = 0L;

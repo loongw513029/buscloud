@@ -3,3 +3,7 @@ body.panel-noscroll{padding: 5px}
 .combo{height: 25px;border:solid 1px #cacaca}
 .fl{float:left}
 .fr{float: right}
+.column{position:relative;height:23px;border-bottom:1px solid #428bca;margin-bottom:10px}
+.column span.current{position:relative;top:0px;display:inline-block;color:#428bca;font-size:12px;font-weight:bold;height:22px;line-height:22px;border-bottom:2px solid #428bca}
+.alarm-icon{text-decoration: none;color:#428bca}
+.datagrid-map{position: absolute;bottom: -200px;width: 100%;height: 200px;left:0px}

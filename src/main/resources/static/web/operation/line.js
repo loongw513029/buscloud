@@ -1,3 +1,4 @@
+var currentIndex;
 var Line = function () {
     return {
         init:function () {
@@ -107,10 +108,29 @@ var Line = function () {
             }
         },
         RemoveLine:function () {
-            
+            var row = $('#table').treegrid('getSelections');
+            if(row.length==0)
+                parent.TramDalog.ErrorAlert("请选择数据！",true);
+            var Ids = [];
+            for(var i=0;i<row.length;i++){
+                Ids.push(row[i].id);
+            }
+            parent.Http.Ajax({
+                url:'/api/v1/operation/removeline?lineIds='+Ids.join(','),
+                type:'delete'
+            },function (result) {
+                if(result.success){
+                    parent.TramDalog.SuccessAlert(result.info,true);
+                    Line.reLoad();
+                }else{
+                    parent.TramDalog.ErrorAlert(result.info,true);
+                }
+            })
         },
-        saveData:function () {
-            
+        saveData:function (layerno,index) {
+            currentIndex = layerno;
+            var wd = parent.window.frames["layui-layer-iframe"+layerno];
+            wd.UserFrom.saveData(parent,Line);
         },
         Search:function (value) {
             var query = $('#table').datagrid('options');
@@ -119,6 +139,12 @@ var Line = function () {
                 query.queryParams.departmentId  = seldpid;
             }
             query.queryParams.linename = value;
+            Line.reLoad();
+        },
+        closeWindow:function () {
+            parent.layer.close(currentIndex);
+        },
+        onLoad:function () {
             $('#table').datagrid('reload');
         }
     }

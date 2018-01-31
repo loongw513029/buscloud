@@ -1,3 +1,4 @@
+var currentIndex;
 var Device = function () {
     return {
         init:function () {
@@ -6,7 +7,6 @@ var Device = function () {
                 method:'get',
                 idField:'id',
                 fit:true,
-                fitColumns:true,
                 pagination:true,
                 pageNumber:1,
                 singleSelect:false,
@@ -152,7 +152,7 @@ var Device = function () {
                 });
             });
             $('#devicetype').combotree({
-                data:[{id:-1,text:'-监控软件类型-'},{id:1,text:'NVR'},{id:0,text:'DVR'}],
+                data:[{id:-1,text:'-监控软件类型-'},{id:0,text:'NVR'},{id:1,text:'DVR'}],
                 valueField:'id',
                 textField:'text'
             });
@@ -193,35 +193,64 @@ var Device = function () {
             };
             return params;
         },
-        AddLine:function () {
-            parent.TramDalog.OpenIframe(650,405,'新增路线',"/operation/linefrom?id=0",function (index,layerno) {
-                Department.saveData(layerno);
+        AddBus:function () {
+            parent.TramDalog.OpenIframe(1000,520,'新增车辆',"/operation/busfrom?id=0",function (layerno,index) {
+                Device.saveData(layerno);
             });
         },
-        EditLine:function () {
+        EditBus:function () {
             var row = $('#table').treegrid('getSelections');
             if(row.length>1||row.length==0)
                 parent.TramDalog.ErrorAlert("只能选择一条数据编辑",true);
             else{
                 var id = row[0].id;
-                parent.TramDalog.OpenIframe(650,405,'编辑路线',"/operation/linefrom?id="+id,function (index,layerno) {
-                    Department.saveData(layerno);
+                parent.TramDalog.OpenIframe(1000,520,'编辑车辆',"/operation/busfrom?id="+id,function (layerno,index) {
+                    Device.saveData(layerno);
                 });
             }
         },
-        RemoveLine:function () {
-
+        RemoveBus:function () {
+            var row = $('#table').treegrid('getSelections');
+            if(row.length==0)
+                parent.TramDalog.ErrorAlert("请选择数据！",true);
+            var Ids = [];
+            for(var i=0;i<row.length;i++){
+                Ids.push(row[i].id);
+            }
+            parent.Http.Ajax({
+                url:'/api/v1/operation/removeuser?deviceids='+Ids.join(','),
+                type:'delete'
+            },function (result) {
+                if(result.success){
+                    parent.TramDalog.SuccessAlert(result.info,true);
+                    User.reLoad();
+                }else{
+                    parent.TramDalog.ErrorAlert(result.info,true);
+                }
+            })
         },
-        saveData:function () {
-
+        saveData:function (layerno,index) {
+            currentIndex = layerno;
+            var wd = parent.window.frames["layui-layer-iframe"+layerno];
+            wd.BusFrom.saveData(parent,Device);
         },
         Search:function (value) {
             var query = $('#table').datagrid('options');
-            var seldpid = $('#departmentId').combotree('getValue');
-            if(seldpid!=0){
-                query.queryParams.departmentId  = seldpid;
-            }
-            query.queryParams.linename = value;
+            var departmentId = $('#departmentId').combotree('getValue');
+            query.queryParams.departmentId  = departmentId==''?0:departmentId;
+            var devicetype =$('#devicetype').combotree('getValue');
+            query.queryParams.devicetype = devicetype;
+            var lineId = $('#lineId').combotree('getValue');
+            query.queryParams.lineId = lineId==''?0:lineId;
+            var status = $('#status').combotree('getValue');
+            query.queryParams.status = status;
+            query.queryParams.keywords = value;
+            Device.reLoad();
+        },
+        closeWindow:function () {
+            parent.layer.close(currentIndex);
+        },
+        reLoad:function () {
             $('#table').datagrid('reload');
         }
     }

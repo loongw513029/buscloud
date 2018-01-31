@@ -2,15 +2,15 @@ package com.sztvis.buscloud.api;
 
 import com.github.pagehelper.PageHelper;
 import com.sztvis.buscloud.core.helper.ListHelper;
-import com.sztvis.buscloud.model.dto.ComboTreeModel;
-import com.sztvis.buscloud.model.dto.DeviceViewModel;
-import com.sztvis.buscloud.model.dto.LineViewModel;
+import com.sztvis.buscloud.model.dto.*;
 import com.sztvis.buscloud.model.dto.response.ApiResult;
 import com.sztvis.buscloud.model.entity.PageBean;
 import com.sztvis.buscloud.model.entity.StatusCodeEnum;
+import com.sztvis.buscloud.service.IBasicService;
 import com.sztvis.buscloud.service.IDeviceService;
 import com.sztvis.buscloud.service.ILineService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,6 +31,8 @@ public class OperationApiController extends BaseApiController{
     private ILineService iLineService;
     @Autowired
     private IDeviceService iDeviceService;
+    @Autowired
+    private IBasicService iBasicService;
     /**
      * get line collections show web page
      * @param userId
@@ -71,6 +73,20 @@ public class OperationApiController extends BaseApiController{
     }
 
     /**
+     * use in map page bottom devicelist
+     * @param devices
+     * @return
+     */
+    @RequestMapping("/mapdevicelist")
+    public ApiResult MapDeviceList(String devices,int page,int rows){
+        PageHelper.startPage(page,rows);
+        List<MapDeviceViewModel> list = this.iDeviceService.getMapDeviceList(devices);
+        int count = list.size();
+        PageBean<MapDeviceViewModel> pageData = new PageBean<>(page, rows, count);
+        pageData.setItems(list);
+        return ApiResult(true, "线路设备获取成功", StatusCodeEnum.Success, pageData);
+    }
+    /**
      * get line dropdownlist,use in easyui combotree
      * @param userid userid
      * @return
@@ -88,7 +104,68 @@ public class OperationApiController extends BaseApiController{
      */
     @RequestMapping(value = "/saveline",method = RequestMethod.POST)
     public ApiResult saveLine(LineViewModel lineViewModel){
+        try{
+            this.iLineService.saveAndUpdateLine(lineViewModel);
+            return ApiResult(true,"保存线路成功",StatusCodeEnum.Success,null);
+        }
+        catch (Exception ex){
+            return ApiResult(false,"保存线路失败",StatusCodeEnum.Error,null);
+        }
+    }
 
+    @RequestMapping(value = "/removeline",method = RequestMethod.DELETE)
+    public ApiResult removeLisr(String lineIds){
+        try{
+            this.iLineService.removeLines(lineIds);
+            return ApiResult(true,"删除线路成功",StatusCodeEnum.Success,null);
+        }
+        catch (Exception ex){
+            return ApiResult(false,"删除线路失败",StatusCodeEnum.Error,null);
+        }
+    }
+    @RequestMapping("/getdrivercombo")
+    public ApiResult getDriverList(long departmentid){
+        try{
+            List<ComboTreeModel> list = this.iDeviceService.getDriverComboList(departmentid);
+            return ApiResult(true,"获得司机下拉列表成功",StatusCodeEnum.Success,ListHelper.addFirstEleComboTree(list,"-选择司机-"));
+        }catch (Exception ex){
+            return ApiResult(false,"获得司机下拉列表失败",StatusCodeEnum.Error,ex.getMessage());
+        }
+    }
+
+    /**
+     * save web page bus infos
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/savebus",method = RequestMethod.POST)
+    public ApiResult saveBus(BusAndDeviceViewModel model){
+        try{
+            this.iDeviceService.saveDeviceInfo(model);
+            return ApiResult(true,"保存车辆信息成功",StatusCodeEnum.Success,null);
+        }catch (Exception ex){
+            return ApiResult(false,"保存车辆信息失败",StatusCodeEnum.Error,ex.getMessage());
+        }
+    }
+
+    @RequestMapping(value = "/removebus",method = RequestMethod.DELETE)
+    public ApiResult removeBus(String deviceids){
+        try{
+            this.iDeviceService.removeDeviceInfo(deviceids);
+            return ApiResult(true,"删除车辆成功",StatusCodeEnum.Success,null);
+        }
+        catch (Exception ex){
+            return ApiResult(false,"删除车辆失败",StatusCodeEnum.Error,null);
+        }
+    }
+    @RequestMapping(value = "/alarmtypelist",method = RequestMethod.GET)
+    public ApiResult getBasicList(int type,String keywords,int page,int rows){
+        PageHelper.startPage(page,rows);
+        List<BasicViewModel> list = this.iBasicService.getBasicList(type,keywords);
+        int count = list.size();
+        PageBean<BasicViewModel> pageData = new PageBean<>(page, rows, count);
+        pageData.setItems(list);
+        return ApiResult(true, "报警类型获取成功", StatusCodeEnum.Success, pageData);
     }
 
 }

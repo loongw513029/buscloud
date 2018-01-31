@@ -11,6 +11,7 @@ import com.sztvis.buscloud.model.domain.TramBasicInfo;
 import com.sztvis.buscloud.model.domain.TramMemberInfo;
 import com.sztvis.buscloud.model.domain.TramMenuInfo;
 import com.sztvis.buscloud.model.domain.TramRoleInfo;
+import com.sztvis.buscloud.model.dto.BasicViewModel;
 import com.sztvis.buscloud.model.dto.ComboTreeModel;
 import com.sztvis.buscloud.model.dto.response.RoleViewModel;
 import com.sztvis.buscloud.service.IBasicService;
@@ -105,6 +106,16 @@ public class BasicService implements IBasicService{
         }
         this.basicMapper.deleteRoelRelInfo(roleInfo.getId());
         this.basicMapper.insertRoleRelInfo(roleInfo.getId(),model.getRoleIds());
+    }
+
+    @Override
+    public List<ComboTreeModel> getAlarmTypeListByParentId(long parentId) {
+        return this.basicMapper.getAlarmTypeListByParentId(parentId);
+    }
+
+    @Override
+    public List<BasicViewModel> getBasicList(int type, String keywords) {
+        return this.basicMapper.getBasicList(type,keywords);
     }
 
     private List<ComboTreeModel> getRoleTreeData(long parentId){

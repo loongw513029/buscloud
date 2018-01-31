@@ -1,12 +1,12 @@
 package com.sztvis.buscloud.model.domain;
 
-public class Tramdevicestateinspectrealtimeinfo {
+public class TramDeviceStateInspectRealtimeInfo {
   private Long id;
   private Long deviceid;
-  private String videotape;
-  private String video;
-  private String harddisk;
-  private String sdcard;
+  private boolean videotape;
+  private boolean video;
+  private boolean harddisk;
+  private boolean sdcard;
   private String cpuuserate;
   private String cputemp;
   private String mermoryuserate;
@@ -23,6 +23,8 @@ public class Tramdevicestateinspectrealtimeinfo {
   private boolean adasinspectstate;
   private boolean timingstate;
   private String deviceCode;
+  private String surplusSdcardSize;
+  private String surplusDiskSize;
 
   public Long getId() {
     return id;
@@ -38,38 +40,6 @@ public class Tramdevicestateinspectrealtimeinfo {
 
   public void setDeviceid(Long deviceid) {
     this.deviceid = deviceid;
-  }
-
-  public String getVideotape() {
-    return videotape;
-  }
-
-  public void setVideotape(String videotape) {
-    this.videotape = videotape;
-  }
-
-  public String getVideo() {
-    return video;
-  }
-
-  public void setVideo(String video) {
-    this.video = video;
-  }
-
-  public String getHarddisk() {
-    return harddisk;
-  }
-
-  public void setHarddisk(String harddisk) {
-    this.harddisk = harddisk;
-  }
-
-  public String getSdcard() {
-    return sdcard;
-  }
-
-  public void setSdcard(String sdcard) {
-    this.sdcard = sdcard;
   }
 
   public String getCpuuserate() {
@@ -210,5 +180,51 @@ public class Tramdevicestateinspectrealtimeinfo {
 
   private boolean onlineState;
 
+  public String getSurplusSdcardSize() {
+    return surplusSdcardSize;
+  }
 
+  public void setSurplusSdcardSize(String surplusSdcardSize) {
+    this.surplusSdcardSize = surplusSdcardSize;
+  }
+
+  public String getSurplusDiskSize() {
+    return surplusDiskSize;
+  }
+
+  public void setSurplusDiskSize(String surplusDiskSize) {
+    this.surplusDiskSize = surplusDiskSize;
+  }
+
+  public boolean isVideotape() {
+    return videotape;
+  }
+
+  public void setVideotape(boolean videotape) {
+    this.videotape = videotape;
+  }
+
+  public boolean isVideo() {
+    return video;
+  }
+
+  public void setVideo(boolean video) {
+    this.video = video;
+  }
+
+  public boolean isHarddisk() {
+    return harddisk;
+  }
+
+  public void setHarddisk(boolean harddisk) {
+    this.harddisk = harddisk;
+  }
+
+  public boolean isSdcard() {
+    return sdcard;
+  }
+
+  public void setSdcard(boolean sdcard) {
+    this.sdcard = sdcard;
+  }
 }

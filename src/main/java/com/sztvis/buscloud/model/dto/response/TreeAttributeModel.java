@@ -10,7 +10,7 @@ import java.io.Serializable;
 public class TreeAttributeModel implements Serializable {
     private boolean state;
     private Integer channel;
-
+    private boolean isdevice = false;
     public boolean isState() {
         return state;
     }
@@ -25,5 +25,13 @@ public class TreeAttributeModel implements Serializable {
 
     public void setChannel(Integer channel) {
         this.channel = channel;
+    }
+
+    public boolean isIsdevice() {
+        return isdevice;
+    }
+
+    public void setIsdevice(boolean isdevice) {
+        this.isdevice = isdevice;
     }
 }

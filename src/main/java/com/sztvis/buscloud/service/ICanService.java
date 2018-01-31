@@ -68,5 +68,30 @@ public interface ICanService {
      */
     TramCanInfo getLastCanInfo(String deviceCode);
 
+    /**
+     * 查询车辆最后刹车状态
+     * @param deviceCode
+     * @return
+     */
+    boolean IsBarke(String deviceCode);
+
+    /**
+     * 查询车辆最后停车挡状态
+     * @param deviceCode
+     * @return
+     */
+    boolean IsPark(String deviceCode);
+    /**
+     * 拼装报警条件
+     * @param deviceCode  设备编码
+     * @param updateTime  更新时间
+     * @param type 报警类型
+     * @param value 报警值
+     * @param extras 附带数据 车速，车距，刹车
+     * @param path 报警视频路径
+     * @return
+     */
+    SaveAlarmQuery getAlarmQuery(String deviceCode,long deviceId,String updateTime,int type,String value,String extras,String path);
+
 
 }

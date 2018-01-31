@@ -26,7 +26,7 @@ public class DeviceViewModel implements Serializable{
     private boolean supportBehavior;
     private boolean supportAdas;
     private int deviceStatus;
-
+    private int bustype;
     public long getId() {
         return id;
     }
@@ -171,5 +171,13 @@ public class DeviceViewModel implements Serializable{
 
     public void setLineName(String lineName) {
         this.lineName = lineName;
+    }
+
+    public int getBustype() {
+        return bustype;
+    }
+
+    public void setBustype(int bustype) {
+        this.bustype = bustype;
     }
 }

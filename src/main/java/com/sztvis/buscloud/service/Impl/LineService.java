@@ -50,4 +50,26 @@ public class LineService implements ILineService {
         List<Long> departments = this.iDepartmentService.GetDepartmentIdsByUserId(userId);
         return this.lineMapper.getLineTreeList(departments);
     }
+
+    @Override
+    public void saveAndUpdateLine(LineViewModel lineViewModel) {
+        TramLineInfo lineInfo = new TramLineInfo();
+        lineInfo.setId(lineViewModel.getId());
+        lineInfo.setLinecode(lineViewModel.getLinecode());
+        lineInfo.setLinename(lineViewModel.getLinename());
+        lineInfo.setDeparentid(lineViewModel.getDepartmentid());
+        lineInfo.setLineupmileage(Double.valueOf(lineViewModel.getLineupmileage()));
+        lineInfo.setLinedownmileage(Double.valueOf(lineViewModel.getLinedownmileage()));
+        lineInfo.setDownsitenum(Long.valueOf(lineViewModel.getDownsitenum()));
+        lineInfo.setUpsitenum(Long.valueOf(lineViewModel.getUpsitenum()));
+        if(lineInfo.getId()==0)
+            this.lineMapper.saveLine(lineInfo);
+        else
+            this.lineMapper.updateLine(lineInfo);
+    }
+
+    @Override
+    public void removeLines(String lineIds) {
+        this.lineMapper.removeLine(lineIds);
+    }
 }

@@ -2,7 +2,7 @@ serverHost: 120.78.128.247
 server:
   port: 8080
   session:
-    timeout: 120
+    timeout: 7200
   tomcat:
     uri-encoding: UTF-8
 spring:
@@ -28,6 +28,7 @@ spring:
       max-wait: 10000
       min-idle: 5
       initial-size: 5
+
 mybatis:
   type-aliases-package: com.sztvis.buscloud.model.domain
   mapper-locations: classpath:/mybatis/*.xml
@@ -48,4 +49,11 @@ jedis:
       maxTotal: 200
       maxIdle: 200
       maxWaitMillis : 100000
-
+ytx:
+  account:
+upload:
+  dir: /Users/tvis/Documents/TVIS/buscloud/src/main/resources/uploads/
+logging:
+  level:
+    com:
+     abc: DEBUG

@@ -29,7 +29,15 @@ var Can=function () {
                 var obj = data.result;
                 deviceId = obj.id;
                 $('#start').show();
-                $('#line-info').text('线路:250 自编号:'+obj.devicecode);
+                $('#line-info').text('线路:'+obj.lineName+' 自编号:'+obj.deviceCode);
+                if(obj.bustype == 5){
+                    $('#mixin-energe').hide();
+                    $('#bms').show();
+                }
+                else{
+                    $('#mixin-energe').show();
+                    $('#bms').hide();
+                }
                 if(obj.devicestatus == -1){
                     parent.TramDalog.ErrorAlert('设备不在线!',false);
                     $('#start').hide();

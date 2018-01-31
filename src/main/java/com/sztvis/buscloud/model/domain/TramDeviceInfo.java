@@ -1,5 +1,7 @@
 package com.sztvis.buscloud.model.domain;
 
+import java.sql.Timestamp;
+
 public class TramDeviceInfo {
   private Long id;
   private String guid;
@@ -10,8 +12,8 @@ public class TramDeviceInfo {
   private String devicename;
   private String clientip;
   private String machine;
-  private String ispositive;
-  private String videosupport;
+  private boolean ispositive;
+  private boolean videosupport;
   private Long videochannel;
   private Long dchannel;
   private Long carriagechannel;
@@ -22,13 +24,13 @@ public class TramDeviceInfo {
   private Long disksize;
   private Long sdcardsize;
   private Long devicestatus;
-  private String aerialview;
+  private boolean aerialview;
   private Long aerialchannel;
-  private String barrier;
-  private String can;
-  private String radar;
-  private String supportbehavior;
-  private String supportadas;
+  private boolean barrier;
+  private boolean can;
+  private boolean radar;
+  private boolean supportbehavior;
+  private boolean supportadas;
   private Long speeduse;
   private java.sql.Timestamp createtime;
   private java.sql.Timestamp lastonlinetime;
@@ -105,19 +107,19 @@ public class TramDeviceInfo {
     this.machine = machine;
   }
 
-  public String getIspositive() {
+  public boolean IsPositive() {
     return ispositive;
   }
 
-  public void setIspositive(String ispositive) {
+  public void setIspositive(boolean ispositive) {
     this.ispositive = ispositive;
   }
 
-  public String getVideosupport() {
+  public boolean isVideosupport() {
     return videosupport;
   }
 
-  public void setVideosupport(String videosupport) {
+  public void setVideosupport(boolean videosupport) {
     this.videosupport = videosupport;
   }
 
@@ -201,11 +203,11 @@ public class TramDeviceInfo {
     this.devicestatus = devicestatus;
   }
 
-  public String getAerialview() {
+  public boolean isAerialview() {
     return aerialview;
   }
 
-  public void setAerialview(String aerialview) {
+  public void setAerialview(boolean aerialview) {
     this.aerialview = aerialview;
   }
 
@@ -217,43 +219,43 @@ public class TramDeviceInfo {
     this.aerialchannel = aerialchannel;
   }
 
-  public String getBarrier() {
+  public boolean isBarrier() {
     return barrier;
   }
 
-  public void setBarrier(String barrier) {
+  public void setBarrier(boolean barrier) {
     this.barrier = barrier;
   }
 
-  public String getCan() {
+  public boolean isCan() {
     return can;
   }
 
-  public void setCan(String can) {
+  public void setCan(boolean can) {
     this.can = can;
   }
 
-  public String getRadar() {
+  public boolean isRadar() {
     return radar;
   }
 
-  public void setRadar(String radar) {
+  public void setRadar(boolean radar) {
     this.radar = radar;
   }
 
-  public String getSupportbehavior() {
+  public boolean isSupportbehavior() {
     return supportbehavior;
   }
 
-  public void setSupportbehavior(String supportbehavior) {
+  public void setSupportbehavior(boolean supportbehavior) {
     this.supportbehavior = supportbehavior;
   }
 
-  public String getSupportadas() {
+  public boolean isSupportadas() {
     return supportadas;
   }
 
-  public void setSupportadas(String supportadas) {
+  public void setSupportadas(boolean supportadas) {
     this.supportadas = supportadas;
   }
 
@@ -265,19 +267,19 @@ public class TramDeviceInfo {
     this.speeduse = speeduse;
   }
 
-  public java.sql.Timestamp getCreatetime() {
+  public Timestamp getCreatetime() {
     return createtime;
   }
 
-  public void setCreatetime(java.sql.Timestamp createtime) {
+  public void setCreatetime(Timestamp createtime) {
     this.createtime = createtime;
   }
 
-  public java.sql.Timestamp getLastonlinetime() {
+  public Timestamp getLastonlinetime() {
     return lastonlinetime;
   }
 
-  public void setLastonlinetime(java.sql.Timestamp lastonlinetime) {
+  public void setLastonlinetime(Timestamp lastonlinetime) {
     this.lastonlinetime = lastonlinetime;
   }
 }

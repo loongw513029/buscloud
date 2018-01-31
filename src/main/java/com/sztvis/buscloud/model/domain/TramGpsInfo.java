@@ -11,7 +11,7 @@ public class TramGpsInfo {
   private Long id;
   private Long deviceid;
   private String devicecode;
-  private Date updatetime;
+  private String updatetime;
   private String longitude;
   private String latitude;
   private Double speed;
@@ -42,11 +42,11 @@ public class TramGpsInfo {
     this.devicecode = devicecode;
   }
 
-  public Date getUpdatetime() {
+  public String getUpdatetime() {
     return updatetime;
   }
 
-  public void setUpdatetime(Date updatetime) {
+  public void setUpdatetime(String updatetime) {
     this.updatetime = updatetime;
   }
 

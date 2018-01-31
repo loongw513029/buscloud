@@ -4,9 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "TramRadarInfo")
-public class Tramradarinfo {
-  @Id
-  private Long id;
+public class TramRadarInfo {
   private String guid;
   private Long deviceid;
   private String devicecode;
@@ -29,13 +27,6 @@ public class Tramradarinfo {
   private Long radar16;
   private java.sql.Timestamp createtime;
 
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
 
   public String getGuid() {
     return guid;

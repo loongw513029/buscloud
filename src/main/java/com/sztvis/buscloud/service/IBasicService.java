@@ -1,6 +1,7 @@
 package com.sztvis.buscloud.service;
 
 import com.sztvis.buscloud.model.domain.TramBasicInfo;
+import com.sztvis.buscloud.model.dto.BasicViewModel;
 import com.sztvis.buscloud.model.dto.ComboTreeModel;
 import com.sztvis.buscloud.model.dto.response.RoleViewModel;
 
@@ -53,4 +54,19 @@ public interface IBasicService {
      * @param model
      */
     void saveAndUpdateRole(RoleViewModel model);
+
+    /**
+     * 获得报警类型下拉列表
+     * @param parentId
+     * @return
+     */
+    List<ComboTreeModel> getAlarmTypeListByParentId(long parentId);
+
+    /**
+     * 获得报警基本信息列
+     * @param type
+     * @param keywords
+     * @return
+     */
+    List<BasicViewModel> getBasicList(int type,String keywords);
 }

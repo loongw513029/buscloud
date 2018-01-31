@@ -5,25 +5,18 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 
 @Document(collection = "TramDeviceStatusInfo")
-public class Tramdevicestatusinfo {
-  @Id
-  private Long id;
+public class TramDeviceStatusInfo {
+
   private String guid;
   private Long deviceid;
   private String devicecode;
-  private java.sql.Timestamp updatetime;
+  private String updatetime;
+  //1:录像状态 2：视频状态 3:硬盘状态 4:SD卡状态 5:硬盘空间 6:SD卡空间 7:时间校准 8:CPU使用率 9:Cpu温度 10：内存使用率 11：硬盘温度
   private Long type;
   private String value1;
   private String value2;
-  private java.sql.Timestamp createtime;
+  private String createtime;
 
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
 
   public String getGuid() {
     return guid;
@@ -47,14 +40,6 @@ public class Tramdevicestatusinfo {
 
   public void setDevicecode(String devicecode) {
     this.devicecode = devicecode;
-  }
-
-  public java.sql.Timestamp getUpdatetime() {
-    return updatetime;
-  }
-
-  public void setUpdatetime(java.sql.Timestamp updatetime) {
-    this.updatetime = updatetime;
   }
 
   public Long getType() {
@@ -81,11 +66,19 @@ public class Tramdevicestatusinfo {
     this.value2 = value2;
   }
 
-  public java.sql.Timestamp getCreatetime() {
+  public String getUpdatetime() {
+    return updatetime;
+  }
+
+  public void setUpdatetime(String updatetime) {
+    this.updatetime = updatetime;
+  }
+
+  public String getCreatetime() {
     return createtime;
   }
 
-  public void setCreatetime(java.sql.Timestamp createtime) {
+  public void setCreatetime(String createtime) {
     this.createtime = createtime;
   }
 }

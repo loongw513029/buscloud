@@ -44,6 +44,7 @@ public class AccountController extends BaseApiController{
             userInfo.setAccessToken(uuid);
             if(loginParams.getLogintype()==3) {
                 httpSession.setAttribute("user",userInfo);
+
             }
             return ApiResult(true,"登录成功", StatusCodeEnum.Success,userInfo);
         }

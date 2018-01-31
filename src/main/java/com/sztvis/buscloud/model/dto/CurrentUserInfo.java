@@ -10,6 +10,7 @@ import java.util.List;
  */
 public class CurrentUserInfo implements Serializable{
     private Long Id;
+    private String uuid;
     private String UserName;
     private String RealName;
     private Integer RoleId;
@@ -27,6 +28,14 @@ public class CurrentUserInfo implements Serializable{
 
     public void setId(Long id) {
         Id = id;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public String getUserName() {

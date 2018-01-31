@@ -204,4 +204,16 @@ public class BasicApiController extends BaseApiController {
         }
     }
 
+    /**
+     * get alarm list page search box
+     * @param parentid
+     * @return
+     */
+    @RequestMapping(value = "/getalarmtypelist",method = RequestMethod.GET)
+    public ApiResult getAlarmTypeList(long parentid){
+        List<ComboTreeModel> list = this.iBasicService.getAlarmTypeListByParentId(parentid);
+        return  ApiResult(true,"获得报警下拉列表成功", StatusCodeEnum.Success, ListHelper.addFirstEleComboTree(list,"-选择报警类型-"));
+    }
+
+
 }

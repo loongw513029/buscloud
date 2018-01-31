@@ -11,6 +11,7 @@ public class LineViewModel implements Serializable{
     private long id;
     private String linename;
     private String departmentname;
+    private long departmentid;
     private String linecode;
     private String lineupmileage;
     private String linedownmileage;
@@ -91,4 +92,11 @@ public class LineViewModel implements Serializable{
 
     private int sort;
 
+    public long getDepartmentid() {
+        return departmentid;
+    }
+
+    public void setDepartmentid(long departmentid) {
+        this.departmentid = departmentid;
+    }
 }
