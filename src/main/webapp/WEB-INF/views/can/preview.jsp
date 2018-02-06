@@ -16,14 +16,14 @@
         00:00
     </div>
     <label>监控时长</label>
-    <select name="interest" lay-filter="aihao">
+    <select name="interest" id="totelMin">
         <option value="1">1分钟</option>
         <option value="3">3分钟</option>
         <option value="5">5分钟</option>
         <option value="10">10分钟</option>
     </select>
     <label>时间间隔</label>
-    <select name="interest" lay-filter="aihao">
+    <select name="interest" id="intervalTime">
         <option value="3">3秒</option>
         <option value="10">10秒</option>
         <option value="15">15秒</option>
@@ -47,6 +47,7 @@
     </div>
     <div class="avoidance-wrap ui-draggable ui-draggable-handle ui-resizable" style="z-index: 99;top:60px;padding:0px;line-height:0px;width:auto; background:#000;width:304px; overflow:inherit">
         <div class="radar">
+            <img src="/images/fangzhuangcar.png" class="carheader" />
             <i class="radar1"></i>
             <i class="radar2"></i>
             <i class="radar3"></i>
@@ -361,6 +362,7 @@
                 <i class="icon-flag icon-flag17" title="位置灯指示"></i>
                 <i class="icon-flag icon-flag18" title="前车门"></i>
                 <i class="icon-flag icon-flag19" title="中门"></i>
+                <i class="icon-flag icon-flag23" title="AC空调信号"></i>
             </div>
         </div>
 

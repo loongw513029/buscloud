@@ -38,6 +38,27 @@ public class ElectricCanInfo implements Serializable{
     private String acceleratorPedal;
     private String carVIN;
 
+    private String idlingSwitch;
+    private String minimumBatteryNumber;
+    private String allBatteryMinimum;
+    private String maxmumBatteryNumber;
+    private String allBatteryMax;
+    private String minimumTempBatteryNumber;
+    private String minimumTemp;
+    private String maxTempBatteryNumber;
+    private String maxTemp;
+    private String chargeSurplusHour;
+    private String chargeSurplusMinute;
+    private String signleChargeValue;
+    private String signleDisChargeValue;
+    private String batteryTempState;
+    private String leakageState;
+    private String mxElec;
+    private String setTemp;
+    private String airState;
+    private String okState;
+    private String shieldTurnState;
+
     public long getCanId() {
         return canId;
     }
@@ -268,5 +289,165 @@ public class ElectricCanInfo implements Serializable{
 
     public void setCarVIN(String carVIN) {
         this.carVIN = carVIN;
+    }
+
+    public String getIdlingSwitch() {
+        return idlingSwitch;
+    }
+
+    public void setIdlingSwitch(String idlingSwitch) {
+        this.idlingSwitch = idlingSwitch;
+    }
+
+    public String getMinimumBatteryNumber() {
+        return minimumBatteryNumber;
+    }
+
+    public void setMinimumBatteryNumber(String minimumBatteryNumber) {
+        this.minimumBatteryNumber = minimumBatteryNumber;
+    }
+
+    public String getAllBatteryMinimum() {
+        return allBatteryMinimum;
+    }
+
+    public void setAllBatteryMinimum(String allBatteryMinimum) {
+        this.allBatteryMinimum = allBatteryMinimum;
+    }
+
+    public String getMaxmumBatteryNumber() {
+        return maxmumBatteryNumber;
+    }
+
+    public void setMaxmumBatteryNumber(String maxmumBatteryNumber) {
+        this.maxmumBatteryNumber = maxmumBatteryNumber;
+    }
+
+    public String getMinimumTempBatteryNumber() {
+        return minimumTempBatteryNumber;
+    }
+
+    public void setMinimumTempBatteryNumber(String minimumTempBatteryNumber) {
+        this.minimumTempBatteryNumber = minimumTempBatteryNumber;
+    }
+
+    public String getMinimumTemp() {
+        return minimumTemp;
+    }
+
+    public void setMinimumTemp(String minimumTemp) {
+        this.minimumTemp = minimumTemp;
+    }
+
+    public String getMaxTempBatteryNumber() {
+        return maxTempBatteryNumber;
+    }
+
+    public void setMaxTempBatteryNumber(String maxTempBatteryNumber) {
+        this.maxTempBatteryNumber = maxTempBatteryNumber;
+    }
+
+    public String getMaxTemp() {
+        return maxTemp;
+    }
+
+    public void setMaxTemp(String maxTemp) {
+        this.maxTemp = maxTemp;
+    }
+
+    public String getChargeSurplusHour() {
+        return chargeSurplusHour;
+    }
+
+    public void setChargeSurplusHour(String chargeSurplusHour) {
+        this.chargeSurplusHour = chargeSurplusHour;
+    }
+
+    public String getChargeSurplusMinute() {
+        return chargeSurplusMinute;
+    }
+
+    public void setChargeSurplusMinute(String chargeSurplusMinute) {
+        this.chargeSurplusMinute = chargeSurplusMinute;
+    }
+
+    public String getSignleChargeValue() {
+        return signleChargeValue;
+    }
+
+    public void setSignleChargeValue(String signleChargeValue) {
+        this.signleChargeValue = signleChargeValue;
+    }
+
+    public String getSignleDisChargeValue() {
+        return signleDisChargeValue;
+    }
+
+    public void setSignleDisChargeValue(String signleDisChargeValue) {
+        this.signleDisChargeValue = signleDisChargeValue;
+    }
+
+    public String getBatteryTempState() {
+        return batteryTempState;
+    }
+
+    public void setBatteryTempState(String batteryTempState) {
+        this.batteryTempState = batteryTempState;
+    }
+
+    public String getLeakageState() {
+        return leakageState;
+    }
+
+    public void setLeakageState(String leakageState) {
+        this.leakageState = leakageState;
+    }
+
+    public String getMxElec() {
+        return mxElec;
+    }
+
+    public void setMxElec(String mxElec) {
+        this.mxElec = mxElec;
+    }
+
+    public String getSetTemp() {
+        return setTemp;
+    }
+
+    public void setSetTemp(String setTemp) {
+        this.setTemp = setTemp;
+    }
+
+    public String getAirState() {
+        return airState;
+    }
+
+    public void setAirState(String airState) {
+        this.airState = airState;
+    }
+
+    public String getOkState() {
+        return okState;
+    }
+
+    public void setOkState(String okState) {
+        this.okState = okState;
+    }
+
+    public String getShieldTurnState() {
+        return shieldTurnState;
+    }
+
+    public void setShieldTurnState(String shieldTurnState) {
+        this.shieldTurnState = shieldTurnState;
+    }
+
+    public String getAllBatteryMax() {
+        return allBatteryMax;
+    }
+
+    public void setAllBatteryMax(String allBatteryMax) {
+        this.allBatteryMax = allBatteryMax;
     }
 }

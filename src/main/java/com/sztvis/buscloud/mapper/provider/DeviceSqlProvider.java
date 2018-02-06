@@ -26,7 +26,7 @@ public class DeviceSqlProvider {
     public String getDeviceViewModel(Map<String,Object> map){
         long id = (Long) map.get("id");
         StringBuilder sb = new StringBuilder();
-        sb.append("select a.id,e.bustype,a.devicecode,a.devicename,b.departmentname,c.linename,d.drivername,e.busnumber,a.clientIp,a.hostSoftType,a.deviceMode,a.videoSupport,a.can,a.radar,a.aerialView,a.supportBehavior,a.supportAdas,a.deviceStatus,a.lastOnlineTime");
+        sb.append("select a.id,e.bustype,a.devicecode,a.devicename,a.dchannel,a.carriageChannel,b.departmentname,c.linename,d.drivername,e.busnumber,a.clientIp,a.hostSoftType,a.deviceMode,a.videoSupport,a.can,a.radar,a.aerialView,a.supportBehavior,a.supportAdas,a.deviceStatus,a.lastOnlineTime");
         sb.append(" from TramDeviceInfo a left join TramDepartmentInfo b on a.departmentId=b.Id");
         sb.append(" left join TramBusInfo e on a.busId=e.Id");
         sb.append(" left join TramLineInfo c on a.lineId=c.Id");

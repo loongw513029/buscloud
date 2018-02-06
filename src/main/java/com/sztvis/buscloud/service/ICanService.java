@@ -2,6 +2,8 @@ package com.sztvis.buscloud.service;
 
 import com.sztvis.buscloud.model.domain.TramCanActinfo;
 import com.sztvis.buscloud.model.domain.TramCanInfo;
+import com.sztvis.buscloud.model.dto.CanViewModel;
+import com.sztvis.buscloud.model.dto.DispatchModel;
 import com.sztvis.buscloud.model.dto.service.SaveAlarmQuery;
 
 import java.util.List;
@@ -93,5 +95,18 @@ public interface ICanService {
      */
     SaveAlarmQuery getAlarmQuery(String deviceCode,long deviceId,String updateTime,int type,String value,String extras,String path);
 
+    /**
+     * 获得最后一条can数据，包含can,can状态，调度，地图数据
+     * @param devicecode
+     * @return
+     */
+    CanViewModel getLastCanViewModel(String devicecode);
+
+    /**
+     * 获得最后一条调度数据
+     * @param devicecode
+     * @return
+     */
+    DispatchModel getLastDispathModel(String devicecode);
 
 }

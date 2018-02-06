@@ -175,14 +175,16 @@ public class ServerController extends BaseApiController{
         }
         try {
             for (Integer key : maps.keySet()) {
-                if(key == 212)
-                    key = 42;
-                if(key == 213)
-                    key = 1;
-                if(key == 214)
-                    key = 2;
-                if(key == 217)
-                    key = 3;
+                if(key == 212) key = 42;
+                if(key == 213) key = 1;
+                if(key == 214) key = 2;
+                if(key == 217) key = 3;
+                if(key == 248||key ==249) key = 82;
+                if(key == 253) key = 42;
+                if(key == 259) key = 88;
+                if(key == 260) key = 87;
+                if(key == 261) key = 14;
+                if(key == 262) key = 15;
                 //传统车辆CAN数据
                 if (CanCommon.NormalCANContrast.containsKey(key)) {
                     Class cls = (Class)canInfo.getClass();

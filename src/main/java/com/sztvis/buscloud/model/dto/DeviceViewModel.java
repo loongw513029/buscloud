@@ -27,6 +27,8 @@ public class DeviceViewModel implements Serializable{
     private boolean supportAdas;
     private int deviceStatus;
     private int bustype;
+    private int dChannel;
+    private int carriageChannel;
     public long getId() {
         return id;
     }
@@ -179,5 +181,21 @@ public class DeviceViewModel implements Serializable{
 
     public void setBustype(int bustype) {
         this.bustype = bustype;
+    }
+
+    public int getdChannel() {
+        return dChannel;
+    }
+
+    public void setdChannel(int dChannel) {
+        this.dChannel = dChannel;
+    }
+
+    public int getCarrieryChannel() {
+        return carriageChannel;
+    }
+
+    public void setCarrieryChannel(int carrieryChannel) {
+        this.carriageChannel = carrieryChannel;
     }
 }

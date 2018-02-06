@@ -1,3 +1,4 @@
+var layerIndex;
 var Http=function(){
     return {
         //统一请求函数
@@ -121,6 +122,22 @@ var TramDalog=function(){
         },
         CloseLayer:function () {
             layer.close();
+        },
+        //数据请求加载框
+        Loading:function () {
+            layerIndex=layer.open({
+                type: 1,
+                title: false,
+                closeBtn: 0,
+                shade:0.5,
+                area: '85px',
+                skin: 'loading-bg', //没有背景色
+                shadeClose: false,
+                content: '<img src="/images/position-icon.png" width="75px"/>车辆定位中<br/>'
+            });
+        },
+        CloseLoading:function () {
+            layer.close(layerIndex);
         }
     }
 }();
@@ -131,6 +148,37 @@ var Main =function () {
             setTimeout(function(){
                 $(window).resize();
             },300)
+        },
+        /**
+         * 转换gps坐标
+         * @param gpsLocation
+         * @returns {string}
+         * @constructor
+         */
+        ConvertGpsToAmapLocation:function (gpsLocation) {
+            var loc = "";
+            var url = "http://restapi.amap.com/v3/assistant/coordinate/convert?locations=" + location + "&coordsys=gps&output=json&key=e30e5e9f5e8b3132a56321bd016aa1e3";
+            $.ajaxSettings.async = false;
+            $.getJSON(url, function (data) {
+                loc = data.locations;
+            });
+            $.ajaxSettings.async = true;
+            return loc;
+        },
+        /**
+         * 根据高德坐标获得地址
+         * @param amapLocation
+         * @returns {string}
+         */
+        getAddressByAmapLocation:function (amapLocation) {
+            var address = "";
+            var url = "http://restapi.amap.com/v3/geocode/regeo?key=e30e5e9f5e8b3132a56321bd016aa1e3&location=" + location + "&poitype=&radius=1&extensions=base&batch=false&roadlevel=0";
+            $.ajaxSettings.async = false;
+            $.getJSON(url, function (data) {
+                address = data.regeocode.formatted_address;
+            });
+            $.ajaxSettings.async = true;
+            return address;
         }
     }
 }();

@@ -34,6 +34,17 @@ var Inspect = function () {
                         title: '机构名称',
                         width: 120,
                         align: 'center'
+                    },{
+                        field:'S',
+                        title:'操作',
+                        width:60,
+                        align:'center',
+                        formatter:function (value,row) {
+                            if(!row.onlineState)
+                                return "<a href='javascript:;'>历史巡检</a>";
+                            else
+                                return "";
+                        }
                     }
                 ]],
                 columns: [[{
@@ -168,7 +179,8 @@ var Inspect = function () {
                             rows: data.result.items
                         };
                     }
-                }
+                },
+                
             });
             parent.Http.Ajax({
                 url:'/api/v1/basic/departmentcombo?userid='+parent.User.GetUserInfo().id,

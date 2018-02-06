@@ -1,15 +1,52 @@
 var deviceId = 0;
 var map;
 var interval;
+var tinterval;
 var marker;
+var busType=0;
+var intervalTime = 0;//请求间隔
+var currentSeconds = 0;//请求了多少秒
+var totalMin = 0;//请求总时长
+var serverIp,hosttype,code,clientIp,channel;
 var Can=function () {
     return{
         init:function () {
+            totalMin = $('#totelMin').val();
+            intervalTime = $('#intervalTime').val();
             Can.initHighCharts();
             map = Can.initMap();
-            mainPlatform.changeWidthSize();
+            Can.changeWidthSize();
             $(window).resize(function(){
-                mainPlatform.changeWidthSize();
+                Can.changeWidthSize();
+            });
+            $('#start').click(function () {
+                totalMin = $('#totelMin').val();
+                intervalTime = $('#intervalTime').val();
+                currentSeconds = totalMin * 60;
+                if($(this).text()=="下发") {
+                    parent.TramDalog.Loading();
+                    //倒计时
+                    tinterval = setInterval(function () {
+                        if(totalMin * 60 == currentSeconds) {
+                            Can.RequestData();
+                            Can.SetOcx();
+                        }
+                        currentSeconds--;
+                        Can.CalcCountDownTime(currentSeconds);
+                        if(currentSeconds == 0)
+                            Can.EndCan()
+                    },1000);
+                    currentSeconds = totalMin*60;
+                    $(this).text('停止');
+                    $('#totelMin').prop('disabled',true);
+                    $('#intervalTime').prop('disabled',true);
+                    interval = setInterval(function () {
+                        Can.RequestData();
+                    },intervalTime*1000);
+                }
+                else {
+                    Can.EndCan();
+                }
             });
         },
         changeWidthSize:function () {
@@ -22,12 +59,20 @@ var Can=function () {
          * @constructor
          */
         TransferData:function (id) {
+            //先停止正在的请求
+            //Can.EndCan();
             parent.Http.Ajax({
                 url:'/api/v1/device/info?deviceId='+id,
                 type:'get'
             },function(data){
                 var obj = data.result;
                 deviceId = obj.id;
+                busType=obj.bustype;
+                code = obj.deviceCode;
+                serverIp = location.hostname;
+                hosttype = obj.hostSoftType == 0?"NVR":"TongLi";
+                clientIp = obj.clientIp;
+                channel = obj.dChannel;
                 $('#start').show();
                 $('#line-info').text('线路:'+obj.lineName+' 自编号:'+obj.deviceCode);
                 if(obj.bustype == 5){
@@ -313,7 +358,7 @@ var Can=function () {
          * 动力电池电流
          * @constructor
          */
-        SetBatteryCircuit:function () {
+        SetBatteryCircuit:function (value) {
             var bccChart = $('#battery-circuit-chart-3').highcharts(),
                 bccPoint = bccChart.series[0].points[0];
             var bccVal = Number((value || 0).toFixed(1));
@@ -324,7 +369,7 @@ var Can=function () {
          * 设置前气压
          * @constructor
          */
-        SetFrontAirPressure:function () {
+        SetFrontAirPressure:function (value) {
             var frontAirChart = $('#frontAirPressureChart-3').highcharts(),
                 frontAirPoint = frontAirChart.series[0].points[0];
             var press1 = parseFloat(value) / 1000;
@@ -335,7 +380,7 @@ var Can=function () {
          * 设置后气压
          * @constructor
          */
-        SetBackAirPressure:function () {
+        SetBackAirPressure:function (value) {
             var backAirChart = $('#backAirPressureChart-3').highcharts(),
                 backAirPoint = backAirChart.series[0].points[0];
             var press = parseFloat(value) / 1000;
@@ -346,7 +391,7 @@ var Can=function () {
          * 电池电压图表
          * @constructor
          */
-        SetBatteryVoltage3:function () {
+        SetBatteryVoltage3:function (value) {
             $('#battery-voltage-text-3').empty().append(value + '<span>v</span>');
             $('#battery-voltage-3').animate({ height: (value * 100 / 30) + '%' }, 800, 'easeOutBounce');
         },
@@ -354,7 +399,7 @@ var Can=function () {
          * 设置水温
          * @constructor
          */
-        SetWaterTemp:function () {
+        SetWaterTemp:function (value) {
             var $waterTemp = $('#water-temp-3'),
                 waterTemp = value || 0;
             $('.num-area', $waterTemp).animate({ height: waterTemp > 100 ? '100' : waterTemp + '%' }, 800, 'easeOutBounce');
@@ -364,7 +409,7 @@ var Can=function () {
          * 机油压力
          * @constructor
          */
-        SetEngineOilPressure:function () {
+        SetEngineOilPressure:function (value) {
             var press = parseFloat(value) / 1000;
             var $engineOilPressure = $('#engineOilPressure-3');
             $('.num-area', $engineOilPressure).animate({ height: (press * 100) + '%' }, 800, 'easeOutBounce');
@@ -374,7 +419,7 @@ var Can=function () {
          * SOC
          * @constructor
          */
-        SetSOC:function () {
+        SetSOC:function (value) {
             var soc = Number(value || 0).toFixed(1);
             if (soc < 0) {
                 soc = 0;
@@ -463,6 +508,7 @@ var Can=function () {
          */
         loadBMSDataView:function (data) {
             var $bmsContainer = $('#bms');
+            $('.uptime').text(data.time);
             var act=data.canstatinfo;
             //右转向灯
             Can.setLightStyle('#bms .icon-flag9', act.rightturn);
@@ -494,6 +540,8 @@ var Can=function () {
             Can.setLightStyle('#bms .icon-flag18',act.headerdoorturn);
             //中门
             Can.setLightStyle('#bms .icon-flag19', act.middledoorturn);
+            //空调状态
+            Can.setLightStyle('#bms .icon-flag23',act.acturn);
             var obj = data.caninfo;
 
             //车速
@@ -596,11 +644,11 @@ var Can=function () {
             //工作模式
             var m1=Number(obj.elec.LeftElecMode||0)
             if (m1 != 0) {
-                $("#leftmode").html('<i>'+SetWorkMode(m1)+'</i>');
+                $("#leftmode").html('<i>'+Can.SetWorkMode(m1)+'</i>');
             }
             var m2 = Number(obj.elec.RightElecMode || 0)
             if (m2 != 0) {
-                $("#rightmode").html('<i>' + SetWorkMode(m2) + '</i>');
+                $("#rightmode").html('<i>' + Can.SetWorkMode(m2) + '</i>');
             }
             // 单体最高电压电池
             $('#single-high-voltage').text((data.highestVoltageBoxNO || 0) + '(箱)/' + (data.highestVoltageInboxLocation || 0) + '(个)/' + (data.highestBatteryVoltage || 0).toFixed(2) + '(V)');
@@ -630,6 +678,11 @@ var Can=function () {
                 '      </div>';
             $('.battery2', $bmsContainer).empty().append(_battery2Html);
         },
+        /**
+         * 更新图表数据
+         * @param obj
+         * @param val
+         */
         updateMeterValue:function(obj, val) {
             obj.highcharts().series[0].points[0].update(val);
         },
@@ -637,6 +690,7 @@ var Can=function () {
          * 加载传统车辆数据
          */
         loadNormalView:function (data) {
+            $('.uptime').text(data.time);
             var obj = data.caninfo;
             if (obj.shortmileage)
                 $("#subTotalMileage-3").html(obj.shortmileage + "<i>km</i>");
@@ -645,25 +699,25 @@ var Can=function () {
             if (obj.oilconsumption)
                 $("#totalEnergy-3").html(obj.oilconsumption + "<i>L</i>");
             var act = data.canstatinfo;
-            Can.setLightStyle(".icon-flag1", act.leftturn);
-            Can.setLightStyle(".icon-flag9", act.rightturn);
-            Can.setLightStyle(".icon-flag20", act.accturn);
-            Can.setLightStyle(".icon-flag2", act.beforefoglampsturn);
-            Can.setLightStyle(".icon-flag3", act.afterfoglampsturn);
-            Can.setLightStyle(".icon-flag4", act.dippedlightsturn);
-            Can.setLightStyle(".icon-flag5", act.highbeamturn);
-            Can.setLightStyle(".icon-flag6", act.absturn);
-            Can.setLightStyle(".icon-flag7", act.parkingbraketurn);
-            Can.setLightStyle(".icon-flag10", act.footbraketurn);
-            Can.setLightStyle(".icon-flag21", act.enginepreheatingturn);
-            Can.setLightStyle(".icon-flag22", act.engineworkturn);
-            Can.setLightStyle(".icon-flag11", act.safetybelt);
-            Can.setLightStyle(".icon-flag18", act.headerdoorturn);
-            Can.setLightStyle(".icon-flag19", act.middledoorturn);
-            Can.setLightStyle(".icon-flag16", act.lastdoorturn);
-            Can.setLightStyle(".icon-flag17", act.positionlampturn);
-            Can.setLightStyle(".icon-flag23", act.acturn);
-            Can.SetDispatch(data.DispatchInfo);
+            Can.setLightStyle("#mixin-energe .icon-flag1", act.leftturn);
+            Can.setLightStyle("#mixin-energe .icon-flag9", act.rightturn);
+            Can.setLightStyle("#mixin-energe .icon-flag20", act.accturn);
+            Can.setLightStyle("#mixin-energe .icon-flag2", act.beforefoglampsturn);
+            Can.setLightStyle("#mixin-energe .icon-flag3", act.afterfoglampsturn);
+            Can.setLightStyle("#mixin-energe .icon-flag4", act.dippedlightsturn);
+            Can.setLightStyle("#mixin-energe .icon-flag5", act.highbeamturn);
+            Can.setLightStyle("#mixin-energe .icon-flag6", act.absturn);
+            Can.setLightStyle("#mixin-energe .icon-flag7", act.parkingbraketurn);
+            Can.setLightStyle("#mixin-energe .icon-flag10", act.footbraketurn);
+            Can.setLightStyle("#mixin-energe .icon-flag21", act.enginepreheatingturn);
+            Can.setLightStyle("#mixin-energe .icon-flag22", act.engineworkturn);
+            Can.setLightStyle("#mixin-energe .icon-flag11", act.safetybelt);
+            Can.setLightStyle("#mixin-energe .icon-flag18", act.headerdoorturn);
+            Can.setLightStyle("#mixin-energe .icon-flag19", act.middledoorturn);
+            Can.setLightStyle("#mixin-energe .icon-flag16", act.lastdoorturn);
+            Can.setLightStyle("#mixin-energe .icon-flag17", act.positionlampturn);
+            Can.setLightStyle("#mixin-energe .icon-flag23", act.acturn);
+            Can.SetDispatch(data.dispatchinfo);
             if (obj.speed)
                 Can.SetSpeed(obj.speed);
             if (obj.ratespeed)
@@ -710,6 +764,7 @@ var Can=function () {
          * @constructor
          */
         RestBMSView:function () {
+            var $bmsContainer = $('#bms');
             //右转向灯
             Can.setLightStyle('#bms .icon-flag9', 1);
             //左转向
@@ -740,7 +795,7 @@ var Can=function () {
             Can.setLightStyle('#bms .icon-flag18', 1);
             //中门
             Can.setLightStyle('#bms .icon-flag19', 1);
-
+            Can.setLightStyle('#bms .icon-flag23', 1);
             //车速
             var chart = $('.speed-meter', $bmsContainer).highcharts(),
                 point = chart.series[0].points[0];
@@ -803,11 +858,11 @@ var Can=function () {
             //工作模式
             var m1 = 3;// Number(obj.elec.LeftElecMode || 0)
             if (m1 != 0) {
-                $("#leftmode").html('<i>' + SetWorkMode(m1) + '</i>');
+                $("#leftmode").html('<i>' + Can.SetWorkMode(m1) + '</i>');
             }
             var m2 = 3;// Number(obj.elec.RightElecMode || 0)
             if (m2 != 0) {
-                $("#rightmode").html('<i>' + SetWorkMode(m2) + '</i>');
+                $("#rightmode").html('<i>' + Can.SetWorkMode(m2) + '</i>');
             }
             //电池箱体状态1、2
             var _battery1Html = '<div class="fl">' +
@@ -834,6 +889,9 @@ var Can=function () {
          * @constructor
          */
         RestNormalView:function () {
+            $("#mixin-energe i.icon-flag").each(function () {
+                $(this).removeClass("active");
+            });
             Can.SetSpeed(0);
             Can.SetRpm(0);
             Can.SetBatteryVoltage(0);
@@ -847,9 +905,6 @@ var Can=function () {
             Can.SetoilMass(0);
             Can.SetBrakePedal(0);
             Can.SetPullPedal(0);
-            $("#mixin-energe i.icon-flag").each(function () {
-                $(this).removeClass("active");
-            });
             $("#subTotalMileage-3").html("<i>0km</i>");
             $("#totalMileage-3").html("<i>0km</i>");
             $("#totalEnergy-3").html("<i>0L</i>");
@@ -877,11 +932,11 @@ var Can=function () {
          * 设置调度信息
          * @constructor
          */
-        SetDispatch:function () {
-            $("#prev-station").text(obj.CurrentSite);
-            $("#next-station").text(obj.NextSite);
-            if (obj.SiteType == 2) {
-                if (obj.InOrOutSite == 0) {
+        SetDispatch:function (obj) {
+            $("#prev-station").text(obj.currentsite==undefined?"":obj.currentsite);
+            $("#next-station").text(obj.nextsite==undefined?"":obj.nextsite);
+            if (obj.sitetype == 2) {
+                if (obj.inoroutsite == 0) {
                     $("#next-station").attr("title", "正在进站...");
                     //$("#next-station").tooltip('show');
                     //$("#prev-station").tooltip('hide');
@@ -891,6 +946,80 @@ var Can=function () {
                     //$("#next-station").tooltip('hide');
                 }
             }
+        },
+        /**
+         * 加载地图
+         * @constructor
+         */
+        SetMap:function (obj) {
+            var location = obj.location;
+            var angle = obj.roate;
+            if(location != '')
+            {
+                location = parent.Main.ConvertGpsToAmapLocation(location);
+                var long = location.split(',')[0],lat = location.split(',')[1];
+                map.setCenter([long,lat]);
+                marker = new AMap.Marker({
+                    map:map,
+                    position:[long,lat],
+                    icon: new AMap.Icon({
+                        image:'http://webapi.amap.com/images/car.png',
+                        size:new AMap.Size(36,36),
+                        imageSize:new AMap.Size(36,21)
+                    }),
+                    angle: parseFloat(angle)-90,
+                    offset:new AMap.Pixel(-15,0),
+                    autoRotation:false
+                });
+            }
+        },
+        /**
+         * 播放视频
+         * @constructor
+         */
+        SetOcx:function () {
+            try{
+                WebOcx.StartPreview(serverIp,hosttype,code,clientIp,channel,1);
+            }catch (err){console.log('browser not support activex');}
+        },
+        /**
+         * 开始请求数据
+         * @constructor
+         */
+        RequestData:function () {
+            parent.Http.Ajax({
+                type:'get',
+                url:'/api/v1/can/realtimebyid?deviceId='+deviceId
+            },function (result) {
+                parent.TramDalog.CloseLoading();
+                if(busType == 5)
+                    Can.loadBMSDataView(result.result);
+                else
+                    Can.loadNormalView(result.result);
+                Can.SetMap(result.result);
+            })
+        },
+        EndCan:function () {
+            $('#start').text('下发');
+            $('#totelMin').prop('disabled',false);
+            $('#intervalTime').prop('disabled',false);
+            $('.timebox').text('00:00');
+            clearInterval(interval);
+            clearInterval(tinterval);
+            parent.TramDalog.InfoAlert('监控结束',true);
+            Can.CalcCountDownTime(0);
+            Can.RestBMSView();
+            Can.RestNormalView();
+            try{
+                WebOcx.Stop();
+            }catch (err){console.log('browser not support activex');}
+
+        },
+        //倒计时统计
+        CalcCountDownTime:function (seconds) {
+            var t = seconds == 0 ? 0 :seconds;
+            var mins = t <60?0:parseInt(t/60),sec = t % 60;
+            $('.timebox').text((parseInt(mins)<10?"0"+mins:mins)+":"+(parseInt(sec)<10?"0"+sec:sec));
         }
     }
 }();

@@ -40,8 +40,8 @@ public class CanCommon {
         put(24,"tirepressure1");
         put(25,"tirenumber2");
         put(26,"tirepressure2");
-        put(87,"");
-        put(88,"");
+        put(87,"incartemperature");
+        put(88,"outcartemperature");
     }};
 
     /**
@@ -76,5 +76,25 @@ public class CanCommon {
         put(232,"rightElecCurrent");
         put(233,"acceleratorPedal");
         put(234,"carVIN");
+        put(235,"idlingSwitch");
+        put(236,"minimumBatteryNumber");
+        put(237,"allBatteryMinimum");
+        put(238,"maxmumBatteryNumber");
+        put(239,"allBatteryMax");
+        put(240,"minimumTempBatteryNumber");
+        put(241,"minimumTemp");
+        put(242,"maxTempBatteryNumber");
+        put(243,"maxTemp");
+        put(244,"chargeSurplusHour");
+        put(245,"chargeSurplusMinute");
+        put(246,"signleChargeValue");
+        put(247,"signleDisChargeValue");
+        put(251,"batteryTempState");
+        put(252,"leakageState");
+        put(256,"mxElec");
+        put(257,"setTemp");
+        put(258,"airState");
+        put(263,"okState");
+        put(264,"shieldTurnState");
     }};
 }

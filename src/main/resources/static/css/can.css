@@ -1686,7 +1686,7 @@ shape.highcharts-background {
     -ms-transform: rotate(-90deg);
     -moz-transform: rotate(-90deg);
     -o-transform: rotate(-90deg);
-    margin-left: -25px
+    margin-left: -10px
 }
 
 .carheader {
@@ -1699,7 +1699,7 @@ shape.highcharts-background {
 }
 
 .radar i {
-    background: url(../images/../img/wifi.png) no-repeat;
+    background: url(../images/wifi.png) no-repeat;
     position: absolute;
     width: 35px;
     height: 35px;
@@ -1708,22 +1708,22 @@ shape.highcharts-background {
 }
 
 i.bg1 {
-    background: url(../images/../img/wifibg1.png) no-repeat;
+    background: url(../images/wifibg1.png) no-repeat;
     background-size: 35px
 }
 
 i.bg2 {
-    background: url(../images/../img/wifibg2.png) no-repeat;
+    background: url(../images/wifibg2.png) no-repeat;
     background-size: 35px
 }
 
 i.bg3 {
-    background: url(../images/../img/wifibg3.png) no-repeat;
+    background: url(../images/wifibg3.png) no-repeat;
     background-size: 35px
 }
 
 i.bg4 {
-    background: url(../images/../img/wifibg4.png) no-repeat;
+    background: url(../images/wifibg4.png) no-repeat;
     background-size: 35px
 }
 

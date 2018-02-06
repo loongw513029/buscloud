@@ -5,6 +5,10 @@ import com.sztvis.buscloud.mapper.AlarmMapper;
 import com.sztvis.buscloud.mapper.BasicMapper;
 import com.sztvis.buscloud.mapper.DeviceMapper;
 import com.sztvis.buscloud.model.domain.*;
+import com.sztvis.buscloud.model.dto.CanModel;
+import com.sztvis.buscloud.model.dto.CanStatModel;
+import com.sztvis.buscloud.model.dto.CanViewModel;
+import com.sztvis.buscloud.model.dto.DispatchModel;
 import com.sztvis.buscloud.model.dto.service.SaveAlarmQuery;
 import com.sztvis.buscloud.model.entity.DeviceStateFiled;
 import com.sztvis.buscloud.service.ICanService;
@@ -128,6 +132,26 @@ public class CanService implements ICanService {
         update.set("electricCanInfo.rightElecCurrent",ecInfo.getRightElecCurrent());
         update.set("electricCanInfo.acceleratorPedal",ecInfo.getAcceleratorPedal());
         update.set("electricCanInfo.carVIN",ecInfo.getCarVIN());
+        update.set("electricCanInfo.idlingSwitch",ecInfo.getIdlingSwitch());
+        update.set("electricCanInfo.minimumBatteryNumber",ecInfo.getMinimumBatteryNumber());
+        update.set("electricCanInfo.allBatteryMinimum",ecInfo.getAllBatteryMinimum());
+        update.set("electricCanInfo.maxmumBatteryNumber",ecInfo.getMaxmumBatteryNumber());
+        update.set("electricCanInfo.allBatteryMax",ecInfo.getAllBatteryMax());
+        update.set("electricCanInfo.minimumTempBatteryNumber",ecInfo.getMinimumTempBatteryNumber());
+        update.set("electricCanInfo.minimumTemp",ecInfo.getMinimumTemp());
+        update.set("electricCanInfo.maxTempBatteryNumber",ecInfo.getMaxTempBatteryNumber());
+        update.set("electricCanInfo.maxTemp",ecInfo.getMaxTemp());
+        update.set("electricCanInfo.chargeSurplusHour",ecInfo.getChargeSurplusHour());
+        update.set("electricCanInfo.chargeSurplusMinute",ecInfo.getChargeSurplusMinute());
+        update.set("electricCanInfo.signleChargeValue",ecInfo.getSignleChargeValue());
+        update.set("electricCanInfo.signleDisChargeValue",ecInfo.getSignleDisChargeValue());
+        update.set("electricCanInfo.batteryTempState",ecInfo.getBatteryTempState());
+        update.set("electricCanInfo.leakageState",ecInfo.getLeakageState());
+        update.set("electricCanInfo.mxElec",ecInfo.getMxElec());
+        update.set("electricCanInfo.setTemp",ecInfo.getSetTemp());
+        update.set("electricCanInfo.airState",ecInfo.getAirState());
+        update.set("electricCanInfo.okState",ecInfo.getOkState());
+        update.set("electricCanInfo.shieldTurnState",ecInfo.getShieldTurnState());
         this.mongoTemplate.updateFirst(query, update, TramCanInfo.class);
     }
 
@@ -175,7 +199,6 @@ public class CanService implements ICanService {
             alarmInfo.setDepartmentId(deviceInfo.getDepartmentid());
             alarmInfo.setState(basicInfo.isEnable()?1:0);
             alarmInfo.setPath("");
-            alarmInfo.setSystemInsertTime(new Timestamp(System.currentTimeMillis()));
             if(gpsInfo!=null)
                 alarmInfo.setLocation(gpsInfo.getLongitude()+","+gpsInfo.getLatitude());
             this.alarmMapper.SaveAlarmInfo(alarmInfo);
@@ -250,10 +273,91 @@ public class CanService implements ICanService {
         query.setDeviceCode(deviceCode);
         query.setPath(path);
         query.setDeviceId(deviceId);
-         query.setValue(value);
-         return query;
+        query.setValue(value);
+        return query;
     }
 
+    @Override
+    public CanViewModel getLastCanViewModel(String devicecode) {
+        CanViewModel viewModel = new CanViewModel();
+        TramCanInfo canInfo = this.getLastCanInfo(devicecode);
+        TramGpsInfo gpsInfo = this.iGpsService.getLastGpsInfo(devicecode);
+        CanModel canModel = new CanModel();
+        canModel.setAfterpressure(canInfo.getPressure2());
+        canModel.setBeforepressure(canInfo.getPressure1());
+        canModel.setBrakeopenings("1");
+        canModel.setElec(canInfo.getElectricCanInfo());
+        canModel.setElecconsumption("");
+        canModel.setElectricalratespeed("0");
+        canModel.setElectricalstat("2");
+        canModel.setLeftpress(canInfo.getPressure1());
+        canModel.setRightpress(canInfo.getPressure2());
+        canModel.setBeforepressure(canInfo.getPressure1());
+        canModel.setAfterpressure(canInfo.getPressure2());
+        canModel.setSpeed(canInfo.getSpeed());
+        canModel.setIncartemp(canInfo.getIncartemperature());
+        canModel.setOutcartemp(canInfo.getOutcartemperature());
+        canModel.setWatertemp(canInfo.getWatertemperature());
+        canModel.setTotalmileage(canInfo.getTotalmileage());
+        canModel.setShortmileage(canInfo.getShortmileage());
+        canModel.setSoc(canInfo.getBaterysoc());
+        canModel.setRatespeed(canInfo.getRotationalspeed());
+        canModel.setRatespped2(canInfo.getElectricCanInfo().getRightElecRote());
+        canModel.setRoate(gpsInfo==null?"0":gpsInfo.getDirection().toString());
+        canModel.setLocation(gpsInfo==null?"":gpsInfo.getLongitude()+","+gpsInfo.getLatitude());
+        canModel.setOilopenings(canInfo.getElectricCanInfo().getAcceleratorPedal());
+        CanStatModel s = new CanStatModel();
+        s.setAbsturn(this.getCanStat(canInfo.getActs(),250));
+        s.setAccturn(this.getCanStat(canInfo.getActs(),59));
+        s.setActurn(this.getCanStat(canInfo.getActs(),258));
+        s.setAfterfoglampsturn(this.getCanStat(canInfo.getActs(),48));
+        s.setBeforefoglampsturn(this.getCanStat(canInfo.getActs(),47));
+        s.setEnginepreheatingturn(this.getCanStat(canInfo.getActs(),70));
+        s.setDippedlightsturn(this.getCanStat(canInfo.getActs(),50));
+        s.setEngineworkturn(this.getCanStat(canInfo.getActs(),70));
+        s.setFootbraketurn(this.getCanStat(canInfo.getActs(),42));
+        s.setParkingbraketurn(this.getCanStat(canInfo.getActs(),43));
+        s.setHeaderdoorturn(this.getCanStat(canInfo.getActs(),39));
+        s.setMiddledoorturn(this.getCanStat(canInfo.getActs(),40));
+        s.setLastdoorturn(this.getCanStat(canInfo.getActs(),41));
+        s.setHighbeamturn(this.getCanStat(canInfo.getActs(),49));
+        s.setLeftturn(this.getCanStat(canInfo.getActs(),52));
+        s.setRightturn(this.getCanStat(canInfo.getActs(),51));
+        s.setSafetybelt(this.getCanStat(canInfo.getActs(),59));
+        viewModel.setCanstatinfo(s);
+        viewModel.setCaninfo(canModel);
+        viewModel.setTime(canInfo.getUpdatetime());
+        viewModel.setDispatchinfo(this.getLastDispathModel(canInfo.getDevicecode()));
+        return viewModel;
+    }
+
+    @Override
+    public DispatchModel getLastDispathModel(String devicecode) {
+        Query query = new Query();
+        query.addCriteria(new Criteria("devicecode").is(devicecode));
+        query.with(new Sort(new Sort.Order(Sort.Direction.DESC,"updatetime")));
+        TramDispatchInfo dispatchInfo = this.mongoTemplate.findOne(query,TramDispatchInfo.class);
+        DispatchModel dModel = new DispatchModel();
+        if(dispatchInfo!=null){
+            dModel.setCurrentsite(dispatchInfo.getDispatchname());
+            dModel.setInoroutsite(dispatchInfo.getDrivingdirection().intValue());
+            dModel.setInoroutsitetype(dispatchInfo.getDispatchtype().intValue());
+            dModel.setNextsite("");
+            dModel.setSitetype(0);
+        }
+        return dModel;
+    }
+
+    private int getCanStat(List<TramCanActinfo> acts,int key){
+        int r = 1;
+        for(TramCanActinfo a:acts){
+            if(a.getCustomId()==key){
+                double d = Double.parseDouble(a.getValue());
+                r = (int)d;
+            }
+        }
+        return r;
+    }
     @Override
     public boolean IsBarke(String deviceCode) {
         TramCanInfo canInfo = this.getLastCanInfo(deviceCode);

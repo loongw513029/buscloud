@@ -11,6 +11,7 @@ public class HostApiModel {
     private HostDataType Type;
     private String Target;
     private String Source;
+    private Object MsgInfo;
 
     public HostDataType getType() {
         return Type;
@@ -43,7 +44,4 @@ public class HostApiModel {
     public void setMsgInfo(Object msgInfo) {
         MsgInfo = msgInfo;
     }
-
-    private Object MsgInfo;
-
 }
