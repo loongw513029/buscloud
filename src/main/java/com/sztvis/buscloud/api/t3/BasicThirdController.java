@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2018/1/29 下午2:48
  */
 @RestController
-@RequestMapping("api/t3/basic")
+@RequestMapping("api/v3/basic")
 public class BasicThirdController extends T3BaseController{
-
+    
 }

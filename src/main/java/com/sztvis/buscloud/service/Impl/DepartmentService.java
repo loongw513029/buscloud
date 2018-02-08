@@ -83,6 +83,17 @@ public class DepartmentService implements IDepartmentService {
         this.departmentMapper.removeDepartment(departmentIds);
     }
 
+    @Override
+    public TramDepartmentInfo getDepartmentInfoByCode(String departmentcode) {
+        return this.departmentMapper.getDepartmentInfoByCode(departmentcode);
+    }
+
+    @Override
+    public List<TramDepartmentInfo> getDepartmentListByCode(String departmentcode) {
+        TramDepartmentInfo departmentInfo = this.departmentMapper.getDepartmentInfoByCode(departmentcode);
+        return  this.departmentMapper.getDepartmentListByParentId(departmentInfo.getId());
+    }
+
     private List<ComboTreeModel> getComboTreeDataOfRecursion(long parentId){
         List<TramDepartmentInfo> list = this.departmentMapper.GetDepartmentsByParentId(parentId);
         List<ComboTreeModel> list2 = new ArrayList<>();

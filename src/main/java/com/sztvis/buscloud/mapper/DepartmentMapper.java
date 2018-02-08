@@ -75,6 +75,11 @@ public interface DepartmentMapper {
     @Update("update TramDepartmentInfo set code=#{code},departmentname=#{departmentname},departmenttype=#{departmenttype},parentid=#{parentid},contactname=#{contactname},contactphone=#{contactphone},sort=#{sort},islookcan=#{islookcan},ishavevedio=#{ishavevedio},appname=#{appname},remark=#{remark} where id=#{id}")
     void updateDepartment(TramDepartmentInfo departmentInfo);
 
+    @Select("select * from TramDepartmentInfo where departmentcode=#{departmentCode}")
+    TramDepartmentInfo getDepartmentInfoByCode(String departmentCode);
+
+    @Select("select * from TramDepartmentInfo where id=#{parentDepartmentId} or parentid=#{parentDepartmentId}")
+    List<TramDepartmentInfo> getDepartmentListByParentId(long parentDepartmentId);
 
 
 }

@@ -62,6 +62,18 @@ public interface IDepartmentService {
      */
     void removeDepartmentInfo(String departmentIds);
 
+    /**
+     * 根据机构编码获得机构
+     * @param departmentcode
+     * @return
+     */
+    TramDepartmentInfo getDepartmentInfoByCode(String departmentcode);
 
+    /**
+     * 根据编码获得结构列表
+     * @param departmentcode
+     * @return
+     */
+    List<TramDepartmentInfo> getDepartmentListByCode(String departmentcode);
 
 }
