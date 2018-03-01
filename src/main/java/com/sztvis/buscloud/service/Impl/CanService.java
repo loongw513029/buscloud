@@ -1,8 +1,10 @@
 package com.sztvis.buscloud.service.Impl;
 
+import com.sztvis.buscloud.core.DateUtil;
 import com.sztvis.buscloud.core.TramException;
 import com.sztvis.buscloud.mapper.AlarmMapper;
 import com.sztvis.buscloud.mapper.BasicMapper;
+import com.sztvis.buscloud.mapper.CanMapper;
 import com.sztvis.buscloud.mapper.DeviceMapper;
 import com.sztvis.buscloud.model.domain.*;
 import com.sztvis.buscloud.model.dto.CanModel;
@@ -46,6 +48,8 @@ public class CanService implements ICanService {
     private AlarmMapper alarmMapper;
     @Autowired
     private IGpsService iGpsService;
+    @Autowired
+    private CanMapper canMapper;
 
     @Override
     public TramCanInfo GetCanInfo(String deviceCode, String updateTime) {
@@ -254,7 +258,14 @@ public class CanService implements ICanService {
         query.with(new Sort(new Sort.Order(Sort.Direction.DESC,"updatetime")));
         return this.mongoTemplate.findOne(query,TramCanInfo.class);
     }
-
+    @Override
+    public TramCanInfo getLastCanInfo(String deviceCode,String updateTime) {
+        Query query = new Query();
+        query.addCriteria(new Criteria("devicecode").is(deviceCode));
+        query.addCriteria(new Criteria("updatetime").lte(updateTime));
+        query.with(new Sort(new Sort.Order(Sort.Direction.DESC,"updatetime")));
+        return this.mongoTemplate.findOne(query,TramCanInfo.class);
+    }
     public SaveAlarmQuery getAlarmQuery(String deviceCode,long deviceId,String updateTime,int type,String value,String extras,String path){
         SaveAlarmQuery query = new SaveAlarmQuery();
         String[] extraArray = extras.split(",");
@@ -346,6 +357,35 @@ public class CanService implements ICanService {
             dModel.setSitetype(0);
         }
         return dModel;
+    }
+
+    @Override
+    public void autoCalcUnsafeData(long deviceId, String updateTime) {
+
+        //1.起步不关车门，车速从0递增到5km/h时，车门未关，持续1s
+
+    }
+
+    @Override
+    public void insertUnsafeData(TramUnsafeBehaviorInfo behaviorInfo) {
+        this.canMapper.insertUnsafeInfo(behaviorInfo);
+    }
+
+    @Override
+    public void insertUnSafeData(long deviceId, String updateTime, int unsafeType) {
+        TramDeviceInfo deviceInfo = this.deviceMapper.getDeviceInfoById(deviceId);
+        TramGpsInfo gpsInfo = this.iGpsService.getLastGpsInfo(deviceInfo.getDevicecode(),updateTime);
+        TramCanInfo canInfo = this.getLastCanInfo(deviceInfo.getDevicecode(),updateTime);
+        TramUnsafeBehaviorInfo behaviorInfo = new TramUnsafeBehaviorInfo();
+        behaviorInfo.setApplytime(Timestamp.valueOf(updateTime));
+        behaviorInfo.setCreatetime(Timestamp.valueOf(DateUtil.getCurrentTime()));
+        behaviorInfo.setDevicecode(deviceInfo.getDevicecode());
+        behaviorInfo.setDeviceid(deviceId);
+        behaviorInfo.setLocation(gpsInfo==null?"":gpsInfo.getLongitude()+","+gpsInfo.getLatitude());
+        behaviorInfo.setRatespeed(canInfo==null?0:Long.valueOf(canInfo.getRotationalspeed()));
+        behaviorInfo.setSpeed(canInfo==null?(gpsInfo==null?0:gpsInfo.getSpeed()):Double.valueOf(canInfo.getSpeed()));
+        behaviorInfo.setUnsafetype((long)unsafeType);
+        this.insertUnsafeData(behaviorInfo);
     }
 
     private int getCanStat(List<TramCanActinfo> acts,int key){

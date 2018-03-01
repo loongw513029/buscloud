@@ -79,12 +79,12 @@ public class OperationApiController extends BaseApiController{
      */
     @RequestMapping("/mapdevicelist")
     public ApiResult MapDeviceList(String devices,int page,int rows){
-        PageHelper.startPage(page,rows);
+        //PageHelper.startPage(page,rows);
         List<MapDeviceViewModel> list = this.iDeviceService.getMapDeviceList(devices);
-        int count = list.size();
-        PageBean<MapDeviceViewModel> pageData = new PageBean<>(page, rows, count);
-        pageData.setItems(list);
-        return ApiResult(true, "线路设备获取成功", StatusCodeEnum.Success, pageData);
+//        int count = list.size();
+//        PageBean<MapDeviceViewModel> pageData = new PageBean<>(page, rows, count);
+//        pageData.setItems(list);
+        return ApiResult(true, "线路设备获取成功", StatusCodeEnum.Success, list);
     }
     /**
      * get line dropdownlist,use in easyui combotree

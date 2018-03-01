@@ -1,12 +1,16 @@
 package com.sztvis.buscloud.service.Impl;
 
 import com.alibaba.fastjson.JSON;
+import com.sztvis.buscloud.core.DateStyle;
+import com.sztvis.buscloud.core.DateUtil;
 import com.sztvis.buscloud.core.helper.StringHelper;
+import com.sztvis.buscloud.mapper.AlarmMapper;
 import com.sztvis.buscloud.mapper.DeviceMapper;
 import com.sztvis.buscloud.mapper.DriverMapper;
 import com.sztvis.buscloud.model.domain.*;
 import com.sztvis.buscloud.model.dto.*;
 import com.sztvis.buscloud.model.dto.api.HVNVRModel;
+import com.sztvis.buscloud.model.dto.push.PushModel;
 import com.sztvis.buscloud.model.entity.DeviceStateFiled;
 import com.sztvis.buscloud.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +20,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,6 +35,8 @@ public class DeviceService implements IDeviceService {
     @Autowired
     private DeviceMapper deviceMapper;
     @Autowired
+    private AlarmMapper alarmMapper;
+    @Autowired
     private MongoTemplate mongoTemplate;
     @Autowired
     private IDepartmentService iDepartmentService;
@@ -41,6 +48,8 @@ public class DeviceService implements IDeviceService {
     private IBasicService iBasicService;
     @Autowired
     private IGpsService iGpsService;
+    @Autowired
+    private IPushService iPushService;
 
     @Override
     public TramDeviceInfo getDeviceInfoByCode(String deviceCode) {
@@ -290,6 +299,83 @@ public class DeviceService implements IDeviceService {
     public List<DeviceInspectViewModel> getDeviceInspectList(long userid, long departmentid, long lineid, int type, String keywords) {
         List<Long> departmens = this.iDepartmentService.GetDepartmentIdsByUserId(userid);
         return this.deviceMapper.getDeviceInspectList(departmens,departmentid,lineid,type,keywords);
+    }
+
+    @Override
+    public void autoCanSignleStatis() {
+        List<TramDeviceInfo> devices = this.deviceMapper.getAllDevices();
+        for(TramDeviceInfo device:devices){
+            Query query1 = new Query();
+            String lastTime = DateUtil.getCurrentTime(DateStyle.YYYY_MM_DD);
+            String firstTime = DateUtil.addDay(DateUtil.getCurrentTime(DateStyle.YYYY_MM_DD),-1);
+            query1.addCriteria(new Criteria("devicecode").is(device.getDevicecode()));
+            query1.addCriteria(new Criteria("updatetime").lte(lastTime));
+            query1.with(new Sort( new Sort.Order(Sort.Direction.DESC,"updatetime")));
+            TramCanInfo lastCanInfo = this.mongoTemplate.findOne(query1,TramCanInfo.class);
+            Query query2 = new Query();
+            query2.addCriteria(new Criteria("devicecode").is(device.getDevicecode()));
+            query2.addCriteria(new Criteria("updatetime").gte(firstTime));
+            query2.with(new Sort( new Sort.Order(Sort.Direction.ASC,"updatetime")));
+            TramCanInfo firstCanInfo = this.mongoTemplate.findOne(query2,TramCanInfo.class);
+            if(firstCanInfo != null && lastCanInfo != null){
+                String updateTime = DateUtil.getCurrentTime(DateStyle.YYYY_MM_DD);
+                CanHistoryEveryDayInfo everyDayInfo = new CanHistoryEveryDayInfo();
+                everyDayInfo.setUpdatetime(updateTime);
+                Double mileage = Double.valueOf(lastCanInfo.getTotalmileage())-Double.valueOf(firstCanInfo.getTotalmileage());
+                everyDayInfo.setTotalmileage(mileage);
+                everyDayInfo.setGasavg(0D);
+                everyDayInfo.setGasonlieavg(0D);
+                everyDayInfo.setElectricavg(0D);
+                everyDayInfo.setDeviceid(device.getId());
+                everyDayInfo.setFaultonelv(this.alarmMapper.getCountByDeviceAndLevel(device.getId(),1));
+                everyDayInfo.setFaultsecondlv(this.alarmMapper.getCountByDeviceAndLevel(device.getId(),2));
+                everyDayInfo.setFaultthreelv(this.alarmMapper.getCountByDeviceAndLevel(device.getId(),3));
+                long unsafeNum = this.deviceMapper.getUnsafeCountByDeviceIdEveryDay(device.getId(),firstTime,lastTime);
+                everyDayInfo.setUnsafenumber(unsafeNum);
+            }
+        }
+    }
+
+    @Override
+    public void autoDeviceStatus(){
+        List<TramDeviceInfo> devices = this.deviceMapper.getAllDevices();
+        for(TramDeviceInfo device:devices){
+            String nowTime = DateUtil.getCurrentTime();
+            String stTime = DateUtil.addMinute(nowTime,-1);
+            long deviceHealthCount = this.getDeviceHealthInfo(device.getDevicecode(),stTime,nowTime);
+            if(deviceHealthCount == 0){
+                this.UpdateRealTimeInspect(device.getDevicecode(),DeviceStateFiled.OnlineState,false,3);
+            }else{
+                this.UpdateRealTimeInspect(device.getDevicecode(),DeviceStateFiled.OnlineState,true,3);
+            }
+            //推送
+            PushModel pushModel = new PushModel();
+            pushModel.setType(1);
+            pushModel.setMsgInfo(this.getCurrentDeviceStatus(device.getId()));
+            this.iPushService.sendMsg(pushModel);
+        }
+    }
+
+    @Override
+    public DeviceStatusPushModel getCurrentDeviceStatus(long deviceId){
+        TramDeviceInfo deviceInfo = this.getDeviceInfoById(deviceId);
+        DeviceStatusPushModel pushModel = new DeviceStatusPushModel();
+        pushModel.setCode(deviceInfo.getDevicecode());
+        TramDeviceStateInspectRealtimeInfo inspectInfo = this.getDeviceStateInspectRealTimeInfo(deviceId);
+        pushModel.setCanState(inspectInfo.isCanstate());
+        pushModel.setGpsState(inspectInfo.isGpsstate());
+        pushModel.setHostSoftType(deviceInfo.getHostsofttype().intValue());
+        pushModel.setOnline(inspectInfo.isOnlineState());
+        return pushModel;
+    }
+
+    @Override
+    public long getDeviceHealthInfo(String deviceCode, String starttime, String endTime) {
+        Query query = new Query();
+        query.addCriteria(new Criteria("devicecode").is(deviceCode));
+        query.addCriteria(new Criteria("updatetime").lte(endTime));
+        query.addCriteria(new Criteria("updatetime").gte(starttime));
+        return this.mongoTemplate.count(query,TramDeviceHealthInfo.class);
     }
 
 

@@ -7,7 +7,7 @@ package com.sztvis.buscloud.model.dto;
  */
 public class MapDeviceViewModel {
     private long id;
-    private String deivcecode;
+    private String devicecode;
     private String iconclass;
     private String departmentname;
     private String linename;
@@ -26,12 +26,12 @@ public class MapDeviceViewModel {
         this.id = id;
     }
 
-    public String getDeivcecode() {
-        return deivcecode;
+    public String getDevicecode() {
+        return devicecode;
     }
 
-    public void setDeivcecode(String deivcecode) {
-        this.deivcecode = deivcecode;
+    public void setDevicecode(String devicecode) {
+        this.devicecode = devicecode;
     }
 
     public String getIconclass() {

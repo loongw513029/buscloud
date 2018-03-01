@@ -1,11 +1,9 @@
 package com.sztvis.buscloud.model.domain;
 
-public class Canhistoryeverydayinfo {
+public class CanHistoryEveryDayInfo {
   private Long id;
   private Long deviceid;
   private String updatetime;
-  private Long totalbusnumber;
-  private Long normalbusnumber;
   private Double totalmileage;
   private Double gasonlieavg;
   private Double electricavg;
@@ -42,22 +40,6 @@ public class Canhistoryeverydayinfo {
 
   public void setUpdatetime(String updatetime) {
     this.updatetime = updatetime;
-  }
-
-  public Long getTotalbusnumber() {
-    return totalbusnumber;
-  }
-
-  public void setTotalbusnumber(Long totalbusnumber) {
-    this.totalbusnumber = totalbusnumber;
-  }
-
-  public Long getNormalbusnumber() {
-    return normalbusnumber;
-  }
-
-  public void setNormalbusnumber(Long normalbusnumber) {
-    this.normalbusnumber = normalbusnumber;
   }
 
   public Double getTotalmileage() {

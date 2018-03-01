@@ -1,10 +1,7 @@
 package com.sztvis.buscloud.mapper;
 
 import com.sztvis.buscloud.mapper.provider.DeviceSqlProvider;
-import com.sztvis.buscloud.model.domain.TramDeviceInfo;
-import com.sztvis.buscloud.model.domain.TramBusInfo;
-import com.sztvis.buscloud.model.domain.TramChannelInfo;
-import com.sztvis.buscloud.model.domain.TramDeviceStateInspectRealtimeInfo;
+import com.sztvis.buscloud.model.domain.*;
 import com.sztvis.buscloud.model.dto.*;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
@@ -124,11 +121,23 @@ public interface DeviceMapper {
     @Select("select busid from TramDeviceInfo where id in(#{deviceIds})")
     List<Long> getBusIds(String deviceIds);
 
-    @Select("select a.id,a.devicecode,b.departmentname,c.linename,e.busnumber from tramdeviceinfo a left join trambusinfo e on a.busid=e.id left join tramdepartmentinfo b on a.departmentid=b.id left join tramlineinfo c on a.lineid=c.id where a.id in(#{devices})")
-    List<MapDeviceViewModel> getMapDeviceList(String devices);
+    //@Select("select a.id,a.devicecode,b.departmentname,c.linename,e.busnumber from tramdeviceinfo a left join trambusinfo e on a.busid=e.id left join tramdepartmentinfo b on a.departmentid=b.id left join tramlineinfo c on a.lineid=c.id where a.id in(#{devices})")
+    @SelectProvider(type = DeviceSqlProvider.class,method = "getMapDeviceListSQL")
+    List<MapDeviceViewModel> getMapDeviceList(@Param("devices") String devices);
 
     @SelectProvider(type = DeviceSqlProvider.class,method = "getDeviceInspectSQL")
     List<DeviceInspectViewModel> getDeviceInspectList(@Param("departments") List<Long> departmens,@Param("departmentid") long departmentid,@Param("lineid") long lineid,@Param("type") int type,@Param("keywords") String keywords);
 
+    @Select("select * from TramDeviceInfo")
+    List<TramDeviceInfo> getAllDevices();
+
+    @Insert("insert into CanHistoryEveryDayInfo(deviceid,updatetime,totalmileage,gasonlieavg,electricavg,gasavg,totalfaultnumber,totalcarfaultnumber,faultthreelv,faultsecondlv,faultonelv,unsafenumber,unsafedriver,speedingtotal,runtimelong)values(#{deviceid},#{updatetime},#{totalmileage},#{gasonlieavg},#{electricavg},#{gasavg},#{totalfaultnumber},#{totalcarfaultnumber},#{faultthreelv},#{faultsecondlv},#{faultonelv},#{unsafenumber},#{unsafedriver},#{speedingtotal},#{runtimelong})")
+    void insertCanHistoryEveryDayData(CanHistoryEveryDayInfo info);
+
+    @Select("select count(id) from tramunsafebehaviorinfo where deviceId=#{deviceId} and ApplyTime>=#{time1} and ApplyTime<=#{time2}")
+    long getUnsafeCountByDeviceIdEveryDay(@Param("deviceId") long deviceId,@Param("time1") String time1,@Param("time2") String time2);
+
+    @Update("update TramDeviceInfo set deviceStatus=#{status} where devicecode=#{deviceCode}")
+    void updateDeviceStatus(@Param("deviceCode") String deviceCode,@Param("status") int status);
 
 }

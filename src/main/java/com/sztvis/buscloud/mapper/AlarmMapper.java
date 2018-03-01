@@ -3,10 +3,7 @@ package com.sztvis.buscloud.mapper;
 import com.sztvis.buscloud.mapper.provider.AlarmProvider;
 import com.sztvis.buscloud.model.domain.TramAlarmInfo;
 import com.sztvis.buscloud.model.dto.AlarmViewModel;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -31,4 +28,7 @@ public interface AlarmMapper {
 
     @SelectProvider(type = AlarmProvider.class,method = "getAlarmViewModelSQL")
     AlarmViewModel getAlarmViewModel(@Param("id") long id);
+
+    @Select("select count(a.id) from TramAlarmInfo a left join trambasicinfo b on a.AlarmType=b.Id where  a.DeviceId = #{deviceId} and b.Level=#{level}")
+    long getCountByDeviceAndLevel(@Param("deviceId") long deviceId,@Param("level") int level);
 }

@@ -1,8 +1,7 @@
 package com.sztvis.buscloud.model.domain;
 
-public class Tramunsafebehaviorinfo {
+public class TramUnsafeBehaviorInfo {
   private Long id;
-  private String guid;
   private Long deviceid;
   private String devicecode;
   private Long unsafetype;
@@ -19,14 +18,6 @@ public class Tramunsafebehaviorinfo {
 
   public void setId(Long id) {
     this.id = id;
-  }
-
-  public String getGuid() {
-    return guid;
-  }
-
-  public void setGuid(String guid) {
-    this.guid = guid;
   }
 
   public Long getDeviceid() {

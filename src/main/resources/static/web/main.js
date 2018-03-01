@@ -4,7 +4,7 @@ var mainPlatform = {
         return ['/can/preview'];
     },
     multiArray:function () {
-        return ['/video/preview'];
+        return ['/video/preview','/map/preview'];
     },
     init: function(){
 
@@ -84,10 +84,10 @@ var mainPlatform = {
                             if($.inArray(src,mainPlatform.signleArray())>=0) {
                                 window.frames[index].Can.TransferData(node.id);
                             }
-                            if($.inArray(src,mainPlatform.multiArray())>=0){
-                                var nodes = $('#easyui-tree').tree('getSelected');
-                                window.frames[index].TMap.ReviceParentAlarm(nodes);
-                            }
+                        }
+                        if($.inArray(src,mainPlatform.multiArray())>=0){
+                            var nodes = $('#easyui-tree').tree('getChecked');
+                            window.frames[index].TMap.ReviceParentAlarm(nodes);
                         }
                     },
                     onBeforeCheck:function (node,checked) {

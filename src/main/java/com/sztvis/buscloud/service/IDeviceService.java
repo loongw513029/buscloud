@@ -158,5 +158,29 @@ public interface IDeviceService {
      */
     List<DeviceInspectViewModel> getDeviceInspectList(long userid,long departmentid,long lineid,int type,String keywords);
 
+    /**
+     * 单车分析统计
+     */
+    void autoCanSignleStatis();
+
+    void autoDeviceStatus();
+
+    /**
+     * 获得时间段内心跳数据条数
+     * @param deviceCode 设备编码
+     * @param starttime 开始时间
+     * @param endTime 结束时间
+     * @return
+     */
+    long getDeviceHealthInfo(String deviceCode,String starttime,String endTime);
+
+    /**
+     * 获取当前设备状态推送模型
+     * @param deviceId
+     * @return
+     */
+    DeviceStatusPushModel getCurrentDeviceStatus(long deviceId);
+
+
 
 }

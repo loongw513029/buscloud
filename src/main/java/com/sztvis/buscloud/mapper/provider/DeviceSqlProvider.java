@@ -105,4 +105,10 @@ public class DeviceSqlProvider {
             sb.append(" and a.devicecode like '%"+keywords+"%'");
         return sb.toString();
     }
+
+    public String getMapDeviceListSQL(Map<String,Object> map){
+        String devices = (String)map.get("devices");
+        String sql="select a.id,a.devicecode,b.departmentname,c.linename,e.busnumber from tramdeviceinfo a left join trambusinfo e on a.busid=e.id left join tramdepartmentinfo b on a.departmentid=b.id left join tramlineinfo c on a.lineid=c.id where a.id in("+devices+")";
+        return sql;
+    }
 }

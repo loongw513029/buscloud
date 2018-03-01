@@ -28,6 +28,12 @@ public class DateUtil {
         SimpleDateFormat df = new SimpleDateFormat(DateStyle.YYYY_MM_DD_HH_MM_SS.getValue());
         return df.format(day);
     }
+
+    public static String getCurrentTime(DateStyle dateStyle){
+        Date day=new Date();
+        SimpleDateFormat df = new SimpleDateFormat(dateStyle.getValue());
+        return df.format(day);
+    }
     /**
      * 获取SimpleDateFormat
      * @param parttern 日期格式

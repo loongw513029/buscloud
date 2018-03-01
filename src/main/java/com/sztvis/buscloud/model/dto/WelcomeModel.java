@@ -1,6 +1,7 @@
 package com.sztvis.buscloud.model.dto;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author longweiqian
@@ -79,5 +80,24 @@ public class WelcomeModel implements Serializable {
 
     private WelcomeTrendModel welcomeTrendModel;
 
+    private List<HomeAlarmViewModel> alarmList;
+
+    private List<MaintenanceModel> maintenanceList;
+
+    public List<HomeAlarmViewModel> getAlarmList() {
+        return alarmList;
+    }
+
+    public void setAlarmList(List<HomeAlarmViewModel> alarmList) {
+        this.alarmList = alarmList;
+    }
+
+    public List<MaintenanceModel> getMaintenanceList() {
+        return maintenanceList;
+    }
+
+    public void setMaintenanceList(List<MaintenanceModel> maintenanceList) {
+        this.maintenanceList = maintenanceList;
+    }
 }
 

@@ -56,4 +56,6 @@ upload:
 logging:
   level:
     com:
-     abc: DEBUG
+      sztvis:
+        buscloud:
+          mapper: debug

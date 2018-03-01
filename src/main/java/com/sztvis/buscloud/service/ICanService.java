@@ -2,6 +2,7 @@ package com.sztvis.buscloud.service;
 
 import com.sztvis.buscloud.model.domain.TramCanActinfo;
 import com.sztvis.buscloud.model.domain.TramCanInfo;
+import com.sztvis.buscloud.model.domain.TramUnsafeBehaviorInfo;
 import com.sztvis.buscloud.model.dto.CanViewModel;
 import com.sztvis.buscloud.model.dto.DispatchModel;
 import com.sztvis.buscloud.model.dto.service.SaveAlarmQuery;
@@ -70,6 +71,8 @@ public interface ICanService {
      */
     TramCanInfo getLastCanInfo(String deviceCode);
 
+    TramCanInfo getLastCanInfo(String deviceCode,String updateTime);
+
     /**
      * 查询车辆最后刹车状态
      * @param deviceCode
@@ -108,5 +111,25 @@ public interface ICanService {
      * @return
      */
     DispatchModel getLastDispathModel(String devicecode);
+
+    /**
+     * 统计不安全数据
+     * @param deviceId
+     */
+    void autoCalcUnsafeData(long deviceId,String updateTime);
+
+    /**
+     * 增加不安全行为数据
+     * @param behaviorInfo
+     */
+    void insertUnsafeData(TramUnsafeBehaviorInfo behaviorInfo);
+
+    /**
+     * 增加不安全行为数据
+     * @param deviceId 设备id
+     * @param updateTime 时间点
+     * @param unsafeType 不安全类型
+     */
+    void insertUnSafeData(long deviceId,String updateTime,int unsafeType);
 
 }
