@@ -68,5 +68,11 @@ public interface IBasicService {
      * @param keywords
      * @return
      */
-    List<BasicViewModel> getBasicList(int type,String keywords);
+    List<BasicViewModel> getBasicList(int type,String keywords,int page,int size);
+
+    int getBasicListCount(int type,String keywords);
+
+    void insertBasicInfo(TramBasicInfo basicInfo);
+
+    void updateBasicInfo(TramBasicInfo basicInfo);
 }

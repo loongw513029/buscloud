@@ -52,7 +52,9 @@ var mainPlatform = {
                 $(window).resize();
             },300)
         });
-
+        function closeTree() {
+            
+        }
         $(document).on('click', '.pf-modify-pwd', function() {
             $('#pf-page').find('iframe').eq(0).attr('src', 'backend/modify_pwd.html')
         });
@@ -91,8 +93,8 @@ var mainPlatform = {
                         }
                     },
                     onBeforeCheck:function (node,checked) {
-                        if(!node.attributes.isdevice)
-                            return false;
+                        //if(!node.attributes.isdevice)
+                            //return false;
                         if(checked) {
                             var index = mainPlatform.getCurrentIframeIndex();
                             var src = $('.page-iframe:eq(' + index + ')').attr("src");
@@ -140,9 +142,9 @@ var mainPlatform = {
         }else{
             var content = '<iframe class="page-iframe" src="'+url+'" frameborder="no"   border="no" height="100%" width="100%" scrolling="auto">';
             $(".easyui-tabs1").tabs('add',{
-               title:title,
-               content:content,
-               closable:true
+                title:title,
+                content:content,
+                closable:true
             });
         }
     },
@@ -158,8 +160,12 @@ var mainPlatform = {
                 
             });
         })
-    }
+    },
+    openAdminInfo:function () {
+        parent.TramDalog.OpenIframe(650,405,'用户信息',"/basic/memberfrom?id="+id,function (layerno,index) {
 
+        });
+    }
 };
 
 mainPlatform.init();

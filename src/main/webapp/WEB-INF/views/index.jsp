@@ -58,13 +58,13 @@
             <div class="pf-user-panel">
                 <ul class="pf-user-opt">
                     <li>
-                        <a href="javascript:;">
+                        <a href="javascript:;" onclick="mainPlatform.openAdminInfo()">
                             <i class="iconfont">&#xf00ec;</i>
                             <span class="pf-opt-name">用户信息</span>
                         </a>
                     </li>
                     <li class="pf-modify-pwd">
-                        <a href="http://www.uimaker.com">
+                        <a href="">
                             <i class="iconfont">&#xf00c9;</i>
                             <span class="pf-opt-name">修改密码</span>
                         </a>

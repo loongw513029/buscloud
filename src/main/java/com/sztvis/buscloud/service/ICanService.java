@@ -3,6 +3,7 @@ package com.sztvis.buscloud.service;
 import com.sztvis.buscloud.model.domain.TramCanActinfo;
 import com.sztvis.buscloud.model.domain.TramCanInfo;
 import com.sztvis.buscloud.model.domain.TramUnsafeBehaviorInfo;
+import com.sztvis.buscloud.model.dto.CanHistoryViewModel;
 import com.sztvis.buscloud.model.dto.CanViewModel;
 import com.sztvis.buscloud.model.dto.DispatchModel;
 import com.sztvis.buscloud.model.dto.service.SaveAlarmQuery;
@@ -131,5 +132,13 @@ public interface ICanService {
      * @param unsafeType 不安全类型
      */
     void insertUnSafeData(long deviceId,String updateTime,int unsafeType);
+
+    /**
+     * 获取can巡检数据
+     * @param dayType 时间类型
+     * @param lineId 线路id
+     * @return
+     */
+    CanHistoryViewModel getCanHistorys(int dayType,long lineId);
 
 }

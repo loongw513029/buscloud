@@ -225,7 +225,7 @@ public class ServerController extends BaseApiController{
                 }
             }
             //运算不安全行为
-
+            this.iCanService.autoCalcUnsafeData(deviceInfo.getId(),updateTime);
             //this.iDeviceService.UpdateRealTimeInspect(deviceInfo.getDevicecode(), DeviceStateFiled.CanState,1);
             return  ApiResult(true,"设备"+deviceInfo.getDevicecode()+"Can增加成功!",StatusCodeEnum.Success,null);
         }catch (Exception ex){

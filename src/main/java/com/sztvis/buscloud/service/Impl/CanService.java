@@ -7,10 +7,7 @@ import com.sztvis.buscloud.mapper.BasicMapper;
 import com.sztvis.buscloud.mapper.CanMapper;
 import com.sztvis.buscloud.mapper.DeviceMapper;
 import com.sztvis.buscloud.model.domain.*;
-import com.sztvis.buscloud.model.dto.CanModel;
-import com.sztvis.buscloud.model.dto.CanStatModel;
-import com.sztvis.buscloud.model.dto.CanViewModel;
-import com.sztvis.buscloud.model.dto.DispatchModel;
+import com.sztvis.buscloud.model.dto.*;
 import com.sztvis.buscloud.model.dto.service.SaveAlarmQuery;
 import com.sztvis.buscloud.model.entity.DeviceStateFiled;
 import com.sztvis.buscloud.service.ICanService;
@@ -386,6 +383,13 @@ public class CanService implements ICanService {
         behaviorInfo.setSpeed(canInfo==null?(gpsInfo==null?0:gpsInfo.getSpeed()):Double.valueOf(canInfo.getSpeed()));
         behaviorInfo.setUnsafetype((long)unsafeType);
         this.insertUnsafeData(behaviorInfo);
+    }
+
+    @Override
+    public CanHistoryViewModel getCanHistorys(int dayType, long lineId) {
+        CanHistoryViewModel viewModel = new CanHistoryViewModel();
+
+        return null;
     }
 
     private int getCanStat(List<TramCanActinfo> acts,int key){

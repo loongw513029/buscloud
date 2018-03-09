@@ -1,4 +1,5 @@
 var layerIndex;
+var expandNodeIdArr=[];
 var Http=function(){
     return {
         //统一请求函数

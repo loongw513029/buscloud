@@ -40,6 +40,7 @@ public class TreeService implements ITreeService {
         treeModel.setIconCls("tree-department");
         TreeAttributeModel m2=new TreeAttributeModel();
         m2.setState(false);
+        m2.setLevel(1);
         treeModel.setAttributes(m2);
         treeModel.setChildren(this.GetChindDepartmentList(departmentinfo.getId()));
         return  treeModel;
@@ -56,6 +57,7 @@ public class TreeService implements ITreeService {
             model.setIconCls("tree-child-department");
             model.setChildren(this.GetChildLineList(dlist.get(i).getId()));
             TreeAttributeModel m2=new TreeAttributeModel();
+            m2.setLevel(2);
             model.setAttributes(m2);
             list.add(model);
         }
@@ -67,13 +69,14 @@ public class TreeService implements ITreeService {
         List<TramLineInfo> dlist = iLineService.GetLinesByDepartmentId(departmentId);
         for(int i=0;i<dlist.size();i++){
             TreeModel model =new TreeModel();
-            model.setState("open");
+            model.setState(i==0?"open":"closed");
             model.setId(dlist.get(i).getId());
             model.setText(dlist.get(i).getLinename());
             model.setChecked(false);
             model.setIconCls("tree-customline");
             model.setChildren(this.GetChindDevicesByLineId(dlist.get(i).getId()));
             TreeAttributeModel m2=new TreeAttributeModel();
+            m2.setLevel(3);
             model.setAttributes(m2);
             list.add(model);
         }
@@ -92,6 +95,7 @@ public class TreeService implements ITreeService {
             model.setIconCls("device-nvr-online");
             TreeAttributeModel m2=new TreeAttributeModel();
             m2.setIsdevice(true);
+            m2.setLevel(4);
             model.setAttributes(m2);
             list.add(model);
         }

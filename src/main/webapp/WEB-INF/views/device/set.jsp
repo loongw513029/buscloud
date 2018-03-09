@@ -8,25 +8,11 @@
     <link rel="stylesheet" href="/easyui/uimaker/easyui.css">
     <link rel="stylesheet" href="/easyui/uimaker/icon.css">
     <link rel="stylesheet" href="/fonts/iconfont.css">
-    <link href="/css/base.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/device-set.css" />
-    <style>
-        .layui-layer-content{padding: 0px}
-    </style>
 </head>
 <body>
-<table id="table" style="margin-top: 10px"></table>
-<div id="toolbar" style="padding:5px;height:auto">
-    <div style="margin-bottom:5px">
-        <div style="display: inline-block">
-            <input class="easyui-text" style="width:130px" id="departmentId">
-            <input class="easyui-text" style="width:130px" id="lineId">
-            <input class="easyui-text" style="width:130px" id="type" />
-            <input id="txtkey"/>
-        </div>
-    </div>
-</div>
-<div class="easyui-tabs set-tab" id="set" data-options="tabWidth:80,tabHeight:30" style="width:100%;height:auto" buttons="#dlg-buttons">
+<a class="easyui-linkbutton" href="/device/inspect">返回列表</a>
+<div class="easyui-tabs set-tab" id="set" data-options="tabWidth:80,tabHeight:30" buttons="#dlg-buttons">
     <div title="系统设置" style="padding:5px;position:relative">
         <section>录像储存</section>
         <div class="item2 fl w100">
@@ -148,7 +134,7 @@
     </div>
     <div title="通道设置" style="padding:5px">
         <div class="easyui-tabs set-channel" data-options="tabPosition:'left'">
-            <div title="01:通道01" style="min-height:500px;padding-left:10px">
+            <div title="01:通道01" style="min-height:628px;padding-left:10px">
                 <div class="item2 fl w100 h30">
                     <input type="checkbox" /><label>启用</label> <label>地址</label><input type="text" /> <label>类型</label> <select class="easyui-combobox"><option value="HV-1">HV-1</option><option value="HV-2">HV-2</option><option value="HV-3">HV-3</option><option value="HV-4">HV-4</option><option value="HV-5">HV-5</option><option value="HV-6">HV-6</option></select>
                 </div>
@@ -530,10 +516,10 @@
         </div>
     </div>
 </div>
-<div id="dlg-buttons">
+<div id="dlg-buttons" style="background-color: #e3e3e3;padding: 5px;border: solid 1px #bfbfbf;border-top: 0px;">
     <table cellpadding="0" cellspacing="0" style="width:100%" border="0">
         <tr>
-            <td style="text-align:right">
+            <td style="text-align:left">
                 <a href="#" class="easyui-linkbutton" iconCls="icon-save" onclick="javascript:alert('save')">保存</a>
                 <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dd').dialog('close')">重置</a>
             </td>
@@ -554,8 +540,7 @@
 
 <script type="text/javascript" src="/easyui/jquery.min.js"></script>
 <script type="text/javascript" src="/easyui/jquery.easyui.min.js"></script>
-<script type="text/javascript" src="/easyui/datagrid-detailview.js"></script>
 <script type="text/javascript" src="/easyui/easyui-lang-zh_CN.js"></script>
-<script type="text/javascript" src="/web/device/inspect.js"></script>
+<script type="text/javascript" src="/web/device/set.js"></script>
 </body>
 </html>

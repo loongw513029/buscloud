@@ -12,10 +12,11 @@ var Basic =function () {
                 fit:true,               //网格自动撑满
                 fitColumns:true,        //设置为 true，则会自动扩大或缩小列的尺寸以适应网格的宽度并且防止水平滚动。
                 pagination:true,
+                singleSelect:true,
                 pageNumber:1,
-                singleSelect:false,
-                pageSize:15,
-                pageList:[15,20,50,100],
+                pageSize:50,
+                pageList:[50,100],
+                updateUrl:'www.baidu.com',
                 queryParams:{type:0,keywords:''},
                 toolbar:[
                     {
@@ -69,7 +70,16 @@ var Basic =function () {
                     },{
                         field: 'level',
                         title: '报警等级',
-                        width: 50
+                        width: 50,
+                        editor:{
+                            type:'combobox',
+                            options:{
+                                valueField:'id',
+                                textField:'value',
+                                data:[{"id":"1","value":"一级报警"},{"id":"2","value":"二级报警"},{"id":"3","value":"三级报警"}],
+                                required:true
+                            }
+                        }
                     },
                     {
                         field: 'turn',
@@ -77,6 +87,15 @@ var Basic =function () {
                         width: 50,
                         formatter:function (value) {
                             return value?'已启用':'已关闭';
+                        },
+                        editor:{
+                            type:'combobox',
+                            options:{
+                                valueField:'id',
+                                textField:'value',
+                                data:[{"id":"true","value":"打开"},{"id":"false","value":"关闭"}],
+                                required:true
+                            }
                         }
                     },{
                         field: 'ispush',
@@ -84,15 +103,31 @@ var Basic =function () {
                         width: 50,
                         formatter:function (value) {
                             return value?'已启用':'已关闭';
+                        },
+                        editor:{
+                            type:'combobox',
+                            options:{
+                                valueField:'id',
+                                textField:'value',
+                                data:[{"id":"true","value":"打开"},{"id":"false","value":"关闭"}],
+                                required:true
+                            }
                         }
                     },{
                         field: 'threshold',
                         title: '阈值',
-                        width: 50
+                        width: 50,
+                        editor:{
+                            type:'text'
+                        }
                     },{
                         field: 'customid',
                         title: '自定义ID',
-                        width: 100
+                        width: 100,
+                        editor:{
+                            type:'numberbox',
+                            value:0
+                        }
                     }
                 ]],
                 loadFilter:function (data) {
@@ -100,14 +135,50 @@ var Basic =function () {
                         var liststr = JSON.stringify(data.result.items);
                         liststr=liststr.replaceAll("parentid","_parentId");
                         var result = JSON.parse(liststr);
+                        for(var i =0;i<result.length;i++){
+                            if(result[i]._parentId==0)
+                                result[i]._parentId=null;
+                        }
                         return {
                             total:data.result.totalNum,
                             rows:result
                         };
                     }
+                },
+                onAfterEdit: function (rowIndex, rowData, changes) {
+                    editRow = undefined;
+                    var row = rowIndex;
+                    //像后台更新记录
+                    parent.Http.Ajax({
+                        url:'/api/v1/operation/updatealarmconfig',
+                        type:'put',
+                        data:row
+                    },function (result) {
+                        if(result.success){
+
+                        }
+                    })
+                },
+                onDblClickRow: function (rowIndex, rowData) {
+                    if (editRow != undefined) {
+                        $("#table").treegrid('endEdit', editRow.id);
+                    }
+
+                    if (editRow == undefined) {
+                        $("#table").treegrid('beginEdit', rowIndex.id);
+                        editRow = rowIndex;
+                    }
+                },
+                onClickRow: function (rowIndex, rowData) {
+                    if (editRow != undefined) {
+                        $("#table").treegrid('endEdit', editRow.id);
+
+                    }
+
                 }
             });
         }
     }
 }();
+var editRow = undefined;
 Basic.init();

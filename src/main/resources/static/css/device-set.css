@@ -1,0 +1,31 @@
+.tt-inner img{width: 28px;border:0;}
+.tt-inner{display:inline-block;line-height:12px;padding-top:5px;}
+.item{height: 40px;line-height: 40px;width: 150px;display: inline-block}
+.item img{vertical-align: middle;width: 20px}
+.group{width: 100%;float: left}
+.item2{padding-top: 10px;display: inline-block}
+.item2 label,.item2 span,.item2 input[type='checkbox'],.item2 input[type='text']{float: left}
+.item2 label{line-height: 25px;margin-right: 5px;margin-left: 5px}
+.item2 input[type='checkbox']{vertical-align: middle}
+.easyui-linkbutton{margin-left: 5px}
+.fl{float: left}
+.fr{float: right}
+.w100{width: 100%}
+.storage{width: 300px;position: absolute;height: 260px;left: 250px;top:10px}
+.panel-tool a{width: 58px}
+.panel-tool a .l-btn-text{line-height: 16px}
+.s-table{width:100%}
+.s-table thead tr{background-color: #dedede;}
+.selchannel{list-style: none;list-style-type: none;padding: 0px;margin: 0px;}
+.selchannel li{list-style: none;list-style-type: none;border-bottom: solid 1px #dedede;height: 20px}
+.selchannel li input{vertical-align: middle}
+.h30{height: 25px}
+.set-channel .item2 label{line-height: 20px}
+.line{border-bottom: solid 1px #dedede}
+.w80{width: 80px}
+.w50{width: 50px}
+.none{clear: both}
+.tr{text-align: right}
+.slider{position: absolute;bottom: 10px;width: 98%;margin: auto}
+.video{width: 100%;height: 492px;position: relative}
+.video-buttons{position: absolute;bottom: 50px;width: 100%;text-align: center;display: none}

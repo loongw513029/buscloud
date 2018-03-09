@@ -56,5 +56,13 @@ public interface BasicMapper {
     List<ComboTreeModel> getAlarmTypeListByParentId(long parentId);
 
     @SelectProvider(type = BasicProvider.class,method = "getBasicList")
-    List<BasicViewModel> getBasicList(@Param("type") int type,@Param("keywords") String keywords);
+    List<BasicViewModel> getBasicList(@Param("type") int type,@Param("keywords") String keywords,@Param("page") int page,@Param("size") int size);
+    @SelectProvider(type = BasicProvider.class,method = "getBasicListCount")
+    int getBasicListCount(@Param("type") int type,@Param("keywords") String keywords);
+
+    @Update("update TramBasicInfo set alarmname=#{alarmName},level=#{level},turn=#{turn},isPush=#{isPush},customId=#{customId},isEnable=#{isEnable} where id=#{id}")
+    void updateAlarmConfig(TramBasicInfo basicInfo);
+
+    @Insert("insert into TramBasicInfo(alarmName,level,type,fixe,turn,isPush,threShold,customId,isEnable)values(#{alarmName},#{level},#{type},#{fixe},#{turn},#{isPush},#{threShold},#{customId},#{isEnable})")
+    void insertAlarmConfig(TramBasicInfo basicInfo);
 }

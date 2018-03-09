@@ -2,6 +2,7 @@ package com.sztvis.buscloud.api;
 
 import com.github.pagehelper.PageHelper;
 import com.sztvis.buscloud.core.helper.ListHelper;
+import com.sztvis.buscloud.model.domain.TramBasicInfo;
 import com.sztvis.buscloud.model.dto.*;
 import com.sztvis.buscloud.model.dto.response.ApiResult;
 import com.sztvis.buscloud.model.entity.PageBean;
@@ -160,12 +161,33 @@ public class OperationApiController extends BaseApiController{
     }
     @RequestMapping(value = "/alarmtypelist",method = RequestMethod.GET)
     public ApiResult getBasicList(int type,String keywords,int page,int rows){
-        PageHelper.startPage(page,rows);
-        List<BasicViewModel> list = this.iBasicService.getBasicList(type,keywords);
-        int count = list.size();
+
+        List<BasicViewModel> list = this.iBasicService.getBasicList(type,keywords,page,rows);
+        int count = this.iBasicService.getBasicListCount(type,keywords);
         PageBean<BasicViewModel> pageData = new PageBean<>(page, rows, count);
         pageData.setItems(list);
         return ApiResult(true, "报警类型获取成功", StatusCodeEnum.Success, pageData);
+    }
+
+    @RequestMapping(value = "/updatealarmconfig",method = RequestMethod.PUT)
+    public ApiResult UpdateBasicAlarm(BasicViewModel viewModel){
+        TramBasicInfo basicInfo = new TramBasicInfo();
+        basicInfo.setAlarmName(viewModel.getAlarmname());
+        basicInfo.setCustomId(viewModel.getCustomid()+"");
+        basicInfo.setEnable(viewModel.isIsenable());
+        basicInfo.setFixe(false);
+        basicInfo.setId((long)viewModel.getId());
+        basicInfo.setLevel((long)viewModel.getLevel());
+        basicInfo.setParentId((long)viewModel.getParentid());
+        basicInfo.setPush(viewModel.isIspush());
+        basicInfo.setTurn(viewModel.isTurn());
+        basicInfo.setThreShold("");
+        try{
+            this.iBasicService.updateBasicInfo(basicInfo);
+            return ApiResult(true,"修改记录成功",StatusCodeEnum.Success,null);
+        }catch (Exception ex){
+            return ApiResult(false,"修改记录失败",StatusCodeEnum.Error,ex.getMessage());
+        }
     }
 
 }

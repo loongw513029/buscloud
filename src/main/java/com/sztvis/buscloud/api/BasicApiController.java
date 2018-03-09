@@ -1,8 +1,6 @@
 package com.sztvis.buscloud.api;
 
 import com.github.pagehelper.PageHelper;
-import com.sun.deploy.util.ArrayUtil;
-import com.sun.tools.javac.util.ArrayUtils;
 import com.sztvis.buscloud.core.TramException;
 import com.sztvis.buscloud.core.helper.ListHelper;
 import com.sztvis.buscloud.model.domain.TramDepartmentInfo;

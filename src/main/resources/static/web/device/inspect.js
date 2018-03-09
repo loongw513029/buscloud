@@ -18,7 +18,7 @@ var Inspect = function () {
                         field: 'id',
                         checkbox: 'true',
                         width: 30
-                    }, {
+                    },{
                         field: 'deviceCode',
                         title: '设备编码',
                         width: 100,
@@ -40,10 +40,7 @@ var Inspect = function () {
                         width:60,
                         align:'center',
                         formatter:function (value,row) {
-                            if(!row.onlineState)
-                                return "<a href='javascript:;'>历史巡检</a>";
-                            else
-                                return "";
+                            return "<a class='easyui-linkbutton' href='/device/set?id="+row.deviceid+"'>主机设置</a>";
                         }
                     }
                 ]],

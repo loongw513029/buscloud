@@ -114,8 +114,23 @@ public class BasicService implements IBasicService{
     }
 
     @Override
-    public List<BasicViewModel> getBasicList(int type, String keywords) {
-        return this.basicMapper.getBasicList(type,keywords);
+    public List<BasicViewModel> getBasicList(int type, String keywords,int page,int size) {
+        return this.basicMapper.getBasicList(type,keywords,page,size);
+    }
+
+    @Override
+    public int getBasicListCount(int type, String keywords) {
+        return this.basicMapper.getBasicListCount(type,keywords);
+    }
+
+    @Override
+    public void insertBasicInfo(TramBasicInfo basicInfo) {
+        this.basicMapper.insertAlarmConfig(basicInfo);
+    }
+
+    @Override
+    public void updateBasicInfo(TramBasicInfo basicInfo) {
+        this.basicMapper.updateAlarmConfig(basicInfo);
     }
 
     private List<ComboTreeModel> getRoleTreeData(long parentId){
