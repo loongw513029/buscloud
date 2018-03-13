@@ -126,6 +126,21 @@
                 </td>
             </tr>
             <tr>
+                <td class="kv-label">
+                    <input type="checkbox" id="passengerflow" ${obj.passengerflow?"checked='checked'":""} />客流设备
+                </td>
+                <td class="kv-label" style="width: 16.5%">
+                </td>
+                <td class="kv-label">
+                </td>
+                <td class="kv-label" style="width: 16.5%">
+                </td>
+                <td class="kv-label">
+                </td>
+                <td class="kv-label" style="width: 16.5%">
+                </td>
+            </tr>
+            <tr>
                 <td class="kv-label" style="width: 16.5%">鸟瞰通道</td>
                 <td class="kv-content" style="width: 16.5%">
                     <input type="text" id="aerialchannel"/>

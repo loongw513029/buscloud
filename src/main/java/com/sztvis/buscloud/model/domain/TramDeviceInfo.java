@@ -31,6 +31,7 @@ public class TramDeviceInfo {
   private boolean radar;
   private boolean supportbehavior;
   private boolean supportadas;
+  private boolean passengerflow;
   private Long speeduse;
   private java.sql.Timestamp createtime;
   private java.sql.Timestamp lastonlinetime;
@@ -281,5 +282,17 @@ public class TramDeviceInfo {
 
   public void setLastonlinetime(Timestamp lastonlinetime) {
     this.lastonlinetime = lastonlinetime;
+  }
+
+  public boolean isIspositive() {
+    return ispositive;
+  }
+
+  public boolean isPassengerflow() {
+    return passengerflow;
+  }
+
+  public void setPassengerflow(boolean passengerflow) {
+    this.passengerflow = passengerflow;
   }
 }

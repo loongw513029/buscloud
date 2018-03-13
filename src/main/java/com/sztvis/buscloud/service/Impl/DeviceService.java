@@ -11,6 +11,7 @@ import com.sztvis.buscloud.model.domain.*;
 import com.sztvis.buscloud.model.dto.*;
 import com.sztvis.buscloud.model.dto.api.HVNVRModel;
 import com.sztvis.buscloud.model.dto.push.PushModel;
+import com.sztvis.buscloud.model.entity.BusType;
 import com.sztvis.buscloud.model.entity.DeviceStateFiled;
 import com.sztvis.buscloud.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -318,14 +319,24 @@ public class DeviceService implements IDeviceService {
             query2.with(new Sort( new Sort.Order(Sort.Direction.ASC,"updatetime")));
             TramCanInfo firstCanInfo = this.mongoTemplate.findOne(query2,TramCanInfo.class);
             if(firstCanInfo != null && lastCanInfo != null){
+                TramBusInfo busInfo = this.deviceMapper.getBusInfo(device.getBusid());
                 String updateTime = DateUtil.getCurrentTime(DateStyle.YYYY_MM_DD);
                 CanHistoryEveryDayInfo everyDayInfo = new CanHistoryEveryDayInfo();
                 everyDayInfo.setUpdatetime(updateTime);
                 Double mileage = Double.valueOf(lastCanInfo.getTotalmileage())-Double.valueOf(firstCanInfo.getTotalmileage());
                 everyDayInfo.setTotalmileage(mileage);
-                everyDayInfo.setGasavg(0D);
+                double avg =0D;
+                if(!StringHelper.isEmpty(lastCanInfo.getBaterysoc())&&!StringHelper.isEmpty(firstCanInfo.getBaterysoc())){
+                    avg = Double.valueOf(firstCanInfo.getBaterysoc())-Double.valueOf(lastCanInfo.getBaterysoc());
+                }
+                if(busInfo.getBustype()== BusType.DoubleBMSBus.getValue()||busInfo.getBustype()==BusType.PureElectricBus.getValue()){
+                    //电车
+                    everyDayInfo.setElectricavg(avg);
+                }
+                else{
+                    everyDayInfo.setGasavg(avg);
+                }
                 everyDayInfo.setGasonlieavg(0D);
-                everyDayInfo.setElectricavg(0D);
                 everyDayInfo.setDeviceid(device.getId());
                 everyDayInfo.setFaultonelv(this.alarmMapper.getCountByDeviceAndLevel(device.getId(),1));
                 everyDayInfo.setFaultsecondlv(this.alarmMapper.getCountByDeviceAndLevel(device.getId(),2));

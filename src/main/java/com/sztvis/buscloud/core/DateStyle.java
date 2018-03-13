@@ -7,7 +7,8 @@ package com.sztvis.buscloud.core;
  */
 public enum DateStyle {
     MM_DD("MM-dd"),
-    YYYY_MM("yyyy-MM"),
+    YYYY("yyyy"),
+    YYYY_MM("yyyy-MM-01"),
     YYYY_MM_DD("yyyy-MM-dd"),
     MM_DD_HH_MM("MM-dd HH:mm"),
     MM_DD_HH_MM_SS("MM-dd HH:mm:ss"),
@@ -29,7 +30,8 @@ public enum DateStyle {
     MM_DD_HH_MM_SS_CN("MM月dd日 HH:mm:ss"),
     YYYY_MM_DD_HH_MM_CN("yyyy年MM月dd日 HH:mm"),
     YYYY_MM_DD_HH_MM_SS_CN("yyyy年MM月dd日 HH:mm:ss"),
-
+    //DD("dd"),
+    //MM("MM"),
     HH_MM("HH:mm"),
     HH_MM_SS("HH:mm:ss");
 

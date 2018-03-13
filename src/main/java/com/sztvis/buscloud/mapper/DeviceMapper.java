@@ -89,7 +89,7 @@ public interface DeviceMapper {
     @Select("select channelname,no,supportptz from TramChannelInfo where deviceid =#{id}")
     List<ChannelViewModel> getChannelViewModelList(long id);
 
-    @Insert("insert into TramDeviceInfo(guid,busid,departmentid,lineid,devicecode,devicename,clientip,ispositive,videosupport,videochannel,dchannel,carriagechannel,devicetypeid,canbustypeid,devicemode,hostsofttype,disksize,sdcardsize,devicestatus,aerialview,aerialchannel,barrier,can,radar,supportbehavior,supportadas,speeduse,createtime,lastonlinetime)values(#{guid},#{busid},#{departmentid},#{lineid},#{devicecode},#{devicename},#{clientip},#{ispositive},#{videosupport},#{videochannel},#{dchannel},#{carriagechannel},#{devicetypeid},#{canbustypeid},#{devicemode},#{hostsofttype},#{disksize},#{sdcardsize},#{devicestatus},#{aerialview},#{aerialchannel},#{barrier},#{can},#{radar},#{supportbehavior},#{supportadas},#{speeduse},#{createtime},#{lastonlinetime})")
+    @Insert("insert into TramDeviceInfo(guid,busid,departmentid,lineid,devicecode,devicename,clientip,ispositive,videosupport,videochannel,dchannel,carriagechannel,devicetypeid,canbustypeid,devicemode,hostsofttype,disksize,sdcardsize,devicestatus,aerialview,aerialchannel,barrier,can,radar,supportbehavior,supportadas,passengerflow,speeduse,createtime,lastonlinetime)values(#{guid},#{busid},#{departmentid},#{lineid},#{devicecode},#{devicename},#{clientip},#{ispositive},#{videosupport},#{videochannel},#{dchannel},#{carriagechannel},#{devicetypeid},#{canbustypeid},#{devicemode},#{hostsofttype},#{disksize},#{sdcardsize},#{devicestatus},#{aerialview},#{aerialchannel},#{barrier},#{can},#{radar},#{supportbehavior},#{supportadas},#{passengerflow},#{speeduse},#{createtime},#{lastonlinetime})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insertDeviceInfo(TramDeviceInfo deviceInfo);
 
@@ -139,5 +139,8 @@ public interface DeviceMapper {
 
     @Update("update TramDeviceInfo set deviceStatus=#{status} where devicecode=#{deviceCode}")
     void updateDeviceStatus(@Param("deviceCode") String deviceCode,@Param("status") int status);
+
+    @Select("select * from TramBusInfo where id=#{busId}")
+    TramBusInfo getBusInfo(long busId);
 
 }

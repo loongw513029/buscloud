@@ -60,9 +60,12 @@ public interface BasicMapper {
     @SelectProvider(type = BasicProvider.class,method = "getBasicListCount")
     int getBasicListCount(@Param("type") int type,@Param("keywords") String keywords);
 
-    @Update("update TramBasicInfo set alarmname=#{alarmName},level=#{level},turn=#{turn},isPush=#{isPush},customId=#{customId},isEnable=#{isEnable} where id=#{id}")
+    @Update("update TramBasicInfo set alarmname=#{alarmName},level=#{level},fixe=#{fixe},turn=#{turn},isPush=#{isPush},customId=#{customId},isEnable=#{isEnable} where id=#{id}")
     void updateAlarmConfig(TramBasicInfo basicInfo);
 
     @Insert("insert into TramBasicInfo(alarmName,level,type,fixe,turn,isPush,threShold,customId,isEnable)values(#{alarmName},#{level},#{type},#{fixe},#{turn},#{isPush},#{threShold},#{customId},#{isEnable})")
     void insertAlarmConfig(TramBasicInfo basicInfo);
+
+    @Select("select * from TramBasicInfo where parentId=#{parentId} and fixe=1")
+    List<TramBasicInfo> getAlarmTypes(long parentId);
 }

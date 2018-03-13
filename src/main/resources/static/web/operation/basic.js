@@ -114,6 +114,22 @@ var Basic =function () {
                             }
                         }
                     },{
+                        field: 'fixe',
+                        title: '报警显示',
+                        width: 50,
+                        formatter:function (value) {
+                            return value?'已启用':'已关闭';
+                        },
+                        editor:{
+                            type:'combobox',
+                            options:{
+                                valueField:'id',
+                                textField:'value',
+                                data:[{"id":"true","value":"打开"},{"id":"false","value":"关闭"}],
+                                required:true
+                            }
+                        }
+                    },{
                         field: 'threshold',
                         title: '阈值',
                         width: 50,

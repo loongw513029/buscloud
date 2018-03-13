@@ -9,19 +9,26 @@
     <link href="/css/base.css" rel="stylesheet">
     <link href="/fonts/iconfont.css" rel="stylesheet">
     <link href="/css/can-history.css" rel="stylesheet">
+    <style>
+        .combo{height: 26px;border-radius: 14px}
+    </style>
 </head>
 <body>
-<div class="tips"><input type="text" id="lineId"/><a href="#" class="active">昨天</a><a href="#">近7天</a><a href="#">本月</a><a href="#">上月</a><a href="#">今年</a><a href="#">上年</a> </div>
+<div class="tips"><input type="text" id="lineId" style="height: 26px;line-height: 26px"/>
+    <div id="tips" style="display: inline">
+        <a href="#" class="active">昨天</a><a href="#">近7天</a><a href="#">本月</a><a href="#">上月</a><a href="#">今年</a><a href="#">上年</a>
+    </div>
+</div>
 <div class="top_header">
     <ul>
-        <li class="li1"><p>车辆总数</p><span>10</span></li>
-        <li class="li2"><p>运营车辆</p><span>10</span></li>
-        <li class="li3"><p>行驶里程</p><span>10</span></li>
-        <li class="li4"><p>油平均能耗</p><span>10</span></li>
-        <li class="li5"><p>电平均能耗</p><span>10</span></li>
-        <li class="li6"><p>气平均能耗</p><span>10</span></li>
-        <li class="li7"><p>故障异常</p><span>10</span></li>
-        <li class="li8"><p>故障车辆</p><span>10</span></li>
+        <li class="li1"><p>车辆总数</p><span>10辆</span></li>
+        <li class="li2"><p>运营车辆</p><span>10辆</span></li>
+        <li class="li3"><p>行驶里程</p><span>10KM</span></li>
+        <li class="li4"><p>油平均能耗</p><span>10L</span></li>
+        <li class="li5"><p>电平均能耗</p><span>10KW/H</span></li>
+        <li class="li6"><p>气平均能耗</p><span>10L</span></li>
+        <li class="li7"><p>故障异常</p><span>10次</span></li>
+        <li class="li8"><p>故障车辆</p><span>10次</span></li>
     </ul>
 </div>
 <div style="float: left;width: 49.5%;margin-top: 10px" >

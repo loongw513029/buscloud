@@ -1,5 +1,6 @@
 package com.sztvis.buscloud.service.Impl;
 
+import com.sztvis.buscloud.core.DateStyle;
 import com.sztvis.buscloud.core.DateUtil;
 import com.sztvis.buscloud.core.TramException;
 import com.sztvis.buscloud.mapper.AlarmMapper;
@@ -13,6 +14,7 @@ import com.sztvis.buscloud.model.entity.DeviceStateFiled;
 import com.sztvis.buscloud.service.ICanService;
 import com.sztvis.buscloud.service.IDeviceService;
 import com.sztvis.buscloud.service.IGpsService;
+import com.sztvis.buscloud.util.DayTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -22,6 +24,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -388,7 +391,100 @@ public class CanService implements ICanService {
     @Override
     public CanHistoryViewModel getCanHistorys(int dayType, long lineId) {
         CanHistoryViewModel viewModel = new CanHistoryViewModel();
+        DayTypes dayTypes = new DayTypes().getDayByType(dayType);
+        double totalMileage=0D,gasTotal=0D,gaslineTotal=0D,elecTotal=0D,longTime=0D;
+        int f1 =0,f2 =0,f3=0,SpeedingTotal=0;
+        List<CanHistoryEveryDayInfo> list = this.canMapper.getCanHistoryDayInfo(lineId,dayTypes.getStartTime(),dayTypes.getEndTime());
+        for (CanHistoryEveryDayInfo c:list) {
+            totalMileage+=c.getTotalmileage();
+            gasTotal+=c.getGasavg();
+            gaslineTotal+=c.getGasonlieavg();
+            elecTotal+=c.getElectricavg();
+            longTime+=c.getRuntimelong();
+            SpeedingTotal+=c.getSpeedingtotal();
+            f1+=c.getFaultonelv();
+            f2+=c.getFaultsecondlv();
+            f3+=c.getFaultthreelv();
+        }
+        viewModel.setLineId(lineId);
+        viewModel.setElecEconomy(elecTotal);
+        viewModel.setGasEconomy(gasTotal);
+        viewModel.setTotalMileage(totalMileage);
+        viewModel.setFuelEconomy(gaslineTotal);
+        viewModel.setCarBusLongTime(longTime);
+        viewModel.setSpeeding(SpeedingTotal);
+        viewModel.setF1(f1);
+        viewModel.setF2(f2);
+        viewModel.setF3(f3);
+        int day = 0;
+        try {
+            if(dayType<=4) {
+                day = DateUtil.daysBetween(dayTypes.getStartTime(), dayTypes.getEndTime());
+            }else{
+                day = DateUtil.yearsBetween(dayTypes.getStartTime(),dayTypes.getEndTime());
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        List<String> xalis = new ArrayList<>();
+        List<List<Integer>> list1 = new ArrayList<>();
+        List<String> faultXalias = new ArrayList<>();
+        int p=0;
+        for (TramBasicInfo b:this.basicMapper.getAlarmTypes(1)) {
+            faultXalias.add(b.getAlarmName());
+            List<Integer> list1s = new ArrayList<>();
+            for(int i=0;i<day;i++){
+                String start = DateUtil.addDay(dayTypes.getStartTime(),i),
+                        end = DateUtil.addDay(start,1);
+                if(dayType==5||dayType==6){
+                    start = DateUtil.addMonth(dayTypes.getStartTime(),i);
+                    end = DateUtil.addMonth(start,1);
+                    if(p==0) {
+                        xalis.add(start.split("-")[1] + "月");
+                    }
+                }else{
+                    if(p==0) {
+                        xalis.add(start.split("-")[2] + "日");
+                    }
+                }
+                int count = this.canMapper.getAlarmTrendsCountByLineId(lineId,start,end,b.getId().intValue());
+                list1s.add(count);
+            }
+            p++;
+            list1.add(list1s);
+        }
+        viewModel.setXlias(xalis);
+        viewModel.setFaultXalias(faultXalias);
+        viewModel.setFaults(list1);
+        List<List<Integer>> list2 = new ArrayList<>();
+        List<String> unsafeXalias = new ArrayList<>();
+        for (TramBasicInfo b:this.basicMapper.getAlarmTypes(78)) {
+            unsafeXalias.add(b.getAlarmName());
+            List<Integer> list2s = new ArrayList<>();
+            for(int i=0;i<day;i++){
+                String start = DateUtil.addDay(dayTypes.getStartTime(),i),
+                        end = DateUtil.addDay(start,1);
+                if(dayType==5||dayType==6){
+                    start = DateUtil.addMonth(dayTypes.getStartTime(),i);
+                    end = DateUtil.addMonth(start,1);
+                }
+                int count = this.canMapper.getAlarmTrendsCountByLineId(lineId,start,end,b.getId().intValue());
+                list2s.add(count);
+            }
+            list2.add(list2s);
+        }
+        viewModel.setUnsafeXalias(unsafeXalias);
+        viewModel.setFaults(list2);
+        return viewModel;
+    }
 
+    @Override
+    public List<List<Integer>> getAlarmTrends(int dayType, long lineId, List<Integer> types) {
+        return null;
+    }
+
+    @Override
+    public List<List<Integer>> getSignleAlarmTrends(int dayType, long deviceId, List<Integer> types) {
         return null;
     }
 

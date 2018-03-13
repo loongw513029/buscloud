@@ -17,7 +17,15 @@ public class CanHistoryViewModel {
     private double gasEconomy;
     private int faultNumber;
     private int faultBus;
+    private double carBusLongTime;
+    private int speeding;
+    private int f1;
+    private int f2;
+    private int f3;
     private List<String> categories;
+    private List<String> xlias;
+    private List<String> faultXalias;
+    private List<String> unsafeXalias;
     private List<List<Integer>> faults;
     private List<List<Integer>> unsafes;
 
@@ -115,5 +123,69 @@ public class CanHistoryViewModel {
 
     public void setUnsafes(List<List<Integer>> unsafes) {
         this.unsafes = unsafes;
+    }
+
+    public double getCarBusLongTime() {
+        return carBusLongTime;
+    }
+
+    public void setCarBusLongTime(double carBusLongTime) {
+        this.carBusLongTime = carBusLongTime;
+    }
+
+    public int getSpeeding() {
+        return speeding;
+    }
+
+    public void setSpeeding(int speeding) {
+        this.speeding = speeding;
+    }
+
+    public int getF1() {
+        return f1;
+    }
+
+    public void setF1(int f1) {
+        this.f1 = f1;
+    }
+
+    public int getF2() {
+        return f2;
+    }
+
+    public void setF2(int f2) {
+        this.f2 = f2;
+    }
+
+    public int getF3() {
+        return f3;
+    }
+
+    public void setF3(int f3) {
+        this.f3 = f3;
+    }
+
+    public List<String> getFaultXalias() {
+        return faultXalias;
+    }
+
+    public void setFaultXalias(List<String> faultXalias) {
+        this.faultXalias = faultXalias;
+    }
+
+    public List<String> getUnsafeXalias() {
+        return unsafeXalias;
+    }
+
+    public void setUnsafeXalias(List<String> unsafeXalias) {
+        this.unsafeXalias = unsafeXalias;
+    }
+
+    public List<String> getXlias() {
+        return xlias;
+    }
+
+    public void setXlias(List<String> xlias) {
+        this.xlias = xlias;
     }
 }

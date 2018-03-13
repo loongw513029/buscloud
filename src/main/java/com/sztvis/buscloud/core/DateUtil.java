@@ -687,4 +687,50 @@ public class DateUtil {
             return str;
         }
     }
+    public static int daysBetween(Date smdate,Date bdate) throws ParseException
+    {
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        smdate=sdf.parse(sdf.format(smdate));
+        bdate=sdf.parse(sdf.format(bdate));
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(smdate);
+        long time1 = cal.getTimeInMillis();
+        cal.setTime(bdate);
+        long time2 = cal.getTimeInMillis();
+        long between_days=(time2-time1)/(1000*3600*24);
+
+        return Integer.parseInt(String.valueOf(between_days));
+    }
+
+    public static int daysBetween(String smdate,String bdate) throws ParseException{
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(sdf.parse(smdate));
+        long time1 = cal.getTimeInMillis();
+        cal.setTime(sdf.parse(bdate));
+        long time2 = cal.getTimeInMillis();
+        long between_days=(time2-time1)/(1000*3600*24);
+        return Integer.parseInt(String.valueOf(between_days));
+    }
+    public static int monthsBetween(String smdate,String bdate) throws ParseException{
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(sdf.parse(smdate));
+        long time1 = cal.getTimeInMillis();
+        cal.setTime(sdf.parse(bdate));
+        long time2 = cal.getTimeInMillis();
+        long between_days=(time2-time1)/(1000*3600*24*30);
+        return Integer.parseInt(String.valueOf(between_days));
+    }
+
+    public static int yearsBetween(String smdate,String bdate) throws ParseException{
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(sdf.parse(smdate));
+        long time1 = cal.getTimeInMillis();
+        cal.setTime(sdf.parse(bdate));
+        long time2 = cal.getTimeInMillis();
+        long between_days=(time2-time1)/(1000*3600*24*30*365);
+        return Integer.parseInt(String.valueOf(between_days));
+    }
 }

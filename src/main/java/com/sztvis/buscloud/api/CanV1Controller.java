@@ -2,6 +2,7 @@ package com.sztvis.buscloud.api;
 
 import com.sztvis.buscloud.model.domain.TramCanInfo;
 import com.sztvis.buscloud.model.domain.TramDeviceInfo;
+import com.sztvis.buscloud.model.dto.CanHistoryViewModel;
 import com.sztvis.buscloud.model.dto.CanViewModel;
 import com.sztvis.buscloud.model.dto.response.ApiResult;
 import com.sztvis.buscloud.model.entity.StatusCodeEnum;
@@ -39,5 +40,11 @@ public class CanV1Controller extends BaseApiController {
         TramDeviceInfo deviceInfo = this.iDeviceService.getDeviceInfoById(deviceId);
         CanViewModel canViewModel = this.iCanService.getLastCanViewModel(deviceInfo.getDevicecode());
         return ApiResult(true,"CAN数据获取成功", StatusCodeEnum.Success,canViewModel);
+    }
+
+    @RequestMapping("/getcanhistory")
+    public ApiResult getCanHistory(long lineId,int dayType){
+        CanHistoryViewModel canViewModel = this.iCanService.getCanHistorys(dayType,lineId);
+        return ApiResult(true,"CAN历史获取成功", StatusCodeEnum.Success,canViewModel);
     }
 }

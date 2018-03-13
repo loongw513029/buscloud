@@ -40,6 +40,7 @@ public class BusAndDeviceViewModel implements Serializable{
     private boolean radar;
     private boolean supportbehavior;
     private boolean supportadas;
+    private boolean passengerflow;
     private int speeduse;
     private long busid;
     private String channellist;
@@ -268,6 +269,14 @@ public class BusAndDeviceViewModel implements Serializable{
         this.busid = busid;
     }
 
+    public boolean isPassengerflow() {
+        return passengerflow;
+    }
+
+    public void setPassengerflow(boolean passengerflow) {
+        this.passengerflow = passengerflow;
+    }
+
     public TramBusInfo ConvertToBusInfo(){
         TramBusInfo busInfo = new TramBusInfo();
         busInfo.setBusframenumber(this.getBusframenumber());
@@ -317,6 +326,7 @@ public class BusAndDeviceViewModel implements Serializable{
         deviceInfo.setVideochannel(new Long(this.getVideochannel()));
         deviceInfo.setVideosupport(this.isVideosupport());
         deviceInfo.setDevicetypeid(1L);
+        deviceInfo.setPassengerflow(this.isPassengerflow());
         return deviceInfo;
     }
 }

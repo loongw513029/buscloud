@@ -13,6 +13,6 @@ li.li8{background-color: #0E2D5F}
 .top_header li p,.top_header li span{position: absolute;width: 100%;text-align: center}
 .top_header li p{bottom: 10px;}
 .top_header li span{top:30px;font-size: 25px}
-.tips{width: 100%;border-radius: 3px;height: 26px;color: #ffffff;line-height: 26px;padding:5px 0px}
+.tips{width: 99%;border-radius: 3px;height: 26px;color: #ffffff;line-height: 26px;padding:5px 0px;background: #dedede;padding-left: 1%;}
 .tips a{float: left;width: 50px;height: 26px;line-height: 26px;text-align: center;color: #CFD7E9;background-color: #586176;border-radius: 13px;margin-right: 5px;margin-bottom: 14px;text-decoration: none}
 .tips a.active{background-color: #01A7FF;color: #fff;}

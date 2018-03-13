@@ -141,4 +141,22 @@ public interface ICanService {
      */
     CanHistoryViewModel getCanHistorys(int dayType,long lineId);
 
+    /**
+     * 获取单条线路趋势数据
+     * @param dayType
+     * @param lineId
+     * @param types
+     * @return
+     */
+    List<List<Integer>> getAlarmTrends(int dayType,long lineId,List<Integer> types);
+
+    /**
+     * 获取单车趋势数据
+     * @param dayType
+     * @param deviceId
+     * @param types
+     * @return
+     */
+    List<List<Integer>> getSignleAlarmTrends(int dayType,long deviceId,List<Integer> types);
+
 }

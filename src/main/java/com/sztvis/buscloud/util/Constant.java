@@ -16,7 +16,7 @@ public class Constant {
     public static final String ForeToServerPath = "/welcome";
     //服务端生产地址，客户端订阅地址以接收服务端生产的消息
     public static final String ProducerPath = "/topic/getResponse";
-    //点对点小弟推送地址前缀
+    //点对点消息推送地址前缀
     public static final String P2pPushBasePath = "/user";
     //点对点消息推送地址后缀，最后的地址为/user/用户识别码/msg
     public static final String P2pPushPath = "/msg";

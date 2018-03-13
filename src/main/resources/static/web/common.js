@@ -137,6 +137,12 @@ var TramDalog=function(){
                 content: '<img src="/images/position-icon.png" width="75px"/>车辆定位中<br/>'
             });
         },
+        Loading2:function () {
+            layerIndex=layer.msg('数据加载中...', {
+                icon: 16
+                ,shade: 0.5
+            });
+        },
         CloseLoading:function () {
             layer.close(layerIndex);
         }

@@ -88,6 +88,7 @@ var BusFrom = function () {
             var aerialview = $('#aerialview').prop("checked");
             var can = $('#can').prop("checked");
             var radar = $('#radar').prop("checked");
+            var passengerflow =$('#passengerflow').prop('checked');
             var supportbehavior = $('#supportbehavior').prop("checked");
             var supportadas = $('#supportadas').prop("checked");
             var aerialchannel = $('#aerialchannel').combotree('getValue');
@@ -150,6 +151,7 @@ var BusFrom = function () {
                 radar:radar,
                 supportbehavior:supportbehavior,
                 supportadas:supportadas,
+                passengerflow:passengerflow,
                 aerialchannel:aerialchannel,
                 dchannel:dchannel,
                 carriagechannel:carriagechannel,
