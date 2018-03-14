@@ -123,7 +123,7 @@ body .todo-panel .todo-items ul li label {
 }
 
 #bd .item-box.price {
-    height: 272px
+    height: 302px
 }
 
 #bd .item-box.attached {
@@ -357,7 +357,7 @@ body .todo-panel .todo-items ul li label {
 }
 
 #bd .center-part .center-items.chart0 {
-    height: 274px
+    height: 304px
 }
 
 #bd .center-part .center-items.chart0 .chart0-item {
@@ -370,7 +370,7 @@ body .todo-panel .todo-items ul li label {
 }
 
 #bd .center-part .center-items.chart0 .chart0-item .item-inner .item-content {
-    height: 272px;
+    height: 302px;
     border: 1px solid #bfbfbf
 }
 
@@ -384,21 +384,21 @@ body .todo-panel .todo-items ul li label {
 }
 
 #bd .center-part .center-items.chart0 .chart0-item .item-inner .item-content .chart-chart {
-    height: 236px
+    height: 266px
 }
 
 #bd .center-part .center-items.chart1 {
     padding-right: 10px;
-    height: 274px;
+    height: 304px;
     border: 0;
     margin-bottom: 0
 }
 
 #bd .center-part .center-items.chart1 .chart1-inner {
-    height: 272px;
+    height: 302px;
     border: 1px solid #bfbfbf
 }
 
 #bd .center-part .center-items.chart1 .chart1-inner .chart1-chart {
-    height: 236px
+    height: 266px
 }

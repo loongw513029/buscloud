@@ -158,4 +158,5 @@ public interface ICanService {
      */
     List<List<Integer>> getSignleAlarmTrends(int dayType,long deviceId,List<Integer> types);
 
+
 }

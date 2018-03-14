@@ -45,4 +45,9 @@ public class AlarmService implements IAlarmService{
         List<Long> devices = this.iDeviceService.getDeviceIdsByUserId(userId);
         return this.alarmMapper.getTop6Alarms(devices);
     }
+    @Override
+    public int getAlarmTrendsCounts(long userId, String startTime, String endTime, int alarmType) {
+        List<Long> devices = this.iDeviceService.getDeviceIdsByUserId(userId);
+        return this.alarmMapper.getAlarmTrendsCounts(devices,startTime,endTime,alarmType);
+    }
 }

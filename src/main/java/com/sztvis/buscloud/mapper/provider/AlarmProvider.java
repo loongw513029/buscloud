@@ -1,6 +1,7 @@
 package com.sztvis.buscloud.mapper.provider;
 
 import com.sztvis.buscloud.core.helper.StringHelper;
+import org.apache.ibatis.jdbc.SQL;
 
 import java.util.List;
 import java.util.Map;
@@ -72,9 +73,21 @@ public class AlarmProvider {
     public String getTop6AlarmSQL(Map<String,Object> map){
         List<Long> devices = (List<Long>)map.get("devices");
         StringBuilder sb = new StringBuilder();
-        sb.append("select top 6 a.id,b.alarmname,a.updatetime");
+        sb.append("select a.id,b.alarmname,a.updatetime");
         sb.append(" from TramAlarmInfo a left join TramBasicInfo b on a.alarmType=b.customId ");
-        sb.append(" where a.deviceid in ("+StringHelper.listToString(devices,',')+") order by updateTime desc");
+        sb.append(" where a.deviceid in ("+StringHelper.listToString(devices,',')+") order by updateTime desc limit 0,6");
         return sb.toString();
+    }
+
+    public String getAlarmCountByUserId(Map<String,Object> map){
+        List<Long> devices = (List<Long>)map.get("devices");
+        String startTime = (String)map.get("startTime");
+        String endTime = (String)map.get("endTime");
+        int type = (Integer) map.get("type");
+        SQL sql = new SQL();
+        sql.SELECT("count(Id)");
+        sql.FROM("TramAlarmInfo");
+        sql.WHERE("deviceId in ("+ StringHelper.listToString(devices,',')+") and updateTime>='"+startTime+"' and updateTime<='"+endTime+"' and alarmType="+type);
+        return sql.toString();
     }
 }

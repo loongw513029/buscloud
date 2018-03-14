@@ -2,6 +2,7 @@ package com.sztvis.buscloud.mapper.provider;
 
 
 import com.sztvis.buscloud.core.helper.StringHelper;
+import org.apache.ibatis.jdbc.SQL;
 
 import java.util.List;
 import java.util.Map;
@@ -116,5 +117,37 @@ public class DeviceSqlProvider {
         List<Long> departmens = (List<Long>) map.get("departments");
         String sql = "select id from TramDeviceInfo where departmentId in ("+StringHelper.listToString(departmens,',')+")";
         return sql;
+    }
+
+    public String getDeviceCountSQL(Map<String,Object> map){
+        int state = (Integer)map.get("state");
+        List<Long> departmens = (List<Long>)map.get("departments");
+        SQL sql = new SQL();
+        sql.SELECT("count(Id)");
+        sql.FROM("TramDeviceInfo");
+        sql.WHERE("departmentId in ("+StringHelper.listToString(departmens,',')+") and deviceStatus="+state);
+        return sql.toString();
+        //select count(Id) from TramDeviceInfo where deviceStatus=#{state} and departmentId in #{departments}
+    }
+
+    public String getOnlinePrecentSQL(Map<String,Object> map){
+        List<Long> departments = (List<Long>)map.get("departments");
+        String startTime = (String)map.get("startTime");
+        //select count(Id) from TramDeviceInfo where departmentId in #{departments} and LastOnlineTime>=#{startTime}
+        SQL sql = new SQL();
+        sql.SELECT("count(Id)");
+        sql.FROM("TramDeviceInfo");
+        sql.WHERE("departmentId in ("+StringHelper.listToString(departments,',')+") and LastOnlineTime>='"+startTime+"'");
+        return sql.toString();
+    }
+
+    public String getUnSafeCountSQL(Map<String,Object> map){
+        List<Long> departments = (List<Long>)map.get("departments");
+        String startTime = (String)map.get("startTime");
+        SQL sql = new SQL();
+        sql.SELECT("count(Id)");
+        sql.FROM("tramunsafebehaviorinfo");
+        sql.WHERE("deviceId in ("+StringHelper.listToString(departments,',')+") and ApplyTime>='"+startTime+"'");
+        return sql.toString();
     }
 }

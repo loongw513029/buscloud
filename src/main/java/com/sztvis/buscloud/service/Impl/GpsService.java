@@ -7,16 +7,24 @@ import com.sztvis.buscloud.model.domain.TramDispatchInfo;
 import com.sztvis.buscloud.model.domain.TramGpsInfo;
 import com.sztvis.buscloud.model.dto.BusAndDeviceViewModel;
 import com.sztvis.buscloud.model.dto.GpsViewModel;
+import com.sztvis.buscloud.model.dto.MapHistoryLocationModel;
 import com.sztvis.buscloud.model.entity.DeviceStateFiled;
+import com.sztvis.buscloud.model.entity.PageBean;
+import com.sztvis.buscloud.model.entity.SpringDataPageable;
 import com.sztvis.buscloud.service.ICanService;
 import com.sztvis.buscloud.service.IDeviceService;
 import com.sztvis.buscloud.service.IGpsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author longweiqian
@@ -128,5 +136,39 @@ public class GpsService implements IGpsService{
             else
                 return 6;
         }
+    }
+
+    @Override
+    public PageBean<MapHistoryLocationModel> getMapHistoryGpsList(long deviceId, String startTime, String endTime, int page, int rows) {
+        SpringDataPageable pageable = new SpringDataPageable();
+        Query query = new Query();
+        query.addCriteria(new Criteria("deviceid").is(deviceId));
+        query.addCriteria(new Criteria("updatetime").lte(endTime));
+        query.addCriteria(new Criteria("updatetime").gte(startTime));
+        Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC,"updatetime"));
+        pageable.setPagenumber(page);
+        // 每页条数
+        pageable.setPagesize(rows);
+        // 排序
+        pageable.setSort(sort);
+        // 查询出一共的条数
+        Long count = mongoTemplate.count(query, TramGpsInfo.class);
+        // 查询
+        List<TramGpsInfo> list = mongoTemplate.find(query.with(pageable), TramGpsInfo.class);
+        // 将集合与分页结果封装
+        Page<TramGpsInfo> pagelist = new PageImpl<TramGpsInfo>(list, pageable, count);
+        PageBean<MapHistoryLocationModel> pageBean = new PageBean<>(page, rows, count.intValue());
+        List<MapHistoryLocationModel> list2 = new ArrayList<>();
+        for (TramGpsInfo gps:pagelist.getContent()) {
+            MapHistoryLocationModel model = new MapHistoryLocationModel();
+            model.setId(gps.getId());
+            model.setLatitude(gps.getLatitude());
+            model.setLongitude(gps.getLongitude());
+            model.setUpdateTime(gps.getUpdatetime());
+            model.setSpeed(gps.getSpeed());
+            list2.add(model);
+        }
+        pageBean.setItems(list2);
+        return pageBean;
     }
 }

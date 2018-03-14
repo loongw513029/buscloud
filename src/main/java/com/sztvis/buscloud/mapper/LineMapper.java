@@ -22,8 +22,8 @@ public interface LineMapper {
     @Select("select * from TramLineInfo where departmentId=#{departmentId} order by sort asc")
     List<TramLineInfo> GetLinesByDepartmentId(long departmentId);
 
-    @Select("select count(Id) from TramLineInfo where departmentId in #{departmentId}")
-    Integer GetLineIdsByDepartmentIds(List<Long> departmentId);
+    @SelectProvider(type = LineProvider.class,method = "getLineIdsByDepartmentIdsSQL")
+    Integer GetLineIdsByDepartmentIds(@Param("departmentId") List<Long> departmentId);
 
     @SelectProvider(type = LineProvider.class,method = "getListSQL")
     List<LineViewModel> getList(@Param("departments") List<Long> departments, @Param("linename") String lineName, @Param("departmentId") long departmentId);

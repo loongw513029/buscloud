@@ -38,7 +38,7 @@
                         </div>
                         <div class="lg-password input-item clearfix">
                             <i class="iconfont">&#xf00c9;</i>
-                            <input type="password" placeholder="请输入密码" name="password">
+                            <input type="password" placeholder="请输入密码" name="password" value="123456">
                         </div>
                         <div class="tips clearfix">
                             <label><input type="checkbox" checked="checked" name="getpwd">记住用户名</label>

@@ -18,4 +18,10 @@ public class MapController {
         ModelAndView modelAndView = new ModelAndView("/map/preview");
         return modelAndView;
     }
+
+    @RequestMapping("history")
+    public ModelAndView History(){
+        ModelAndView modelAndView = new ModelAndView("/map/history");
+        return modelAndView;
+    }
 }

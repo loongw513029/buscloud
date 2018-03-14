@@ -10,6 +10,7 @@ import com.sztvis.buscloud.model.domain.*;
 import com.sztvis.buscloud.model.dto.*;
 import com.sztvis.buscloud.model.dto.service.SaveAlarmQuery;
 import com.sztvis.buscloud.service.ICanService;
+import com.sztvis.buscloud.service.IDeviceService;
 import com.sztvis.buscloud.service.IGpsService;
 import com.sztvis.buscloud.util.DayTypes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,8 @@ public class CanService implements ICanService {
     private IGpsService iGpsService;
     @Autowired
     private CanMapper canMapper;
+    @Autowired
+    private IDeviceService iDeviceService;
 
     @Override
     public TramCanInfo GetCanInfo(String deviceCode, String updateTime) {
@@ -484,6 +487,8 @@ public class CanService implements ICanService {
     public List<List<Integer>> getSignleAlarmTrends(int dayType, long deviceId, List<Integer> types) {
         return null;
     }
+
+
 
     private int getCanStat(List<TramCanActinfo> acts,int key){
         int r = 1;

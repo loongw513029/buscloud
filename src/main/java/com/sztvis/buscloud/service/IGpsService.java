@@ -2,6 +2,13 @@ package com.sztvis.buscloud.service;
 
 import com.sztvis.buscloud.model.domain.TramGpsInfo;
 import com.sztvis.buscloud.model.dto.GpsViewModel;
+import com.sztvis.buscloud.model.dto.MapHistoryLocationModel;
+import com.sztvis.buscloud.model.entity.PageBean;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.springframework.data.domain.Page;
+
+import java.util.List;
 
 /**
  * @author longweiqian
@@ -59,6 +66,15 @@ public interface IGpsService {
      * @return 1:正常 2:正常停车 3:正常正在运行有报警 4:正常停车有报警 5:正常但是gps故障 6:正常有故障有报警 7:离线
      */
     int getDeviceCurrentGpsState(long deviceid,String starttime,boolean gpsState,boolean onLineState,String deviceCode);
+
+    /**
+     * 获得历史轨迹数据
+     * @param deviceId
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    PageBean<MapHistoryLocationModel> getMapHistoryGpsList(long deviceId, String startTime, String endTime, int page, int rows);
 
 
 }

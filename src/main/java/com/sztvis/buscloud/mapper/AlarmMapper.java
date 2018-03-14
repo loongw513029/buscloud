@@ -1,6 +1,7 @@
 package com.sztvis.buscloud.mapper;
 
 import com.sztvis.buscloud.mapper.provider.AlarmProvider;
+import com.sztvis.buscloud.mapper.provider.CanProvider;
 import com.sztvis.buscloud.model.domain.TramAlarmInfo;
 import com.sztvis.buscloud.model.dto.AlarmViewModel;
 import com.sztvis.buscloud.model.dto.HomeAlarmViewModel;
@@ -35,4 +36,7 @@ public interface AlarmMapper {
 
     @SelectProvider(type = AlarmProvider.class,method = "getTop6AlarmSQL")
     List<HomeAlarmViewModel> getTop6Alarms(@Param("devices") List<Long> devices);
+
+    @SelectProvider(type = AlarmProvider.class,method = "getAlarmCountByUserId")
+    int getAlarmTrendsCounts(@Param("devices") List<Long> devices,@Param("startTime") String startTime,@Param("endTime") String endTime,@Param("type") int type);
 }

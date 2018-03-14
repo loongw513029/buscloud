@@ -32,14 +32,14 @@ public interface DeviceMapper {
     @Select("select * from TramDeviceInfo where lineId=#{lineId}")
     List<TramDeviceInfo> getDevicesByLineId(long lineId);
 
-    @Select("select count(Id) from TramDeviceInfo where deviceStatus=#{state} and departmentId in #{departments}")
-    Integer getDeviceCount(int state,List<Long> departments);
+    @SelectProvider(type = DeviceSqlProvider.class,method = "getDeviceCountSQL")
+    Integer getDeviceCount(@Param("state") int state,@Param("departments") List<Long> departments);
 
-    @Select("select count(Id) from TramDeviceInfo where departmentId in #{departments} and LastOnlineTime>=#{startTime}")
-    Integer getOnlinePrecent(List<Long> departments,String startTime);
+    @SelectProvider(type = DeviceSqlProvider.class,method = "getOnlinePrecentSQL")
+    Integer getOnlinePrecent(@Param("departments") List<Long> departments,@Param("startTime") String startTime);
 
-    @Select("select count(Id) from tramunsafebehaviorinfo where deviceId in #{departments} and ApplyTime>#{startTime}")
-    Integer getUnSafeCountByDepartmentIds(List<Long> departments,String startTime);
+    @SelectProvider(type=DeviceSqlProvider.class,method = "getUnSafeCountSQL")
+    Integer getUnSafeCountByDepartmentIds(@Param("departments") List<Long> departments,@Param("startTime") String startTime);
 
     @Select("select * from TramDeviceInfo where id =#{deviceId}")
     TramDeviceInfo getDeviceInfoById(long deviceId);
@@ -51,7 +51,7 @@ public interface DeviceMapper {
     TramDeviceInfo getDeviceInfoByCode(String deviceCode);
 
     @Update("update TramDeviceInfo set deviceStatus=#{value} where deviceCode=#{deviceCode}")
-    void udpateDeviceState(String deviceCode,int value);
+    void udpateDeviceState(@Param("deviceCode") String deviceCode,@Param("value") int value);
 
     @Select("select count(Id) from tramdevicestateinspectrealtimeinfo where deviceCode=#{deviceCode}")
     int getRealtimeInspectCount(String deviceCode);

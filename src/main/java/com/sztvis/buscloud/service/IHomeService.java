@@ -16,5 +16,5 @@ public interface IHomeService {
      * 首页趋势数据
      * @return
      */
-    WelcomeTrendModel getWelcomeTrendModels();
+    WelcomeTrendModel getWelcomeTrendModels(long userId);
 }

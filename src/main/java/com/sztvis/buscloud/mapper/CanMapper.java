@@ -1,10 +1,12 @@
 package com.sztvis.buscloud.mapper;
 
+import com.sztvis.buscloud.mapper.provider.CanProvider;
 import com.sztvis.buscloud.model.domain.CanHistoryEveryDayInfo;
 import com.sztvis.buscloud.model.domain.TramUnsafeBehaviorInfo;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectProvider;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -29,7 +31,6 @@ public interface CanMapper {
     @Select("select count(Id) from TramAlarmInfo where deviceId=#{deviceId} and updateTime>=#{startTime} and updateTime<=#{endTime} and alarmType=#{type}")
     int getAlarmTrendsCountByDeviceId(@Param("deviceId") long deviceId,@Param("startTime") String startTime,@Param("endTime") String endTime,@Param("type") int type);
 
-    @Select("select count(a.Id) from TramAlarmInfo a left join TramDeviceInfo b on a.deviceId=b.Id where a.updateTime>=#{startTime} and a.updateTime<=#{endTime} and a.alarmType=#{type}")
-    int getAlarmTrendsCounts(@Param("startTime") String startTime,@Param("endTime") String endTime,@Param("type") int type);
+
 
 }

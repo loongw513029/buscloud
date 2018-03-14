@@ -17,5 +17,7 @@ public interface IAlarmService {
 
     AlarmViewModel getAlarmViewModel(long id);
 
+    int getAlarmTrendsCounts(long userId,String startTime,String endTime,int alarmType);
+
     List<HomeAlarmViewModel> getTop6HomePageAlarms(long userId);
 }

@@ -60,9 +60,9 @@ public class HomeService implements IHomeService {
     }
 
     @Override
-    public WelcomeTrendModel getWelcomeTrendModels() {
+    public WelcomeTrendModel getWelcomeTrendModels(long userId) {
         WelcomeTrendModel welcomeTrendModel =new WelcomeTrendModel();
-        DayTypes dayTypes = new DayTypes().getDayByType(1);
+        DayTypes dayTypes = new DayTypes().getDayByType(2);
         int day = 0;
         try {
            day = DateUtil.daysBetween(dayTypes.getStartTime(), dayTypes.getEndTime());
@@ -80,9 +80,9 @@ public class HomeService implements IHomeService {
                 String start = DateUtil.addDay(dayTypes.getStartTime(),i),
                         end = DateUtil.addDay(start,1);
                 if(p==0) {
-                    xalis.add(start.split("-")[1] + "月");
+                    xalis.add(start.split("-")[2] + "日");
                 }
-                int count = this.canMapper.getAlarmTrendsCounts(start,end,b.getId().intValue());
+                int count = this.iAlarmService.getAlarmTrendsCounts(userId,start,end,b.getId().intValue());
                 list1s.add(count);
             }
             p++;
@@ -99,7 +99,7 @@ public class HomeService implements IHomeService {
             for(int i=0;i<day;i++){
                 String start = DateUtil.addDay(dayTypes.getStartTime(),i),
                         end = DateUtil.addDay(start,1);
-                int count = this.canMapper.getAlarmTrendsCounts(start,end,b.getId().intValue());
+                int count = this.iAlarmService.getAlarmTrendsCounts(userId,start,end,b.getId().intValue());
                 list2s.add(count);
             }
             list2.add(list2s);

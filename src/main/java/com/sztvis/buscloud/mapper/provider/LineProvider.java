@@ -57,4 +57,14 @@ public class LineProvider {
         sql.ORDER_BY("sort asc");
         return sql.toString();
     }
+    //select count(Id) from TramLineInfo where departmentId in #{departmentId}
+
+    public String getLineIdsByDepartmentIdsSQL(Map<String,Object> map){
+        List<Long> departmentId =(List<Long>)map.get("departmentId");
+        SQL sql = new SQL();
+        sql.SELECT("count(Id)");
+        sql.FROM("TramLineInfo");
+        sql.WHERE("departmentId in ("+StringHelper.listToString(departmentId,',')+")");
+        return sql.toString();
+    }
 }
