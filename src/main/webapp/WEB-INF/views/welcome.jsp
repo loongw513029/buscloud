@@ -100,73 +100,73 @@
                         </li>
                     </ul>
                 </div>
-                <div class="attached item-box">
-                    <div class="inform-hd">
-                        <label>常用附件下载</label>
-                        <a href="javascript:;">更多<span>&gt;</span></a>
-                    </div>
-                    <div class="attached-tab">
-                        <a href="javascript:;" class="current item-left" attached="public-attached">公开附件</a>
-                        <a href="javascript:;" class="item-right" attached="inner-attached">内部附件</a>
-                    </div>
-                    <ul class="public-attached">
-                        <li>
-                            <span></span>
-                            <a href="javascript:;" class="ellipsis">界面设计作品PSD源文件免费下载</a>
-                        </li>
-                        <li>
-                            <span></span>
-                            <a href="javascript:;" class="ellipsis">uimaker版权所有禁止转载发布</a>
-                        </li>
-                        <li>
-                            <span></span>
-                            <a href="javascript:;" class="ellipsis">意见建议反馈内容模版</a>
-                        </li>
-                        <li>
-                            <span></span>
-                            <a href="javascript:;" class="ellipsis">系统错误修复文档下载分布</a>
-                        </li>
-                        <li>
-                            <span></span>
-                            <a href="javascript:;" class="ellipsis">采集信息管理系统后台界面</a>
-                        </li>
-                        <li>
-                            <span></span>
-                            <a href="javascript:;" class="ellipsis">用户管理信息文件同步</a>
-                        </li>
-                    </ul>
-                    <ul class="inner-attached hide">
-                        <li>
-                            <span></span>
-                            <a href="javascript:;" class="ellipsis">意见建议反馈内容模版</a>
-                        </li>
-                        <li>
-                            <span></span>
-                            <a href="javascript:;" class="ellipsis">这里显示的不同内容</a>
-                        </li>
-                        <li>
-                            <span></span>
-                            <a href="javascript:;" class="ellipsis">界面设计作品PSD源文件免费下载</a>
-                        </li>
-                        <li>
-                            <span></span>
-                            <a href="javascript:;" class="ellipsis">系统错误修复文档下载分布</a>
-                        </li>
-                        <li>
-                            <span></span>
-                            <a href="javascript:;" class="ellipsis">采集信息管理系统后台界面</a>
-                        </li>
-                        <li>
-                            <span></span>
-                            <a href="javascript:;" class="ellipsis">用户管理信息文件同步</a>
-                        </li>
-                    </ul>
-                </div>
+                <%--<div class="attached item-box">--%>
+                    <%--<div class="inform-hd">--%>
+                        <%--<label>常用附件下载</label>--%>
+                        <%--<a href="javascript:;">更多<span>&gt;</span></a>--%>
+                    <%--</div>--%>
+                    <%--<div class="attached-tab">--%>
+                        <%--<a href="javascript:;" class="current item-left" attached="public-attached">公开附件</a>--%>
+                        <%--<a href="javascript:;" class="item-right" attached="inner-attached">内部附件</a>--%>
+                    <%--</div>--%>
+                    <%--<ul class="public-attached">--%>
+                        <%--<li>--%>
+                            <%--<span></span>--%>
+                            <%--<a href="javascript:;" class="ellipsis">界面设计作品PSD源文件免费下载</a>--%>
+                        <%--</li>--%>
+                        <%--<li>--%>
+                            <%--<span></span>--%>
+                            <%--<a href="javascript:;" class="ellipsis">uimaker版权所有禁止转载发布</a>--%>
+                        <%--</li>--%>
+                        <%--<li>--%>
+                            <%--<span></span>--%>
+                            <%--<a href="javascript:;" class="ellipsis">意见建议反馈内容模版</a>--%>
+                        <%--</li>--%>
+                        <%--<li>--%>
+                            <%--<span></span>--%>
+                            <%--<a href="javascript:;" class="ellipsis">系统错误修复文档下载分布</a>--%>
+                        <%--</li>--%>
+                        <%--<li>--%>
+                            <%--<span></span>--%>
+                            <%--<a href="javascript:;" class="ellipsis">采集信息管理系统后台界面</a>--%>
+                        <%--</li>--%>
+                        <%--<li>--%>
+                            <%--<span></span>--%>
+                            <%--<a href="javascript:;" class="ellipsis">用户管理信息文件同步</a>--%>
+                        <%--</li>--%>
+                    <%--</ul>--%>
+                    <%--<ul class="inner-attached hide">--%>
+                        <%--<li>--%>
+                            <%--<span></span>--%>
+                            <%--<a href="javascript:;" class="ellipsis">意见建议反馈内容模版</a>--%>
+                        <%--</li>--%>
+                        <%--<li>--%>
+                            <%--<span></span>--%>
+                            <%--<a href="javascript:;" class="ellipsis">这里显示的不同内容</a>--%>
+                        <%--</li>--%>
+                        <%--<li>--%>
+                            <%--<span></span>--%>
+                            <%--<a href="javascript:;" class="ellipsis">界面设计作品PSD源文件免费下载</a>--%>
+                        <%--</li>--%>
+                        <%--<li>--%>
+                            <%--<span></span>--%>
+                            <%--<a href="javascript:;" class="ellipsis">系统错误修复文档下载分布</a>--%>
+                        <%--</li>--%>
+                        <%--<li>--%>
+                            <%--<span></span>--%>
+                            <%--<a href="javascript:;" class="ellipsis">采集信息管理系统后台界面</a>--%>
+                        <%--</li>--%>
+                        <%--<li>--%>
+                            <%--<span></span>--%>
+                            <%--<a href="javascript:;" class="ellipsis">用户管理信息文件同步</a>--%>
+                        <%--</li>--%>
+                    <%--</ul>--%>
+                <%--</div>--%>
             </div>
             <div class="center-part">
                 <div class="center-items todo">
-                    <div class="calendar-part">
-                        <div class="easyui-calendar" style="width:205px;height:231px;"></div>
+                    <div class="calendar-part" style="width: 225px">
+                        <div class="easyui-calendar" style="width:212px;height:232px;"></div>
                     </div>
                     <ul class="work-items clearfix">
                         <li>
@@ -244,110 +244,110 @@
                         </div>
                     </div>
                 </div>
-                <div class="center-items chart1">
-                    <div class="chart1-inner">
-                        <div class="item-hd">询价降本率</div>
-                        <div class="chart1-chart" id="chart3"></div>
-                    </div>
-                </div>
+                <%--<div class="center-items chart1">--%>
+                    <%--<div class="chart1-inner">--%>
+                        <%--<div class="item-hd">询价降本率</div>--%>
+                        <%--<div class="chart1-chart" id="chart3"></div>--%>
+                    <%--</div>--%>
+                <%--</div>--%>
             </div>
         </div>
     </div>
 
     <div id="ft"></div>
 </div>
-<div class="todo-panel">
-    <div class="todo-title">
-        <i class="iconfont">&#xe61f;</i>
-        <span class="num">14&nbsp;<span class="unit">个</span></span>
-        <label>待办未处理</label>
-    </div>
-    <div class="todo-items">
-        <ul>
-            <li>
-                <span></span>
-                <a href="javascript:;" class="ellipsis">您有<span>2条</span>供应商开发申请未处理<i></i></a>
-                <label>04-13</label>
-            </li>
-            <li>
-                <span></span>
-                <a href="javascript:;" class="ellipsis">您有<span>10条</span>供应商开发申请未处理<i></i></a></a>
-                <label>04-13</label>
-            </li>
-            <li>
-                <span></span>
-                <a href="javascript:;" class="ellipsis">您有<span>0条</span>供应商开发申请未处理，请及时审批<i></i></a></a>
-                <label>04-13</label>
-            </li>
-            <li>
-                <span></span>
-                <a href="javascript:;" class="ellipsis">您有<span>1条</span>供应商开发申请未处理，请及时审批</a></a>
-                <label>04-13</label>
-            </li>
-            <li>
-                <span></span>
-                <a href="javascript:;" class="ellipsis">您有<span>4条</span>供应商开发申请未处理，请及时审批</a></a>
-                <label>04-13</label>
-            </li>
-            <li>
-                <span></span>
-                <a href="javascript:;" class="ellipsis">您有<span>6条</span>供应商开发申请未处理，请及时审批，未处理会导致失效</a></a>
-                <label>04-13</label>
-            </li>
-            <li>
-                <span></span>
-                <a href="javascript:;" class="ellipsis">您有<span>2条</span>供应商开发申请未处理，请及时审批，未处理会导致失效</a></a>
-                <label>04-13</label>
-            </li>
-            <li>
-                <span></span>
-                <a href="javascript:;" class="ellipsis">您有<span>2条</span>供应商开发申请未处理，请及时审批，未处理会导致失效</a></a>
-                <label>04-13</label>
-            </li>
-            <li>
-                <span></span>
-                <a href="javascript:;" class="ellipsis">您有<span>2条</span>供应商开发申请未处理，请及时审批，未处理</a></a>
-                <label>04-13</label>
-            </li>
-            <li>
-                <span></span>
-                <a href="javascript:;" class="ellipsis">您有<span>2条</span>供应商开发申请未处理，请及时审批，未处理会导致失效</a></a>
-                <label>04-13</label>
-            </li>
-            <li>
-                <span></span>
-                <a href="javascript:;" class="ellipsis">您有<span>2条</span>供应商开发申请未处理，未处理会导致失效</a></a>
-                <label>04-13</label>
-            </li>
-            <li>
-                <span></span>
-                <a href="javascript:;" class="ellipsis">您有<span>2条</span>开发申请未处理，请及时审批，未处理会导致失效</a></a>
-                <label>04-13</label>
-            </li>
-            <li>
-                <span></span>
-                <a href="javascript:;" class="ellipsis">您有<span>2条</span>供应商开发申请未处理，请及时审批，未处理会导致失效</a></a>
-                <label>04-13</label>
-            </li>
-            <li>
-                <span></span>
-                <a href="javascript:;" class="ellipsis">您有<span>2条</span>供应商开发申请未处理，请及时审批，会导致失效</a></a>
-                <label>04-13</label>
-            </li>
-            <li>
-                <span></span>
-                <a href="javascript:;" class="ellipsis">您有<span>2条</span>供应商开发申请未处理，请及时审批，未处理</a></a>
-                <label>04-13</label>
-            </li>
-            <li>
-                <span></span>
-                <a href="javascript:;" class="ellipsis">您有<span>2条</span>供应商开发申请未处理，请及时审批</a></a>
-                <label>04-13</label>
-            </li>
-        </ul>
-    </div>
+<%--<div class="todo-panel">--%>
+    <%--<div class="todo-title">--%>
+        <%--<i class="iconfont">&#xe61f;</i>--%>
+        <%--<span class="num">14&nbsp;<span class="unit">个</span></span>--%>
+        <%--<label>待办未处理</label>--%>
+    <%--</div>--%>
+    <%--<div class="todo-items">--%>
+        <%--<ul>--%>
+            <%--<li>--%>
+                <%--<span></span>--%>
+                <%--<a href="javascript:;" class="ellipsis">您有<span>2条</span>供应商开发申请未处理<i></i></a>--%>
+                <%--<label>04-13</label>--%>
+            <%--</li>--%>
+            <%--<li>--%>
+                <%--<span></span>--%>
+                <%--<a href="javascript:;" class="ellipsis">您有<span>10条</span>供应商开发申请未处理<i></i></a></a>--%>
+                <%--<label>04-13</label>--%>
+            <%--</li>--%>
+            <%--<li>--%>
+                <%--<span></span>--%>
+                <%--<a href="javascript:;" class="ellipsis">您有<span>0条</span>供应商开发申请未处理，请及时审批<i></i></a></a>--%>
+                <%--<label>04-13</label>--%>
+            <%--</li>--%>
+            <%--<li>--%>
+                <%--<span></span>--%>
+                <%--<a href="javascript:;" class="ellipsis">您有<span>1条</span>供应商开发申请未处理，请及时审批</a></a>--%>
+                <%--<label>04-13</label>--%>
+            <%--</li>--%>
+            <%--<li>--%>
+                <%--<span></span>--%>
+                <%--<a href="javascript:;" class="ellipsis">您有<span>4条</span>供应商开发申请未处理，请及时审批</a></a>--%>
+                <%--<label>04-13</label>--%>
+            <%--</li>--%>
+            <%--<li>--%>
+                <%--<span></span>--%>
+                <%--<a href="javascript:;" class="ellipsis">您有<span>6条</span>供应商开发申请未处理，请及时审批，未处理会导致失效</a></a>--%>
+                <%--<label>04-13</label>--%>
+            <%--</li>--%>
+            <%--<li>--%>
+                <%--<span></span>--%>
+                <%--<a href="javascript:;" class="ellipsis">您有<span>2条</span>供应商开发申请未处理，请及时审批，未处理会导致失效</a></a>--%>
+                <%--<label>04-13</label>--%>
+            <%--</li>--%>
+            <%--<li>--%>
+                <%--<span></span>--%>
+                <%--<a href="javascript:;" class="ellipsis">您有<span>2条</span>供应商开发申请未处理，请及时审批，未处理会导致失效</a></a>--%>
+                <%--<label>04-13</label>--%>
+            <%--</li>--%>
+            <%--<li>--%>
+                <%--<span></span>--%>
+                <%--<a href="javascript:;" class="ellipsis">您有<span>2条</span>供应商开发申请未处理，请及时审批，未处理</a></a>--%>
+                <%--<label>04-13</label>--%>
+            <%--</li>--%>
+            <%--<li>--%>
+                <%--<span></span>--%>
+                <%--<a href="javascript:;" class="ellipsis">您有<span>2条</span>供应商开发申请未处理，请及时审批，未处理会导致失效</a></a>--%>
+                <%--<label>04-13</label>--%>
+            <%--</li>--%>
+            <%--<li>--%>
+                <%--<span></span>--%>
+                <%--<a href="javascript:;" class="ellipsis">您有<span>2条</span>供应商开发申请未处理，未处理会导致失效</a></a>--%>
+                <%--<label>04-13</label>--%>
+            <%--</li>--%>
+            <%--<li>--%>
+                <%--<span></span>--%>
+                <%--<a href="javascript:;" class="ellipsis">您有<span>2条</span>开发申请未处理，请及时审批，未处理会导致失效</a></a>--%>
+                <%--<label>04-13</label>--%>
+            <%--</li>--%>
+            <%--<li>--%>
+                <%--<span></span>--%>
+                <%--<a href="javascript:;" class="ellipsis">您有<span>2条</span>供应商开发申请未处理，请及时审批，未处理会导致失效</a></a>--%>
+                <%--<label>04-13</label>--%>
+            <%--</li>--%>
+            <%--<li>--%>
+                <%--<span></span>--%>
+                <%--<a href="javascript:;" class="ellipsis">您有<span>2条</span>供应商开发申请未处理，请及时审批，会导致失效</a></a>--%>
+                <%--<label>04-13</label>--%>
+            <%--</li>--%>
+            <%--<li>--%>
+                <%--<span></span>--%>
+                <%--<a href="javascript:;" class="ellipsis">您有<span>2条</span>供应商开发申请未处理，请及时审批，未处理</a></a>--%>
+                <%--<label>04-13</label>--%>
+            <%--</li>--%>
+            <%--<li>--%>
+                <%--<span></span>--%>
+                <%--<a href="javascript:;" class="ellipsis">您有<span>2条</span>供应商开发申请未处理，请及时审批</a></a>--%>
+                <%--<label>04-13</label>--%>
+            <%--</li>--%>
+        <%--</ul>--%>
+    <%--</div>--%>
 
-</div>
+<%--</div>--%>
 <script type="text/javascript" src="/easyui/jquery.min.js"></script>
 <script type="text/javascript" src="/easyui/jquery.easyui.min.js"></script>
 <!-- <script type="text/javascript" src="js/menu.js"></script> -->

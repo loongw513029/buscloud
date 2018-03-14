@@ -1,6 +1,7 @@
 package com.sztvis.buscloud.service;
 
 import com.sztvis.buscloud.model.dto.WelcomeModel;
+import com.sztvis.buscloud.model.dto.WelcomeTrendModel;
 
 /**
  * @author longweiqian
@@ -10,4 +11,10 @@ import com.sztvis.buscloud.model.dto.WelcomeModel;
 public interface IHomeService {
 
     WelcomeModel GetWelcomeData(long userId);
+
+    /**
+     * 首页趋势数据
+     * @return
+     */
+    WelcomeTrendModel getWelcomeTrendModels();
 }

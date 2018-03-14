@@ -380,6 +380,12 @@ public class DeviceService implements IDeviceService {
     }
 
     @Override
+    public List<Long> getDeviceIdsByUserId(long userId) {
+        List<Long> departmenIds = this.iDepartmentService.GetDepartmentIdsByUserId(userId);
+        return this.deviceMapper.getDeviceIdByDepartmens(departmenIds);
+    }
+
+    @Override
     public long getDeviceHealthInfo(String deviceCode, String starttime, String endTime) {
         Query query = new Query();
         query.addCriteria(new Criteria("devicecode").is(deviceCode));

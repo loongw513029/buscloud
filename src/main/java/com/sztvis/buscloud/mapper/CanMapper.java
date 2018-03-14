@@ -28,4 +28,8 @@ public interface CanMapper {
 
     @Select("select count(Id) from TramAlarmInfo where deviceId=#{deviceId} and updateTime>=#{startTime} and updateTime<=#{endTime} and alarmType=#{type}")
     int getAlarmTrendsCountByDeviceId(@Param("deviceId") long deviceId,@Param("startTime") String startTime,@Param("endTime") String endTime,@Param("type") int type);
+
+    @Select("select count(a.Id) from TramAlarmInfo a left join TramDeviceInfo b on a.deviceId=b.Id where a.updateTime>=#{startTime} and a.updateTime<=#{endTime} and a.alarmType=#{type}")
+    int getAlarmTrendsCounts(@Param("startTime") String startTime,@Param("endTime") String endTime,@Param("type") int type);
+
 }

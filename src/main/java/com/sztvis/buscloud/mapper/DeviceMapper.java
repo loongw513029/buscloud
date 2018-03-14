@@ -143,4 +143,7 @@ public interface DeviceMapper {
     @Select("select * from TramBusInfo where id=#{busId}")
     TramBusInfo getBusInfo(long busId);
 
+    @SelectProvider(type = DeviceSqlProvider.class,method = "getDeviceIdByDepartmentIds")
+    List<Long> getDeviceIdByDepartmens(@Param("departments") List<Long> departments);
+
 }

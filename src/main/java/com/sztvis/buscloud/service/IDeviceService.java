@@ -181,6 +181,13 @@ public interface IDeviceService {
      */
     DeviceStatusPushModel getCurrentDeviceStatus(long deviceId);
 
+    /**
+     * 获得用户所属机构下面所有设备Id
+     * @param userId
+     * @return
+     */
+    List<Long> getDeviceIdsByUserId(long userId);
+
 
 
 }

@@ -70,16 +70,6 @@ public class WelcomeModel implements Serializable {
         this.unsafeNum = unsafeNum;
     }
 
-    public WelcomeTrendModel getWelcomeTrendModel() {
-        return welcomeTrendModel;
-    }
-
-    public void setWelcomeTrendModel(WelcomeTrendModel welcomeTrendModel) {
-        this.welcomeTrendModel = welcomeTrendModel;
-    }
-
-    private WelcomeTrendModel welcomeTrendModel;
-
     private List<HomeAlarmViewModel> alarmList;
 
     private List<MaintenanceModel> maintenanceList;

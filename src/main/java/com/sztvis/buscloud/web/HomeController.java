@@ -23,6 +23,7 @@ public class HomeController extends BaseController{
     @RequestMapping("/welcome")
     public ModelAndView welcome(){
         ModelAndView model = new ModelAndView("welcome");
+
         return model;
     }
 

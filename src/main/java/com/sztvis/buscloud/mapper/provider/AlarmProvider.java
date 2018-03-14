@@ -68,4 +68,13 @@ public class AlarmProvider {
         sb.append(" where a.id="+id);
         return sb.toString();
     }
+
+    public String getTop6AlarmSQL(Map<String,Object> map){
+        List<Long> devices = (List<Long>)map.get("devices");
+        StringBuilder sb = new StringBuilder();
+        sb.append("select top 6 a.id,b.alarmname,a.updatetime");
+        sb.append(" from TramAlarmInfo a left join TramBasicInfo b on a.alarmType=b.customId ");
+        sb.append(" where a.deviceid in ("+StringHelper.listToString(devices,',')+") order by updateTime desc");
+        return sb.toString();
+    }
 }

@@ -29,4 +29,32 @@ public class WelcomeTrendModel implements Serializable {
     private List<List<Integer>> faults;
 
     private List<List<Integer>> unsafes;
+
+    private List<String> xalias;
+    private List<String> faultXalias;
+    private List<String> unsafeXalias;
+
+    public List<String> getXalias() {
+        return xalias;
+    }
+
+    public void setXalias(List<String> xalias) {
+        this.xalias = xalias;
+    }
+
+    public List<String> getFaultXalias() {
+        return faultXalias;
+    }
+
+    public void setFaultXalias(List<String> faultXalias) {
+        this.faultXalias = faultXalias;
+    }
+
+    public List<String> getUnsafeXalias() {
+        return unsafeXalias;
+    }
+
+    public void setUnsafeXalias(List<String> unsafeXalias) {
+        this.unsafeXalias = unsafeXalias;
+    }
 }

@@ -1,13 +1,21 @@
 package com.sztvis.buscloud.service.Impl;
 
 import com.sztvis.buscloud.core.DateUtil;
+import com.sztvis.buscloud.mapper.BasicMapper;
+import com.sztvis.buscloud.mapper.CanMapper;
 import com.sztvis.buscloud.mapper.DeviceMapper;
 import com.sztvis.buscloud.mapper.LineMapper;
+import com.sztvis.buscloud.model.domain.TramBasicInfo;
 import com.sztvis.buscloud.model.dto.WelcomeModel;
+import com.sztvis.buscloud.model.dto.WelcomeTrendModel;
+import com.sztvis.buscloud.service.IAlarmService;
 import com.sztvis.buscloud.service.IHomeService;
+import com.sztvis.buscloud.util.DayTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,7 +32,12 @@ public class HomeService implements IHomeService {
     private DepartmentService departmentService;
     @Autowired
     private LineMapper lineMapper;
-
+    @Autowired
+    private BasicMapper basicMapper;
+    @Autowired
+    private CanMapper canMapper;
+    @Autowired
+    private IAlarmService iAlarmService;
     @Override
     public WelcomeModel GetWelcomeData(long userId) {
         WelcomeModel model =new WelcomeModel();
@@ -42,7 +55,57 @@ public class HomeService implements IHomeService {
         model.setFiveDayPrecent(new Double(fivePrecent).byteValue());
         Integer unsafeNum = deviceMapper.getUnSafeCountByDepartmentIds(departmentIds,DateUtil.GetSystemDate("yyyy-MM-dd",0));
         model.setUnsafeNum(unsafeNum);
-
+        model.setAlarmList(this.iAlarmService.getTop6HomePageAlarms(userId));
         return model;
+    }
+
+    @Override
+    public WelcomeTrendModel getWelcomeTrendModels() {
+        WelcomeTrendModel welcomeTrendModel =new WelcomeTrendModel();
+        DayTypes dayTypes = new DayTypes().getDayByType(1);
+        int day = 0;
+        try {
+           day = DateUtil.daysBetween(dayTypes.getStartTime(), dayTypes.getEndTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        List<String> xalis = new ArrayList<>();
+        List<List<Integer>> list1 = new ArrayList<>();
+        List<String> faultXalias = new ArrayList<>();
+        int p=0;
+        for (TramBasicInfo b:this.basicMapper.getAlarmTypes(1)) {
+            faultXalias.add(b.getAlarmName());
+            List<Integer> list1s = new ArrayList<>();
+            for(int i=0;i<day;i++){
+                String start = DateUtil.addDay(dayTypes.getStartTime(),i),
+                        end = DateUtil.addDay(start,1);
+                if(p==0) {
+                    xalis.add(start.split("-")[1] + "月");
+                }
+                int count = this.canMapper.getAlarmTrendsCounts(start,end,b.getId().intValue());
+                list1s.add(count);
+            }
+            p++;
+            list1.add(list1s);
+        }
+        welcomeTrendModel.setXalias(xalis);
+        welcomeTrendModel.setFaultXalias(faultXalias);
+        welcomeTrendModel.setFaults(list1);
+        List<List<Integer>> list2 = new ArrayList<>();
+        List<String> unsafeXalias = new ArrayList<>();
+        for (TramBasicInfo b:this.basicMapper.getAlarmTypes(78)) {
+            unsafeXalias.add(b.getAlarmName());
+            List<Integer> list2s = new ArrayList<>();
+            for(int i=0;i<day;i++){
+                String start = DateUtil.addDay(dayTypes.getStartTime(),i),
+                        end = DateUtil.addDay(start,1);
+                int count = this.canMapper.getAlarmTrendsCounts(start,end,b.getId().intValue());
+                list2s.add(count);
+            }
+            list2.add(list2s);
+        }
+        welcomeTrendModel.setUnsafeXalias(unsafeXalias);
+        welcomeTrendModel.setUnsafes(list2);
+        return  welcomeTrendModel;
     }
 }

@@ -3,6 +3,7 @@ package com.sztvis.buscloud.mapper;
 import com.sztvis.buscloud.mapper.provider.AlarmProvider;
 import com.sztvis.buscloud.model.domain.TramAlarmInfo;
 import com.sztvis.buscloud.model.dto.AlarmViewModel;
+import com.sztvis.buscloud.model.dto.HomeAlarmViewModel;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
@@ -31,4 +32,7 @@ public interface AlarmMapper {
 
     @Select("select count(a.id) from TramAlarmInfo a left join trambasicinfo b on a.AlarmType=b.Id where  a.DeviceId = #{deviceId} and b.Level=#{level}")
     long getCountByDeviceAndLevel(@Param("deviceId") long deviceId,@Param("level") int level);
+
+    @SelectProvider(type = AlarmProvider.class,method = "getTop6AlarmSQL")
+    List<HomeAlarmViewModel> getTop6Alarms(@Param("devices") List<Long> devices);
 }

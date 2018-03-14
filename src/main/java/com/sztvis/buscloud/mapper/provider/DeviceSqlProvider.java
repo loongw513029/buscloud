@@ -111,4 +111,10 @@ public class DeviceSqlProvider {
         String sql="select a.id,a.devicecode,b.departmentname,c.linename,e.busnumber from tramdeviceinfo a left join trambusinfo e on a.busid=e.id left join tramdepartmentinfo b on a.departmentid=b.id left join tramlineinfo c on a.lineid=c.id where a.id in("+devices+")";
         return sql;
     }
+
+    public String getDeviceIdByDepartmentIds(Map<String,Object> map){
+        List<Long> departmens = (List<Long>) map.get("departments");
+        String sql = "select id from TramDeviceInfo where departmentId in ("+StringHelper.listToString(departmens,',')+")";
+        return sql;
+    }
 }

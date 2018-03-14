@@ -1,6 +1,7 @@
 package com.sztvis.buscloud.service;
 
 import com.sztvis.buscloud.model.dto.AlarmViewModel;
+import com.sztvis.buscloud.model.dto.HomeAlarmViewModel;
 
 import java.util.List;
 
@@ -15,4 +16,6 @@ public interface IAlarmService {
     List<AlarmViewModel> getMapAlarmTableList(String devices,String starttime);
 
     AlarmViewModel getAlarmViewModel(long id);
+
+    List<HomeAlarmViewModel> getTop6HomePageAlarms(long userId);
 }
