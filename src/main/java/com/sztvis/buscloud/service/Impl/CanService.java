@@ -1,6 +1,5 @@
 package com.sztvis.buscloud.service.Impl;
 
-import com.sztvis.buscloud.core.DateStyle;
 import com.sztvis.buscloud.core.DateUtil;
 import com.sztvis.buscloud.core.TramException;
 import com.sztvis.buscloud.mapper.AlarmMapper;
@@ -10,9 +9,7 @@ import com.sztvis.buscloud.mapper.DeviceMapper;
 import com.sztvis.buscloud.model.domain.*;
 import com.sztvis.buscloud.model.dto.*;
 import com.sztvis.buscloud.model.dto.service.SaveAlarmQuery;
-import com.sztvis.buscloud.model.entity.DeviceStateFiled;
 import com.sztvis.buscloud.service.ICanService;
-import com.sztvis.buscloud.service.IDeviceService;
 import com.sztvis.buscloud.service.IGpsService;
 import com.sztvis.buscloud.util.DayTypes;
 import org.springframework.beans.factory.annotation.Autowired;

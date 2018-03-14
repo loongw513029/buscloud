@@ -1,6 +1,5 @@
 package com.sztvis.buscloud.model.dto.api;
 
-import java.util.List;
 import java.util.Map;
 
 /**

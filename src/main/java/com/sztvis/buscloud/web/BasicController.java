@@ -2,7 +2,6 @@ package com.sztvis.buscloud.web;
 
 import com.sztvis.buscloud.model.domain.TramDepartmentInfo;
 import com.sztvis.buscloud.model.domain.TramMemberInfo;
-import com.sztvis.buscloud.model.dto.EasyDataGridResult;
 import com.sztvis.buscloud.service.IDepartmentService;
 import com.sztvis.buscloud.service.IMemberService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,9 +1,15 @@
 package com.sztvis.buscloud.mapper.provider;
 
 import com.sztvis.buscloud.core.helper.StringHelper;
+import com.sztvis.buscloud.mapper.LineMapper;
+import com.sztvis.buscloud.mapper.MemberMapper;
+import com.sztvis.buscloud.model.domain.TramMemberInfo;
+import org.apache.ibatis.jdbc.SQL;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author longweiqian
@@ -11,6 +17,7 @@ import java.util.Map;
  * @date 2018/1/18 下午2:19
  */
 public class LineProvider {
+    
 
     public String getListSQL(Map<String,Object> map){
         List<Long> departments = (List<Long>)map.get("departments");
@@ -32,5 +39,22 @@ public class LineProvider {
         String departments = StringHelper.listToString(((List<Long>)map.get("departments")),',');
         String sql = "select id,linename as text from TramLineInfo where departmentId in ("+departments+")";
         return  sql;
+    }
+
+    public String getDropDownLineSQL(TramMemberInfo user, int type, List<Long> arr, String msg)
+    {
+        String OrganizationIds=arr.toString().replace("[", "(").replace("]",")");
+        SQL sql=new SQL();
+        if(type!=3)
+            sql.SELECT("Id,LineName as Value");
+        else
+            sql.SELECT("Id");
+        sql.FROM("TramLineInfo");
+        if(type==2)
+            sql.WHERE("DepartmentId in"+ OrganizationIds +"");
+        if(type==3)
+            sql.WHERE("Id in "+ msg +"");
+        sql.ORDER_BY("sort asc");
+        return sql.toString();
     }
 }

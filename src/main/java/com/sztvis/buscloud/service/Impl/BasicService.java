@@ -133,6 +133,16 @@ public class BasicService implements IBasicService{
         this.basicMapper.updateAlarmConfig(basicInfo);
     }
 
+    @Override
+    public List<Long> getDeviceIdsByRoleLv(long userId) {
+        return null;
+    }
+
+    @Override
+    public List<BasicViewModel> getBasicList(int type, String keywords) {
+        return null;
+    }
+
     private List<ComboTreeModel> getRoleTreeData(long parentId){
         List<TramRoleInfo> list = this.basicMapper.getRoleList(parentId);
         List<ComboTreeModel> list2 = new ArrayList<>();

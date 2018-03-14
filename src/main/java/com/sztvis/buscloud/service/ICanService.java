@@ -9,7 +9,6 @@ import com.sztvis.buscloud.model.dto.DispatchModel;
 import com.sztvis.buscloud.model.dto.service.SaveAlarmQuery;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author longweiqian

@@ -1,6 +1,5 @@
 package com.sztvis.buscloud.service.Impl;
 
-import com.sztvis.buscloud.model.domain.TramCanInfo;
 import com.sztvis.buscloud.model.domain.TramDispatchInfo;
 import com.sztvis.buscloud.service.IDispatchService;
 import org.springframework.beans.factory.annotation.Autowired;

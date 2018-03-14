@@ -1,15 +1,24 @@
 package com.sztvis.buscloud.service.Impl;
 
+import com.sztvis.buscloud.mapper.DepartmentMapper;
+import com.sztvis.buscloud.mapper.DeviceMapper;
 import com.sztvis.buscloud.mapper.LineMapper;
+import com.sztvis.buscloud.mapper.MemberMapper;
 import com.sztvis.buscloud.model.domain.TramLineInfo;
-import com.sztvis.buscloud.model.dto.ComboTreeModel;
-import com.sztvis.buscloud.model.dto.LineViewModel;
+import com.sztvis.buscloud.model.domain.TramMemberInfo;
+import com.sztvis.buscloud.model.dto.*;
+import com.sztvis.buscloud.model.dto.AppNumViewModel;
+import com.sztvis.buscloud.model.dto.SelectViewModel;
 import com.sztvis.buscloud.service.IDepartmentService;
 import com.sztvis.buscloud.service.ILineService;
+import com.sztvis.buscloud.service.IMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.lang.reflect.Array;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @author longweiqian
@@ -22,7 +31,11 @@ public class LineService implements ILineService {
     @Autowired
     private LineMapper lineMapper;
     @Autowired
+    private MemberMapper iMemberMapper;
+    @Autowired
     private IDepartmentService iDepartmentService;
+    @Autowired
+    private DepartmentMapper iDepartmentMapper;
 
     @Override
     public List<TramLineInfo> GetLinesByDepartmentId(long departmentId) {
@@ -71,5 +84,46 @@ public class LineService implements ILineService {
     @Override
     public void removeLines(String lineIds) {
         this.lineMapper.removeLine(lineIds);
+    }
+
+    @Override
+    public AppNumViewModel GetAppNumByLineId(Long lineId){
+        AppNumViewModel appNumViewModel=new AppNumViewModel();
+        Date date=new Date();
+        DateFormat time=new SimpleDateFormat("yyyy-MM-dd");
+        String Nowtime=time.format(date.getTime());
+        appNumViewModel.setCarNum(this.lineMapper.carNum(lineId));
+        appNumViewModel.setOnLineNum(this.lineMapper.onlineNum(lineId));
+        appNumViewModel.setUnSafeNum(this.lineMapper.unsafeNum(lineId,Nowtime));
+        appNumViewModel.setLineNum(1);
+        return appNumViewModel;
+    }
+
+    @Override
+    public List<SelectViewModel> GetDropDownLine(Long userId){
+        List<SelectViewModel> list=new ArrayList<>();
+        TramMemberInfo user=this.iMemberMapper.getMemberById(userId);
+        List<Long> arr=this.iDepartmentMapper.GetPartmentIdsByDepartmentId(userId);
+        if (user.getRolelv()<3)
+        {
+            if (user.getRolelv()==0){
+                if (user.getUsername()=="admin")
+                {
+                    list = this.lineMapper.GetDropDownLine(user,1,null,null);
+                }
+                else {
+                    list = this.lineMapper.GetDropDownLine(user,2,arr,null);
+                }
+            }
+            else {
+
+                list = this.lineMapper.GetDropDownLine(user,2,arr,null);
+            }
+        }
+        else {
+            String msg=user.getManagescope();
+            list = this.lineMapper.GetDropDownLine(user,4,null,msg);
+        }
+         return list;
     }
 }

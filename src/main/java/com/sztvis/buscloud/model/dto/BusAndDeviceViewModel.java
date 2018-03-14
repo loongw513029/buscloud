@@ -1,12 +1,10 @@
 package com.sztvis.buscloud.model.dto;
 
-import com.sztvis.buscloud.model.domain.TramDeviceInfo;
 import com.sztvis.buscloud.model.domain.TramBusInfo;
+import com.sztvis.buscloud.model.domain.TramDeviceInfo;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 /**

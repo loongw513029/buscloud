@@ -1,9 +1,6 @@
 package com.sztvis.buscloud.model.domain;
 
-import com.sztvis.buscloud.core.DateUtil;
-
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.UUID;
 
 public class TramDepartmentInfo {

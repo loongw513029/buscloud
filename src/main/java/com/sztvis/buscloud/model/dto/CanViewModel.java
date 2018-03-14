@@ -1,7 +1,5 @@
 package com.sztvis.buscloud.model.dto;
 
-import com.sztvis.buscloud.model.domain.TramCanInfo;
-
 /**
  * @author longweiqian
  * @company tvis

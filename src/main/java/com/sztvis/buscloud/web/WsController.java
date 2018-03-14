@@ -2,7 +2,6 @@ package com.sztvis.buscloud.web;
 
 import com.sztvis.buscloud.model.dto.push.PushModel;
 import com.sztvis.buscloud.service.IPushService;
-import com.sztvis.buscloud.service.Impl.PushService;
 import com.sztvis.buscloud.util.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;

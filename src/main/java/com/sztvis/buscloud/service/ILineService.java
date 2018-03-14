@@ -1,8 +1,10 @@
 package com.sztvis.buscloud.service;
 
 import com.sztvis.buscloud.model.domain.TramLineInfo;
+import com.sztvis.buscloud.model.dto.AppNumViewModel;
 import com.sztvis.buscloud.model.dto.ComboTreeModel;
 import com.sztvis.buscloud.model.dto.LineViewModel;
+import com.sztvis.buscloud.model.dto.SelectViewModel;
 
 import java.util.List;
 
@@ -35,4 +37,8 @@ public interface ILineService {
      * @param lineIds
      */
     void removeLines(String lineIds);
+
+    AppNumViewModel GetAppNumByLineId(Long lineId);
+
+    List<SelectViewModel> GetDropDownLine(Long userId);
 }

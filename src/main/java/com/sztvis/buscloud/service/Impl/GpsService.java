@@ -1,7 +1,10 @@
 package com.sztvis.buscloud.service.Impl;
 
 import com.sztvis.buscloud.core.DateUtil;
-import com.sztvis.buscloud.model.domain.*;
+import com.sztvis.buscloud.model.domain.TramCanInfo;
+import com.sztvis.buscloud.model.domain.TramDeviceStateInspectRealtimeInfo;
+import com.sztvis.buscloud.model.domain.TramDispatchInfo;
+import com.sztvis.buscloud.model.domain.TramGpsInfo;
 import com.sztvis.buscloud.model.dto.BusAndDeviceViewModel;
 import com.sztvis.buscloud.model.dto.GpsViewModel;
 import com.sztvis.buscloud.model.entity.DeviceStateFiled;

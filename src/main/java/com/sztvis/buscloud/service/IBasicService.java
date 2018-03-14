@@ -75,4 +75,8 @@ public interface IBasicService {
     void insertBasicInfo(TramBasicInfo basicInfo);
 
     void updateBasicInfo(TramBasicInfo basicInfo);
+
+    List<Long> getDeviceIdsByRoleLv(long userId);
+
+    List<BasicViewModel> getBasicList(int type, String keywords);
 }

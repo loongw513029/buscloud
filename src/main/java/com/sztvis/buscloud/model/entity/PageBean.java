@@ -1,7 +1,5 @@
 package com.sztvis.buscloud.model.entity;
 
-import com.github.pagehelper.Page;
-
 import java.io.Serializable;
 import java.util.List;
 

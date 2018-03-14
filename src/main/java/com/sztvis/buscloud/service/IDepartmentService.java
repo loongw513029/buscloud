@@ -1,7 +1,6 @@
 package com.sztvis.buscloud.service;
 
 import com.sztvis.buscloud.model.domain.TramDepartmentInfo;
-import com.sztvis.buscloud.model.domain.TramDeviceInfo;
 import com.sztvis.buscloud.model.dto.ComboTreeModel;
 import com.sztvis.buscloud.model.dto.response.DepartmentViewModel;
 

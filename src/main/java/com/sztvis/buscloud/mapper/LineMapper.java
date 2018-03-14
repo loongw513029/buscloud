@@ -2,8 +2,10 @@ package com.sztvis.buscloud.mapper;
 
 import com.sztvis.buscloud.mapper.provider.LineProvider;
 import com.sztvis.buscloud.model.domain.TramLineInfo;
+import com.sztvis.buscloud.model.domain.TramMemberInfo;
 import com.sztvis.buscloud.model.dto.ComboTreeModel;
 import com.sztvis.buscloud.model.dto.LineViewModel;
+import com.sztvis.buscloud.model.dto.SelectViewModel;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
@@ -41,4 +43,15 @@ public interface LineMapper {
     @Delete("delete from TramLineInfo where id in (#{lineIds})")
     void removeLine(String lineIds);
 
+    @Select("select count(Id) from TramDeviceInfo where LineId=(#{lineId}) and DeviceStatus!=0")
+    int carNum (long lineId);
+
+    @Select("select count(Id) from TramDeviceInfo where LineId=(#{lineId}) and DeviceStatus=1")
+    int onlineNum (long lineId);
+
+    @Select("select count(Id) from TramUnSafeBehaviorInfo where DeviceId in(select Id from TramDeviceInfo where LineId= #{lineId}) and datediff(#{Nowtime},ApplyTime)>=0")
+    int unsafeNum (@Param("lineId")Long lineId,@Param("Nowtime")String Nowtime);
+
+    @SelectProvider(type = LineProvider.class,method = "getDropDownLineSQL")
+    List<SelectViewModel> GetDropDownLine (TramMemberInfo user, int type, List<Long> arr, String msg);
 }

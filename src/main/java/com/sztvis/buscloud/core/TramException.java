@@ -1,8 +1,6 @@
 package com.sztvis.buscloud.core;
 
 import com.sztvis.buscloud.web.AppErrorController;
-import org.omg.CORBA.portable.ApplicationException;
-import org.omg.CORBA.portable.InputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
