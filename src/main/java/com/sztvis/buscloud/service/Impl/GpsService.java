@@ -1,5 +1,6 @@
 package com.sztvis.buscloud.service.Impl;
 
+import com.sztvis.buscloud.core.DateStyle;
 import com.sztvis.buscloud.core.DateUtil;
 import com.sztvis.buscloud.model.domain.TramCanInfo;
 import com.sztvis.buscloud.model.domain.TramDeviceStateInspectRealtimeInfo;
@@ -24,6 +25,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -170,5 +172,15 @@ public class GpsService implements IGpsService{
         }
         pageBean.setItems(list2);
         return pageBean;
+    }
+
+    @Override
+    public long GetCountBy10sGps(long deviceId, String date, int second)
+    {
+        String starttime=DateUtil.addSecond(date,-second);
+        Query query1=new Query();
+        query1.addCriteria(Criteria.where("deviceid").is(deviceId));
+        query1.addCriteria(Criteria.where("updatetime").lte(date).gte(starttime));
+        return this.mongoTemplate.count(query1,TramGpsInfo.class);
     }
 }

@@ -2,6 +2,7 @@ package com.sztvis.buscloud.service;
 
 import com.sztvis.buscloud.model.domain.*;
 import com.sztvis.buscloud.model.dto.*;
+import com.sztvis.buscloud.model.dto.api.DeviceFilterSearchResult;
 import com.sztvis.buscloud.model.dto.api.HVNVRModel;
 import com.sztvis.buscloud.model.entity.DeviceStateFiled;
 
@@ -188,6 +189,13 @@ public interface IDeviceService {
      */
     List<Long> getDeviceIdsByUserId(long userId);
 
+    TramDeviceInfo GetDriverInfo(long Id,String code);
 
+    DeviceFilterSearchResult GetAppDeviceFilterSearch(String code);
 
+    List<Long> GetDeviceIdsByDepartmentId(CurrentUserInfo user);
+
+    AppBusViewModel GetAppBusModel(int dayType, long deviceId);
+
+    List<TramChannelInfo> GetChannelsByDeviceId(long deviceId);
 }

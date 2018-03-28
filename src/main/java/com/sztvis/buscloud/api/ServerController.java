@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -63,7 +64,7 @@ public class ServerController extends BaseApiController{
      * @return
      */
     @RequestMapping("/accept")
-    public ApiResult Accept(@RequestBody HostApiModel apiModel) throws NoSuchFieldException, IllegalAccessException, ParseException {
+    public ApiResult Accept(@RequestBody HostApiModel apiModel,HttpServletRequest request) throws NoSuchFieldException, IllegalAccessException, ParseException {
         ApiResult result =new ApiResult();
         switch (apiModel.getType()){
             case HEALTH:
@@ -79,7 +80,7 @@ public class ServerController extends BaseApiController{
                 result = DispatchFunc(apiModel);
                 break;
             case ALARM:
-                result = AlarmFunc(apiModel);
+                result = AlarmFunc(apiModel,request);
                 break;
             case HVNVR:
                 result = DeviceStatusFunc(apiModel);
@@ -238,7 +239,7 @@ public class ServerController extends BaseApiController{
      * @param apiModel
      * @return
      */
-    private ApiResult AlarmFunc(HostApiModel apiModel) throws NoSuchFieldException, IllegalAccessException, ParseException {
+    private ApiResult AlarmFunc(HostApiModel apiModel,HttpServletRequest request) throws NoSuchFieldException, IllegalAccessException, ParseException {
         AlarmModel alarmModel = JSON.parseObject(apiModel.getMsgInfo().toString(),AlarmModel.class);
         alarmModel.setUpdateTime(DateUtil.getTimestampStr(alarmModel.getUpdateTime()));
         TramDeviceInfo deviceInfo = this.iDeviceService.getDeviceInfoByCode(alarmModel.getCode());
@@ -303,9 +304,9 @@ public class ServerController extends BaseApiController{
                     String[] pics = JSON.parseObject(alarmModel.getValue1().toString(), new TypeReference<String[]>() {
                     });
                     String imgFileName = UUID.randomUUID().toString().replaceAll("-", "")+"_"+alarmModel.getCode()+"_"+alarmModel.getUpdateTime().replaceAll(":","").replace(" ","").replaceAll("-","");
-                    ImageHelper.generateImage(pics[0], filePath + imgFileName + "_0.jpg");
-                    ImageHelper.generateImage(pics[1], filePath + imgFileName + "_1.jpg");
-                    String imgValue1 = "/storage/" + imgFileName + "_0.jpg", imgValue2 = "/storage/" + imgFileName + "_1.jpg";
+                    ImageHelper.generateImage(pics[0], "imgupload/ADAS/", imgFileName + "_0.jpg",request);
+                    ImageHelper.generateImage(pics[1], "imgupload/ADAS/", imgFileName + "_1.jpg",request);
+                    String imgValue1 = "imgupload/ADAS/" + imgFileName + "_0.jpg", imgValue2 = "imgupload/ADAS/" + imgFileName + "_1.jpg";
                     List<Double> extras = JSON.parseObject(alarmModel.getValue2().toString(), new TypeReference<List<Double>>() {
                     });
                     this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(), deviceInfo.getId(), alarmModel.getUpdateTime(), alarmModel.getType(), imgValue1 + "," + imgValue2, StringHelper.listToString(extras, ','), alarmModel.getPath()));

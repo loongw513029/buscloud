@@ -107,4 +107,26 @@ public class MemberService implements IMemberService{
     public void removeUser(String userIds) {
         this.memberMapper.remove(userIds);
     }
+
+    @Override
+    public void ChangePassWord(long userId, String oldPwd, String newPwd)
+    {
+        TramMemberInfo memberInfo = this.memberMapper.getMemberById(userId);
+        String oldPwdStr=SecureHelper.encryptToMD5(oldPwd.concat(memberInfo.getPasswordsalt()));
+        if (oldPwdStr!=memberInfo.getPassword())
+            throw new TramException("旧密码不正确");
+        this.ChangePassWord(userId,newPwd);
+    }
+
+    public void ChangePassWord(long userId, String newPwd)
+    {
+        TramMemberInfo memberInfo = this.memberMapper.getMemberById(userId);
+        String PassWord= SecureHelper.encryptToMD5(newPwd.concat(memberInfo.getPasswordsalt()));
+        this.memberMapper.ChangePassWord(userId,PassWord);
+    }
+
+    public void ModifyUserPhoto(long userId, String filePath)
+    {
+        this.memberMapper.ModifyUserPhoto(userId,filePath);
+    }
 }

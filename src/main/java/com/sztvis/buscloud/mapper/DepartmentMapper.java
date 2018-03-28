@@ -2,6 +2,7 @@ package com.sztvis.buscloud.mapper;
 
 import com.sztvis.buscloud.core.SimpleSelectInLangDriver;
 import com.sztvis.buscloud.mapper.provider.DepartmentProvider;
+import com.sztvis.buscloud.model.domain.TramChannelInfo;
 import com.sztvis.buscloud.model.domain.TramDepartmentInfo;
 import com.sztvis.buscloud.model.dto.ComboTreeModel;
 import com.sztvis.buscloud.model.dto.response.DepartmentViewModel;
@@ -50,6 +51,9 @@ public interface DepartmentMapper {
     @Select("select * from TramDepartmentInfo where parentId=#{parentId}")
     List<TramDepartmentInfo> GetDepartmentsByParentId(long parentId);
 
+    @Select("select * from TramDepartmentInfo where Id=#{Id}")
+    TramDepartmentInfo GetDepartmentsById(Long Id);
+
     /**
      *
      * @param departmentId
@@ -80,6 +84,5 @@ public interface DepartmentMapper {
 
     @Select("select * from TramDepartmentInfo where id=#{parentDepartmentId} or parentid=#{parentDepartmentId}")
     List<TramDepartmentInfo> getDepartmentListByParentId(long parentDepartmentId);
-
 
 }

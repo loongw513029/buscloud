@@ -28,7 +28,7 @@ public class DayTypes {
         this.endTime = endTime;
     }
 
-    public DayTypes getDayByType(int type){
+    public static DayTypes getDayByType(int type){
         DayTypes dayTypes = new DayTypes();
         switch (type){
             case 1://昨天
@@ -60,4 +60,5 @@ public class DayTypes {
         }
         return dayTypes;
     }
+
 }

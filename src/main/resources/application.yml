@@ -52,7 +52,7 @@ jedis:
 ytx:
   account:
 upload:
-  dir: /Users/tvis/Documents/TVIS/buscloud/src/main/resources/uploads/
+  dir: classpath:/uploads/
 logging:
   level:
     com:

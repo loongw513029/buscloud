@@ -2,6 +2,7 @@ package com.sztvis.buscloud.mapper.provider;
 
 
 import com.sztvis.buscloud.core.helper.StringHelper;
+import com.sztvis.buscloud.model.dto.CurrentUserInfo;
 import org.apache.ibatis.jdbc.SQL;
 
 import java.util.List;
@@ -149,5 +150,55 @@ public class DeviceSqlProvider {
         sql.FROM("tramunsafebehaviorinfo");
         sql.WHERE("deviceId in ("+StringHelper.listToString(departments,',')+") and ApplyTime>='"+startTime+"'");
         return sql.toString();
+    }
+
+    public String getDevices(Map<String,Object> map)
+    {
+        List<Long> deviceIds=(List<Long>)map.get("deviceIds");
+        Long lineId=(Long)map.get("lineId");
+        SQL sql=new SQL();
+        sql.SELECT("a.*");
+        sql.FROM("TramDeviceInfo a left join TramBusInfo b on a.BusId=b.Id");
+        if (lineId ==0)
+        {
+            if (deviceIds!=null)
+                sql.WHERE("a.id in ("+ StringHelper.listToString(deviceIds,',') +") and a.deviceStatus!=0");
+        }
+        else
+            sql.WHERE(" b.LineId="+lineId+" and a.deviceStatus!=0");
+        return sql.toString();
+    }
+
+    public String GetDriverInfoSQL(Map<String,Object> map)
+    {
+        Long Id=(Long) map.get("Id");
+        String code=(String)map.get("code");
+        SQL sql=new SQL();
+        sql.SELECT("*");
+        sql.FROM("TramDeviceInfo");
+        if (String.valueOf(Id)!=null&&Id!=0) {
+            sql.WHERE("Id=" + Id + "");
+        }
+        else {
+            sql.WHERE("deviceCode='" + code + "'");
+        }
+        return sql.toString();
+    }
+
+    public String GetAppDeviceFilterSearchSQL(Map<String,Object> map)
+    {
+        String code=(String)map.get("Code");
+        String sql="select a.Id as DeviceId,a.DeviceCode,b.Id as LineId,b.LineName " +
+                "from TramDeviceInfo a left join TramLineInfo b on a.LineId=b.Id " +
+                "where a.DeviceCode like '%"+ code +"%'";
+        return sql;
+    }
+
+    public String GetDeviceIdsByDepartmentIdSQL(CurrentUserInfo user)
+    {
+        if (user.getUserName()=="admin")
+            return "select Id from TramDeviceInfo";
+        else
+            return "select Id from TramDeviceInfo where DepartmentId in(select id from TramDepartmentInfo where Id="+ user.getDepartmentId() +" or parentId="+ user.getDepartmentId() +")";
     }
 }

@@ -1,10 +1,13 @@
 package com.sztvis.buscloud.mapper;
 
 import com.sztvis.buscloud.mapper.provider.BasicProvider;
+import com.sztvis.buscloud.mapper.provider.LineProvider;
 import com.sztvis.buscloud.model.domain.TramBasicInfo;
+import com.sztvis.buscloud.model.domain.TramMemberInfo;
 import com.sztvis.buscloud.model.domain.TramRoleInfo;
 import com.sztvis.buscloud.model.domain.TramMenuInfo;
 import com.sztvis.buscloud.model.dto.BasicViewModel;
+import com.sztvis.buscloud.model.dto.BicycleViewModel;
 import com.sztvis.buscloud.model.dto.ComboTreeModel;
 import com.sztvis.buscloud.model.dto.response.RoleViewModel;
 import org.apache.ibatis.annotations.*;
@@ -68,4 +71,13 @@ public interface BasicMapper {
 
     @Select("select * from TramBasicInfo where parentId=#{parentId} and fixe=1")
     List<TramBasicInfo> getAlarmTypes(long parentId);
+
+    @SelectProvider(type = BasicProvider.class,method = "GetAlarmKeysByUserIdSQL")
+    List<Long> GetAlarmKeysByUserId(@Param("userId") Long userId,@Param("RoleLv") Long RoleLv);
+
+    @Select("select Id,Name from TramBasicInfo where Fixe=1 and Type=1")
+    List<TramBasicInfo> Types();
+
+    @Select("select AlarmName from TramBasicInfo where Id=#{Id}")
+   String BasicName(int Id);
 }

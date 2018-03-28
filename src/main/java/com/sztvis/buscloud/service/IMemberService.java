@@ -22,4 +22,8 @@ public interface IMemberService {
     void saveAndUpdateMember(TramMemberInfo memberInfo);
 
     void removeUser(String userIds);
+
+    void ChangePassWord(long userId, String oldPwd, String newPwd);
+
+    void ModifyUserPhoto(long userId,String filePath);
 }

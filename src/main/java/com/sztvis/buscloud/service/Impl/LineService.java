@@ -4,6 +4,8 @@ import com.sztvis.buscloud.mapper.DepartmentMapper;
 import com.sztvis.buscloud.mapper.DeviceMapper;
 import com.sztvis.buscloud.mapper.LineMapper;
 import com.sztvis.buscloud.mapper.MemberMapper;
+import com.sztvis.buscloud.model.domain.TramChannelInfo;
+import com.sztvis.buscloud.model.domain.TramDeviceInfo;
 import com.sztvis.buscloud.model.domain.TramLineInfo;
 import com.sztvis.buscloud.model.domain.TramMemberInfo;
 import com.sztvis.buscloud.model.dto.*;
@@ -11,11 +13,9 @@ import com.sztvis.buscloud.model.dto.AppNumViewModel;
 import com.sztvis.buscloud.model.dto.SelectViewModel;
 import com.sztvis.buscloud.service.IDepartmentService;
 import com.sztvis.buscloud.service.ILineService;
-import com.sztvis.buscloud.service.IMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -36,6 +36,8 @@ public class LineService implements ILineService {
     private IDepartmentService iDepartmentService;
     @Autowired
     private DepartmentMapper iDepartmentMapper;
+    @Autowired
+    private DeviceMapper deviceMapper;
 
     @Override
     public List<TramLineInfo> GetLinesByDepartmentId(long departmentId) {
@@ -125,5 +127,25 @@ public class LineService implements ILineService {
             list = this.lineMapper.GetDropDownLine(user,4,null,msg);
         }
          return list;
+    }
+
+    @Override
+    public List<TramDeviceInfo>  getDevices(long lineId,long userId)
+    {
+        userId=0;
+        List<Long> deviceIds=new ArrayList<>();
+        if (userId!=0)
+        {
+            TramMemberInfo info = this.iMemberMapper.getMemberById(userId);
+            deviceIds=this.deviceMapper.getLineIdsByDepartmentId(info.getOwnershipid());
+        }
+        List<TramDeviceInfo> list=this.deviceMapper.getDevices(deviceIds,lineId);
+        return list;
+    }
+
+    @Override
+    public List<TramChannelInfo> GetChannlsByDeviceId(long deviceId)
+    {
+        return this.lineMapper.GetChannlsByDeviceId(deviceId);
     }
 }

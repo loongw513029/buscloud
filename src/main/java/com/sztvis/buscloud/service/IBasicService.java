@@ -78,5 +78,7 @@ public interface IBasicService {
 
     List<Long> getDeviceIdsByRoleLv(long userId);
 
+    List<Long> GetAlarmKeysByUserId(long userId);
+
     List<BasicViewModel> getBasicList(int type, String keywords);
 }

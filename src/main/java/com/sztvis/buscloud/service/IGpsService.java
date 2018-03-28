@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.data.domain.Page;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -76,5 +77,5 @@ public interface IGpsService {
      */
     PageBean<MapHistoryLocationModel> getMapHistoryGpsList(long deviceId, String startTime, String endTime, int page, int rows);
 
-
+    long GetCountBy10sGps(long deviceId, String date, int second);
 }

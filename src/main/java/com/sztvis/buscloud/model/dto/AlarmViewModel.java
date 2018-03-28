@@ -21,6 +21,15 @@ public class AlarmViewModel {
     private String value;
     private String path;
 
+    public CurrentCanModel getCan() {
+        return can;
+    }
+
+    public void setCan(CurrentCanModel can) {
+        this.can = can;
+    }
+
+    public CurrentCanModel can;
     public long getId() {
         return id;
     }
@@ -133,4 +142,44 @@ public class AlarmViewModel {
         this.departmentname = departmentname;
     }
 
+    public static class CurrentCanModel
+    {
+        /// <summary>
+        /// 车速
+        /// </summary>
+        public String speed;
+        /// <summary>
+        /// 是否踩刹车
+        /// </summary>
+        public Boolean isBreak;
+        /// <summary>
+        /// 距离
+        /// </summary>
+        public double distance;
+
+        public String getSpeed() {
+            return speed;
+        }
+
+        public void setSpeed(String speed) {
+            this.speed = speed;
+        }
+
+        public Boolean getBreak() {
+            return isBreak;
+        }
+
+        public void setBreak(Boolean aBreak) {
+            isBreak = aBreak;
+        }
+
+        public double getDistance() {
+            return distance;
+        }
+
+        public void setDistance(double distance) {
+            this.distance = distance;
+        }
+    }
 }
+

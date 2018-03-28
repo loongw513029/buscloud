@@ -1,5 +1,8 @@
 package com.sztvis.buscloud.model.dto;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 /**
  * @author longweiqian
  * @company tvis

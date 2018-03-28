@@ -1,6 +1,7 @@
 package com.sztvis.buscloud.mapper.provider;
 
 import com.sztvis.buscloud.core.helper.StringHelper;
+import org.apache.ibatis.jdbc.SQL;
 
 import java.util.Map;
 
@@ -26,7 +27,7 @@ public class BasicProvider {
         return sb.toString();
     }
 
-    public  String getBasicListCount(Map<String,Object> map){
+    public String getBasicListCount(Map<String,Object> map){
         int type = (Integer)map.get("type");
         String keywords = (String)map.get("keywords");
         StringBuilder sb = new StringBuilder();
@@ -36,5 +37,19 @@ public class BasicProvider {
             sb.append(" and alarmname like '%"+keywords+"%'");
         }
         return sb.toString();
+    }
+
+    public String GetAlarmKeysByUserIdSQL(Map<String,Object> map)
+    {
+        Long RoleLv=(Long)map.get("RoleLv");
+        int alarmType = RoleLv==1 ? 1:RoleLv==2 ? 2 : 1;
+        SQL sql=new SQL();
+        sql.SELECT("Id");
+        sql.FROM("TramBasicInfo");
+        if(RoleLv==0)
+            sql.WHERE("Type=1");
+        else
+            sql.WHERE("Type=1 and parentId in(select Id from TramAlarmTypeInfo where parentId="+alarmType+")");
+        return sql.toString();
     }
 }

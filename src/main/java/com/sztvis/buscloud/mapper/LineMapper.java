@@ -1,6 +1,7 @@
 package com.sztvis.buscloud.mapper;
 
 import com.sztvis.buscloud.mapper.provider.LineProvider;
+import com.sztvis.buscloud.model.domain.TramChannelInfo;
 import com.sztvis.buscloud.model.domain.TramLineInfo;
 import com.sztvis.buscloud.model.domain.TramMemberInfo;
 import com.sztvis.buscloud.model.dto.ComboTreeModel;
@@ -54,4 +55,11 @@ public interface LineMapper {
 
     @SelectProvider(type = LineProvider.class,method = "getDropDownLineSQL")
     List<SelectViewModel> GetDropDownLine (TramMemberInfo user, int type, List<Long> arr, String msg);
+
+    @Select("select Id from TramLineInfo where DepartmentId in(select Id from TramDepartmentInfo where Id=#{OwnershipId} or ParentId=#{OwnershipId})")
+    List<Long> LineId(Long OwnershipId);
+
+    @Select("select * from TramChannelInfo where DeviceId=#{deviceId} order by No asc")
+    List<TramChannelInfo> GetChannlsByDeviceId(Long deviceId);
+
 }

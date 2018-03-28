@@ -731,4 +731,5 @@ public class DateUtil {
         long between_days=(time2-time1)/(1000*3600*24*30*365);
         return Integer.parseInt(String.valueOf(between_days));
     }
+
 }

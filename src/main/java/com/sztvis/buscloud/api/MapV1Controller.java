@@ -10,6 +10,7 @@ import com.sztvis.buscloud.service.IDeviceService;
 import com.sztvis.buscloud.service.IGpsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -53,6 +54,7 @@ public class MapV1Controller extends BaseApiController{
      * @param endTime
      * @return
      */
+    @RequestMapping(value = "/getmaphistory",method = RequestMethod.GET)
     public ApiResult getWebMapHistory(long deviceId,String startTime,String endTime,int page,int rows){
         PageBean<MapHistoryLocationModel> pageBean = this.iGpsService.getMapHistoryGpsList(deviceId,startTime,endTime,page,rows);
         return ApiResult(true, "历史列表获取成功", StatusCodeEnum.Success, pageBean);

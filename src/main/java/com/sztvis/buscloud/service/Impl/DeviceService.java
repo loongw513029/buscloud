@@ -5,15 +5,18 @@ import com.sztvis.buscloud.core.DateStyle;
 import com.sztvis.buscloud.core.DateUtil;
 import com.sztvis.buscloud.core.helper.StringHelper;
 import com.sztvis.buscloud.mapper.AlarmMapper;
+import com.sztvis.buscloud.mapper.BasicMapper;
 import com.sztvis.buscloud.mapper.DeviceMapper;
 import com.sztvis.buscloud.mapper.DriverMapper;
 import com.sztvis.buscloud.model.domain.*;
 import com.sztvis.buscloud.model.dto.*;
+import com.sztvis.buscloud.model.dto.api.DeviceFilterSearchResult;
 import com.sztvis.buscloud.model.dto.api.HVNVRModel;
 import com.sztvis.buscloud.model.dto.push.PushModel;
 import com.sztvis.buscloud.model.entity.BusType;
 import com.sztvis.buscloud.model.entity.DeviceStateFiled;
 import com.sztvis.buscloud.service.*;
+import com.sztvis.buscloud.util.DayTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -21,6 +24,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -50,6 +54,8 @@ public class DeviceService implements IDeviceService {
     private IGpsService iGpsService;
     @Autowired
     private IPushService iPushService;
+    @Autowired
+    private BasicMapper basicMapper;
 
     @Override
     public TramDeviceInfo getDeviceInfoByCode(String deviceCode) {
@@ -394,5 +400,47 @@ public class DeviceService implements IDeviceService {
         return this.mongoTemplate.count(query,TramDeviceHealthInfo.class);
     }
 
+    @Override
+    public TramDeviceInfo GetDriverInfo(long Id,String code){
+        return this.deviceMapper.GetDriverInfo(Long.valueOf(Id),code);
+    }
 
+    @Override
+    public DeviceFilterSearchResult GetAppDeviceFilterSearch(String code)
+    {
+        return this.deviceMapper.GetAppDeviceFilterSearch(code);
+    }
+
+    @Override
+    public List<Long> GetDeviceIdsByDepartmentId(CurrentUserInfo user)
+    {
+        return this.deviceMapper.GetDeviceIdsByDepartmentId(user);
+    }
+
+    @Override
+    public AppBusViewModel GetAppBusModel(int dayType, long deviceId)
+    {
+        int dayn=0;
+        Double Mileage= Double.valueOf(0);
+        AppBusViewModel model1=this.deviceMapper.GetAppBusModelsql1(deviceId);
+        DayTypes dayTypes=DayTypes.getDayByType(dayType);
+        try {
+            dayn=DateUtil.daysBetween(dayTypes.getStartTime(),dayTypes.getEndTime()) + 1;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        for (int i=0;i<dayn;i++)
+        {
+            String time=DateUtil.addDay(DateUtil.getCurrentTime(DateStyle.YYYY_MM_DD),-i);
+            Double milage=this.deviceMapper.GetAppBusModelsql2(deviceId,"'"+time+"'");
+            Mileage += StringHelper.isEmpty(milage) ? 0 : Double.valueOf(milage);
+        }
+        AppBusViewModel model=new AppBusViewModel();
+        model.setBusTypeName(this.basicMapper.BasicName(model1.getBusType()));
+        model.setMileage(Mileage);
+        return model;
+    }
+
+    @Override
+    public List<TramChannelInfo> GetChannelsByDeviceId(long deviceId){ return this.deviceMapper.GetChannelsByDeviceId(deviceId);};
 }

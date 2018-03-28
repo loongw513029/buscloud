@@ -3,6 +3,7 @@ package com.sztvis.buscloud.mapper;
 import com.sztvis.buscloud.mapper.provider.DeviceSqlProvider;
 import com.sztvis.buscloud.model.domain.*;
 import com.sztvis.buscloud.model.dto.*;
+import com.sztvis.buscloud.model.dto.api.DeviceFilterSearchResult;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
@@ -17,8 +18,14 @@ import java.util.List;
 public interface DeviceMapper {
 
 
+    @Select("select id from TramDeviceInfo")
+    List<Long> getTramDeviceId();
+
     @Select("select Id from TramLineInfo where DeparentId in (select Id from TramDepartmentInfo where Id=#{parentId})")
     List<Long> getLineIdsByDepartmentId(Long parentId);
+
+    @Select("select Id from TramDeviceInfo where lineId in (#{lineIds})")
+    List<Long> getDeviceByLineIds(String lineIds);
 
     @Select("select DeviceCode from TramDeviceInfo where lineId in #{lineIds}")
     List<String> getDeviceCodesByLineIds(List<Long> lineIds);
@@ -28,6 +35,9 @@ public interface DeviceMapper {
 
     @Select("select DeviceCode from TramDeviceInfo where DepartmentId in(select Id from TramDepartmentInfo where Id=#{departmentId} or ParentId=#{departmentId})")
     List<String> getDeviceCodesByDepartmentId(Long departmentId);
+
+    @Select("select Id from TramDeviceInfo where DepartmentId in(select Id from TramDepartmentInfo where Id=#{departmentId} or ParentId=#{departmentId})")
+    List<Long> getDeviceIdByDepartmentId(Long departmentId);
 
     @Select("select * from TramDeviceInfo where lineId=#{lineId}")
     List<TramDeviceInfo> getDevicesByLineId(long lineId);
@@ -146,4 +156,24 @@ public interface DeviceMapper {
     @SelectProvider(type = DeviceSqlProvider.class,method = "getDeviceIdByDepartmentIds")
     List<Long> getDeviceIdByDepartmens(@Param("departments") List<Long> departments);
 
+    @SelectProvider(type = DeviceSqlProvider.class,method = "getDevices")
+    List<TramDeviceInfo> getDevices(@Param("deviceIds") List<Long> deviceIds,@Param("lineId") Long lineId);
+
+    @SelectProvider(type = DeviceSqlProvider.class,method = "GetDriverInfoSQL")
+    TramDeviceInfo GetDriverInfo(@Param("Id") Long Id,@Param("code") String code);
+
+    @SelectProvider(type = DeviceSqlProvider.class,method = "GetAppDeviceFilterSearchSQL")
+    DeviceFilterSearchResult GetAppDeviceFilterSearch(@Param("Code") String code);
+
+    @SelectProvider(type = DeviceSqlProvider.class,method = "GetDeviceIdsByDepartmentIdSQL")
+    List<Long> GetDeviceIdsByDepartmentId(@Param("user") CurrentUserInfo user);
+
+    @Select("select a.Id as DeviceId,a.DeviceCode,a.BusId,a.LineId,b.BusNumber,b.BusType,a.DeviceStatus as Status,c.LineName,d.DriverName from TramDeviceInfo a left join TramBusInfo b on a.BusId=b.Id left join TramLineInfo c on a.LineId = c.Id left join TramDriverInfo d on b.DriverId = d.Id where a.Id=#{deviceId}")
+    AppBusViewModel GetAppBusModelsql1(@Param("deviceId") Long deviceId);
+
+    @Select("select SUM(TotalMileage) from CanHistoryEveryDayInfo where deviceId=#{deviceId} and UpdateTime=#{time}")
+    Double GetAppBusModelsql2(@Param("deviceId") Long deviceId,@Param("time") String time);
+
+    @Select("select * from TramChannelInfo where deviceId=#{deviceId}")
+    List<TramChannelInfo> GetChannelsByDeviceId(long deviceId);
 }

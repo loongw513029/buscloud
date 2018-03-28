@@ -8,6 +8,7 @@ import com.sztvis.buscloud.model.dto.CanViewModel;
 import com.sztvis.buscloud.model.dto.DispatchModel;
 import com.sztvis.buscloud.model.dto.service.SaveAlarmQuery;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -158,5 +159,7 @@ public interface ICanService {
      */
     List<List<Integer>> getSignleAlarmTrends(int dayType,long deviceId,List<Integer> types);
 
+    TramCanInfo GetCanInfoByLastTime(String code, int year, int month, int day, int hour, int minute, int second);
 
+    int GetCanInfoBy10sTime(String code, String date, int second);
 }

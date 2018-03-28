@@ -1,6 +1,7 @@
 package com.sztvis.buscloud.mapper.provider;
 
 import com.sztvis.buscloud.core.helper.StringHelper;
+import com.sztvis.buscloud.util.DayTypes;
 import org.apache.ibatis.jdbc.SQL;
 
 import java.util.List;
@@ -88,6 +89,81 @@ public class AlarmProvider {
         sql.SELECT("count(Id)");
         sql.FROM("TramAlarmInfo");
         sql.WHERE("deviceId in ("+ StringHelper.listToString(devices,',')+") and updateTime>='"+startTime+"' and updateTime<='"+endTime+"' and alarmType="+type);
+        return sql.toString();
+    }
+
+    public String GetListSQL(Map<String,Object> map){
+        List<Long> DeviceIds=(List<Long>)map.get("DeviceIds");
+        List<Long> AlarmKeys=(List<Long>)map.get("AlarmKeys");
+        int dayType=(int)map.get("dayType");
+        Long typeId=(Long)map.get("typeId");
+        Long alarmType=(Long)map.get("alarmType");
+        String code=(String)map.get("code");
+        Long lineId=(Long)map.get("lineId");
+        String device=DeviceIds.size()==0?"":StringHelper.listToString(DeviceIds,',');
+        String alarmkey=AlarmKeys.size()==0?"":StringHelper.listToString(AlarmKeys,',');
+        SQL sql = new SQL();
+        sql.SELECT("a.Id,b.DeviceCode,a.Extras,b.Id as DeviceId,c.BusNumber" +
+                ",d.LineName,e.DepartmentName,f.AlarmName,f.Level,a.UpdateTime,a.AlarmValue,a.AlarmKey,a.AlarmType,a.Path");
+        sql.FROM("TramCanAlarmInfo a left join TramDeviceInfo b on a.DeviceId = b.Id left join TramBusInfo c on " +
+                "b.BusId = c.Id left join TramLineInfo d on b.LineId = d.Id left join TramDepartmentInfo e on " +
+                "b.DepartmentId = e.Id left join TramBasicInfo f on a.AlarmKey = f.Id");
+        sql.WHERE("a.IsShow=1 and a.deviceId in("+device+") and AlarmKey in("+alarmkey+")");
+        if (String.valueOf(dayType)!=null&&dayType!=0)
+        {
+            DayTypes types = DayTypes.getDayByType(dayType);
+            sql.AND().WHERE("and datediff(dd,'"+ types.getStartTime() +"',a.UpdateTime)>=0  and datediff(dd,'"+ types.getEndTime() +"',a.UpdateTime)<=0");
+        }
+        if (String.valueOf(typeId)!=null&&typeId!=0)
+            sql.AND().WHERE("and a.AlarmKey in (select Id from TramBasicInfo where AlarmType="+ typeId +"");
+        if (String.valueOf(alarmType)!=null&&alarmType!=0)
+            sql.AND().WHERE("and a.AlarmKey="+ alarmType +"");
+        if (code!=null&&code!="")
+            sql.AND().WHERE("and (b.DeviceCode like '%"+ code +"%' or c.BusNumber like '"+ code +"%')");
+        if (String.valueOf(lineId)!=null&&lineId!=0)
+            sql.AND().WHERE("and d.Id="+ lineId +"");
+        sql.ORDER_BY("a.UpdateTime desc");
+        return sql.toString();
+    }
+
+    public String GetAppAlarmChartsSQL(Map<String,Object> map)
+    {
+        Long Id=(Long)map.get("Id");
+        int type=(int)map.get("type");
+        String startTime=(String)map.get("startTime");
+        String endTime=(String)map.get("endTime");
+        Long lineId=(Long)map.get("lineId");
+        List<Long> deviceIds=(List<Long>)map.get("deviceIds");
+        SQL sql=new SQL();
+        sql.SELECT("count(Id)");
+        sql.FROM("TramCanAlarmInfo");
+        if (type==1)
+            sql.WHERE("AlarmKey in (select Id from TramBasicInfo where AlarmType="+ Id +") and CreateTime>='"+ startTime +"' and CreateTime<='"+ endTime +"' and isShow=1 and deviceId in ("+ deviceIds +")");
+        else
+            sql.WHERE("AlarmKey in(select Id from TramBasicInfo where AlarmType in (select id from TramAlarmTypeInfo where parentId="+ Id +")) and CreateTime>='"+ startTime +"' and CreateTime<='"+ endTime +"' and isShow=1 and deviceId in ("+ deviceIds +")");
+        if (StringHelper.isNotEmpty(lineId))
+            sql.AND().WHERE("DeviceId in(select Id from TramDeviceInfo where LineId=" + lineId + ")");
+        return sql.toString();
+    }
+
+    public String xValCharsSQL(Map<String,Object> map)
+    {
+        Long Id=(Long)map.get("Id");
+        Long roleLv=(Long)map.get("roleLv");
+        int type=(int)map.get("type");
+        SQL sql=new SQL();
+        sql.SELECT("id,TypeName as Name");
+        sql.FROM("TramAlarmTypeInfo");
+        if (type==1) {
+            sql.WHERE("parentId=0");
+            if (roleLv>0)
+            {
+                int k = roleLv == 1 ? 1 : roleLv == 2 ? 2 : 9;
+                sql.AND().WHERE("Id="+k);
+            }
+        }
+        else
+            sql.WHERE("parentId="+Id);
         return sql.toString();
     }
 }

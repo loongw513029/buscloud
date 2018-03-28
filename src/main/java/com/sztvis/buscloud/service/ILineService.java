@@ -1,5 +1,7 @@
 package com.sztvis.buscloud.service;
 
+import com.sztvis.buscloud.model.domain.TramChannelInfo;
+import com.sztvis.buscloud.model.domain.TramDeviceInfo;
 import com.sztvis.buscloud.model.domain.TramLineInfo;
 import com.sztvis.buscloud.model.dto.AppNumViewModel;
 import com.sztvis.buscloud.model.dto.ComboTreeModel;
@@ -24,6 +26,10 @@ public interface ILineService {
     TramLineInfo getLineInfo(long Id);
 
     List<ComboTreeModel> getLineTreeList(long userId);
+
+    List<TramDeviceInfo>  getDevices(long lineId,long userId);
+
+    List<TramChannelInfo> GetChannlsByDeviceId(long deviceId);
 
     /**
      * 保存线路

@@ -438,6 +438,15 @@ public class StringHelper {
         }
     }
 
+    public static String getLists(String str) {
+        int a = str.indexOf("[");
+        int c = str.indexOf("]");
+        if (a >= 0 && c >= 0 & c > a) {
+            return (str.substring(a + 1, c));
+        } else {
+            return str;
+        }
+    }
     /**
      * 将字符串中所有的，替换成|
      *

@@ -4,22 +4,19 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.sztvis.buscloud.core.RedisUtil;
 import com.sztvis.buscloud.core.helper.StringHelper;
-import com.sztvis.buscloud.mapper.BasicMapper;
-import com.sztvis.buscloud.mapper.DeviceMapper;
-import com.sztvis.buscloud.mapper.MemberMapper;
-import com.sztvis.buscloud.model.domain.TramBasicInfo;
-import com.sztvis.buscloud.model.domain.TramMemberInfo;
-import com.sztvis.buscloud.model.domain.TramMenuInfo;
-import com.sztvis.buscloud.model.domain.TramRoleInfo;
+import com.sztvis.buscloud.mapper.*;
+import com.sztvis.buscloud.model.domain.*;
 import com.sztvis.buscloud.model.dto.BasicViewModel;
 import com.sztvis.buscloud.model.dto.ComboTreeModel;
 import com.sztvis.buscloud.model.dto.response.RoleViewModel;
 import com.sztvis.buscloud.service.IBasicService;
 import com.sztvis.buscloud.util.Constant;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -38,6 +35,11 @@ public class BasicService implements IBasicService{
     private BasicMapper basicMapper;
     @Autowired
     private RedisUtil redisUtil;
+    @Autowired
+    private DepartmentMapper departmentMapper;
+    @Autowired
+    private LineMapper lineMapper;
+
 
     /**
      * 获得该用户所能管理的设备编码集合
@@ -135,7 +137,39 @@ public class BasicService implements IBasicService{
 
     @Override
     public List<Long> getDeviceIdsByRoleLv(long userId) {
-        return null;
+        TramMemberInfo user=this.memberMapper.getMemberById(userId);
+        List<Long> LineIds = null;
+        List<String> msg = null;
+        Long roleLv=user.getRolelv();
+        Long ownershipId=user.getOwnershipid();
+        if (roleLv==1||roleLv==2)
+        {
+            LineIds=this.lineMapper.LineId(ownershipId);
+        }
+        else if(roleLv==3)
+        {
+            TramDepartmentInfo dp=this.departmentMapper.GetDepartmentsById(ownershipId);
+            if (dp.getParentid()==0)
+                LineIds=this.lineMapper.LineId(ownershipId);
+            else {
+                msg = Arrays.asList(user.getManagescope().split(","));
+                for (String r : msg) {
+                    LineIds.add(Long.valueOf(r));
+                }
+            }
+        }
+        if(roleLv==0)
+        {
+            if (user.getUsername()=="admin")
+                return this.deviceMapper.getTramDeviceId();
+            else
+                return this.deviceMapper.getLineIdsByDepartmentId(ownershipId);
+        }
+        else
+        {
+            String Ids=LineIds.toString().replace("[","").replace("]","");
+            return this.deviceMapper.getDeviceByLineIds(Ids);
+        }
     }
 
     @Override
@@ -167,5 +201,12 @@ public class BasicService implements IBasicService{
             list2.add(comboTreeModel);
         }
         return list2;
+    }
+
+    @Override
+    public List<Long> GetAlarmKeysByUserId(long userId)
+    {
+        TramMemberInfo user=this.memberMapper.getMemberById(userId);
+        return this.basicMapper.GetAlarmKeysByUserId(userId,user.getRolelv());
     }
 }

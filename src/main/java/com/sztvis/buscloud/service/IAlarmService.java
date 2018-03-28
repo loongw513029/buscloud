@@ -1,7 +1,11 @@
 package com.sztvis.buscloud.service;
 
+import com.sztvis.buscloud.model.HomealramViewModel;
 import com.sztvis.buscloud.model.dto.AlarmViewModel;
+import com.sztvis.buscloud.model.dto.BicycleViewModel;
+import com.sztvis.buscloud.model.dto.CanAlarmInfo;
 import com.sztvis.buscloud.model.dto.HomeAlarmViewModel;
+import com.sztvis.buscloud.model.dto.api.AppAlarmChartModel;
 
 import java.util.List;
 
@@ -20,4 +24,14 @@ public interface IAlarmService {
     int getAlarmTrendsCounts(long userId,String startTime,String endTime,int alarmType);
 
     List<HomeAlarmViewModel> getTop6HomePageAlarms(long userId);
+
+    List<AlarmViewModel> GetList(long userId, int dayType, long typeId, long alarmType, String code, long lineId);
+
+    CanAlarmInfo GetCanAlarmInfo(int Id);
+
+    BicycleViewModel GetBicycleUnSafeInfo(int dayType, long deviceId);
+
+    AppAlarmChartModel GetAppAlarmCharts(long userId, long lineId, int type);
+
+    HomealramViewModel.ViewModel GetTop10Alarms(long userId);
 }

@@ -1,6 +1,7 @@
 package com.sztvis.buscloud.mapper;
 
 import com.sztvis.buscloud.mapper.provider.MemberProvider;
+import com.sztvis.buscloud.model.domain.TramRoleInfo;
 import com.sztvis.buscloud.model.domain.Tramloginlogfo;
 import com.sztvis.buscloud.model.domain.TramMemberInfo;
 import com.sztvis.buscloud.model.dto.CurrentUserInfo;
@@ -86,4 +87,13 @@ public interface MemberMapper {
 
     @Select("select count(Id) from TramMemberInfo where username=#{username}")
     int getCountByUsername(String username);
+
+    @Select("select * from TramRoleInfo where Id=#{Id}")
+    TramRoleInfo GetRoleInfo(Long Id);
+
+    @Update("update TramMemberInfo set PassWord=#{newPwd} where Id=#{userId}")
+    void ChangePassWord(@Param("userId") long userId,@Param("newPwd") String newPwd);
+
+    @Update("update TramMemberInfo set Photo=#{filePath} where Id=#{userId}")
+    void ModifyUserPhoto(@Param("userId") long userId,@Param("filePath") String filePath);
 }

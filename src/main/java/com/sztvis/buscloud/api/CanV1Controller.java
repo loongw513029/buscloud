@@ -9,7 +9,9 @@ import com.sztvis.buscloud.model.entity.StatusCodeEnum;
 import com.sztvis.buscloud.service.ICanService;
 import com.sztvis.buscloud.service.IDeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -47,4 +49,5 @@ public class CanV1Controller extends BaseApiController {
         CanHistoryViewModel canViewModel = this.iCanService.getCanHistorys(dayType,lineId);
         return ApiResult(true,"CAN历史获取成功", StatusCodeEnum.Success,canViewModel);
     }
+
 }

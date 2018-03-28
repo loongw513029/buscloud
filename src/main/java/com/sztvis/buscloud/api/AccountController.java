@@ -2,8 +2,10 @@ package com.sztvis.buscloud.api;
 
 import com.sztvis.buscloud.core.RedisUtil;
 import com.sztvis.buscloud.core.TramException;
+import com.sztvis.buscloud.core.helper.StringHelper;
 import com.sztvis.buscloud.model.dto.CurrentUserInfo;
 import com.sztvis.buscloud.model.dto.LoginParams;
+import com.sztvis.buscloud.model.dto.api.ModifyPwdForm;
 import com.sztvis.buscloud.model.dto.response.ApiResult;
 import com.sztvis.buscloud.model.entity.StatusCodeEnum;
 import com.sztvis.buscloud.service.IMemberService;
@@ -67,5 +69,27 @@ public class AccountController extends BaseApiController{
 
         }
         return ApiResult(true,"退出登录登录",StatusCodeEnum.Success,null);
+    }
+
+    /**
+     * 修改密码
+     * @param modifyPwdForm
+     * @return
+     */
+    @RequestMapping(value = "/ModifyPwd",method = RequestMethod.POST)
+    public ApiResult ModifyPwd(ModifyPwdForm modifyPwdForm)
+    {
+        if (modifyPwdForm.getUserid()==0|| StringHelper.isNotEmpty(modifyPwdForm.getOldpwd())||StringHelper.isNotEmpty(modifyPwdForm.getNewpwd()))
+            return ApiResult(false,"请求参数不完整或不正确",StatusCodeEnum.ParameterError,null);
+        try {
+            this.iMemberService.ChangePassWord(modifyPwdForm.getUserid(),modifyPwdForm.getOldpwd(),modifyPwdForm.getNewpwd());
+            return ApiResult(true,"修改密码成功",StatusCodeEnum.Success,null);
+        }
+        catch (TramException ex){
+            return ApiResult(false,ex.getMessage(),StatusCodeEnum.ParameterError,null);
+        }
+        catch (Exception ex){
+            return ApiResult(false,ex.getMessage(),StatusCodeEnum.Error,null);
+        }
     }
 }

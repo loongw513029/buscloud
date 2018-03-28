@@ -1,5 +1,6 @@
 package com.sztvis.buscloud.service.Impl;
 
+import com.sztvis.buscloud.core.DateStyle;
 import com.sztvis.buscloud.core.DateUtil;
 import com.sztvis.buscloud.core.TramException;
 import com.sztvis.buscloud.mapper.AlarmMapper;
@@ -22,11 +23,9 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author longweiqian
@@ -524,5 +523,30 @@ public class CanService implements ICanService {
             }
         }
         return fag;
+    }
+
+    @Override
+    public TramCanInfo GetCanInfoByLastTime(String code, int year, int month, int day, int hour, int minute, int second)
+    {
+        StringBuffer time=new StringBuffer();
+        int []time1={year,month,day,hour,minute,second};
+        for (int i=0;i<6;i++)
+        {
+            time.append(String.valueOf(time1[i]));
+            if (i<2)
+                time.append("-");
+            if (i==2)
+                time.append(" ");
+            if(3<=i&&i<5)
+                time.append(":");
+        }
+        return this.canMapper.GetCanInfoByLastTime(Long.valueOf(code),time.toString());
+    }
+
+    @Override
+    public int GetCanInfoBy10sTime(String code, String date, int second)
+    {
+        String starttime=DateUtil.addSecond(date,-second);
+        return this.canMapper.GetCanInfoBy10sTime(code,starttime,date);
     }
 }
