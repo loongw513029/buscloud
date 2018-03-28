@@ -10,10 +10,10 @@ public class BasicViewModel {
     private int parentid;
     private String alarmname;
     private int level;
-    private boolean turn;
-    private boolean ispush;
+    private String turn;
+    private String ispush;
     private int customid;
-    private boolean isenable;
+    private String isenable;
 
     public int getId() {
         return id;
@@ -47,20 +47,28 @@ public class BasicViewModel {
         this.level = level;
     }
 
-    public boolean isTurn() {
+    public String getTurn() {
         return turn;
     }
 
-    public void setTurn(boolean turn) {
+    public void setTurn(String turn) {
         this.turn = turn;
     }
 
-    public boolean isIspush() {
+    public String getIspush() {
         return ispush;
     }
 
-    public void setIspush(boolean ispush) {
+    public void setIspush(String ispush) {
         this.ispush = ispush;
+    }
+
+    public String getIsenable() {
+        return isenable;
+    }
+
+    public void setIsenable(String isenable) {
+        this.isenable = isenable;
     }
 
     public int getCustomid() {
@@ -71,11 +79,4 @@ public class BasicViewModel {
         this.customid = customid;
     }
 
-    public boolean isIsenable() {
-        return isenable;
-    }
-
-    public void setIsenable(boolean isenable) {
-        this.isenable = isenable;
-    }
 }

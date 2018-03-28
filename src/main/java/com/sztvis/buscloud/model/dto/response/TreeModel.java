@@ -14,6 +14,7 @@ public class TreeModel implements Serializable{
     private String text;
     private String iconCls;
     private String state;
+    private boolean edit;
     private boolean checked;
     private TreeAttributeModel attributes;
     private List<TreeModel> children;
@@ -21,8 +22,7 @@ public class TreeModel implements Serializable{
     public long getId() {
         return id;
     }
-
-    public void setId(long id) {
+      public void setId(long id) {
         this.id = id;
     }
 
@@ -74,5 +74,11 @@ public class TreeModel implements Serializable{
         this.children = children;
     }
 
+    public boolean isEdit() {
+        return edit;
+    }
 
+    public void setEdit(boolean edit) {
+        this.edit = edit;
+    }
 }

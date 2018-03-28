@@ -94,6 +94,12 @@ public class ServerController extends BaseApiController{
             case REALTIMEDVRSTATE:
                 result = RealTimeStateFunc(apiModel);
                 break;
+            case KL:
+                break;
+            case INSPECT:
+                break;
+            case PAY_TERMINAL:
+                break;
             default:
                 break;
         }

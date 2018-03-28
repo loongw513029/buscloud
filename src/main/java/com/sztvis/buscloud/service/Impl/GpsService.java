@@ -23,6 +23,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -109,8 +110,8 @@ public class GpsService implements IGpsService{
     public long getGpsCount(long deviceid, String starttime, String endtime) {
         Query query1=new Query();
         query1.addCriteria(new Criteria("deviceid").is(deviceid));
-        query1.addCriteria(new Criteria("updatetime").lte(endtime));
-        query1.addCriteria(new Criteria("updatetime").gte(starttime));
+        query1.addCriteria(new Criteria().andOperator(Criteria.where("updatetime").lte(endtime),
+                Criteria.where("updatetime").lte(starttime)));
         return this.mongoTemplate.count(query1,TramGpsInfo.class);
     }
 
@@ -145,19 +146,14 @@ public class GpsService implements IGpsService{
         SpringDataPageable pageable = new SpringDataPageable();
         Query query = new Query();
         query.addCriteria(new Criteria("deviceid").is(deviceId));
-        query.addCriteria(new Criteria("updatetime").lte(endTime));
-        query.addCriteria(new Criteria("updatetime").gte(startTime));
+        query.addCriteria(new Criteria().andOperator(Criteria.where("updatetime").lte(endTime),
+                Criteria.where("updatetime").lte(startTime)));
         Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC,"updatetime"));
         pageable.setPagenumber(page);
-        // 每页条数
         pageable.setPagesize(rows);
-        // 排序
         pageable.setSort(sort);
-        // 查询出一共的条数
         Long count = mongoTemplate.count(query, TramGpsInfo.class);
-        // 查询
         List<TramGpsInfo> list = mongoTemplate.find(query.with(pageable), TramGpsInfo.class);
-        // 将集合与分页结果封装
         Page<TramGpsInfo> pagelist = new PageImpl<TramGpsInfo>(list, pageable, count);
         PageBean<MapHistoryLocationModel> pageBean = new PageBean<>(page, rows, count.intValue());
         List<MapHistoryLocationModel> list2 = new ArrayList<>();

@@ -38,6 +38,7 @@ public class TreeService implements ITreeService {
         treeModel.setId(departmentinfo.getId());
         treeModel.setState("open");
         treeModel.setIconCls("tree-department");
+        treeModel.setEdit(true);
         TreeAttributeModel m2=new TreeAttributeModel();
         m2.setState(false);
         m2.setLevel(1);
@@ -54,6 +55,7 @@ public class TreeService implements ITreeService {
             model.setId(dlist.get(i).getId());
             model.setText(dlist.get(i).getDepartmentname());
             model.setChecked(false);
+            model.setEdit(true);
             model.setIconCls("tree-child-department");
             model.setChildren(this.GetChildLineList(dlist.get(i).getId()));
             TreeAttributeModel m2=new TreeAttributeModel();
@@ -73,6 +75,7 @@ public class TreeService implements ITreeService {
             model.setId(dlist.get(i).getId());
             model.setText(dlist.get(i).getLinename());
             model.setChecked(false);
+            model.setEdit(true);
             model.setIconCls("tree-customline");
             model.setChildren(this.GetChindDevicesByLineId(dlist.get(i).getId()));
             TreeAttributeModel m2=new TreeAttributeModel();
@@ -92,7 +95,8 @@ public class TreeService implements ITreeService {
             model.setId(dlist.get(i).getId());
             model.setText(dlist.get(i).getDevicecode());
             model.setChecked(false);
-            model.setIconCls("device-nvr-online");
+            model.setIconCls(dlist.get(i).getDevicestatus()==1?(dlist.get(i).getHostsofttype()==0?"device-nvr-online":"device-dvr-online"):"device-offline");
+            model.setEdit(dlist.get(i).getDevicestatus()==1);
             TreeAttributeModel m2=new TreeAttributeModel();
             m2.setIsdevice(true);
             m2.setLevel(4);

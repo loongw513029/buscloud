@@ -172,15 +172,16 @@ public class OperationApiController extends BaseApiController{
     @RequestMapping(value = "/updatealarmconfig",method = RequestMethod.PUT)
     public ApiResult UpdateBasicAlarm(BasicViewModel viewModel){
         TramBasicInfo basicInfo = new TramBasicInfo();
+        System.out.println(viewModel.getIsenable());
         basicInfo.setAlarmName(viewModel.getAlarmname());
         basicInfo.setCustomId(viewModel.getCustomid()+"");
-        basicInfo.setEnable(viewModel.isIsenable());
+        basicInfo.setEnable(viewModel.getIsenable().equals("1"));
         basicInfo.setFixe(false);
         basicInfo.setId((long)viewModel.getId());
         basicInfo.setLevel((long)viewModel.getLevel());
         basicInfo.setParentId((long)viewModel.getParentid());
-        basicInfo.setPush(viewModel.isIspush());
-        basicInfo.setTurn(viewModel.isTurn());
+        basicInfo.setPush(viewModel.getIspush().equals("1"));
+        basicInfo.setTurn(viewModel.getTurn().equals("1"));
         basicInfo.setThreShold("");
         try{
             this.iBasicService.updateBasicInfo(basicInfo);

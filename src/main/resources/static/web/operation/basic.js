@@ -17,43 +17,14 @@ var Basic =function () {
                 pageSize:50,
                 pageList:[50,100],
                 updateUrl:'www.baidu.com',
-                queryParams:{type:0,keywords:''},
+                queryParams:{type:0,keywords:$('#serachbox').val()},
                 toolbar:[
                     {
-                        text:'增加',
-                        iconCls:'icon-add',
-                        handler:function () {
-                            parent.TramDalog.OpenIframe(650,405,'新增机构',"/basic/departmentfrom?id=0",function (index,layerno) {
-                                Department.saveData(layerno,index);
-                            });
-                        }
-                    },'-',
-                    {
-                        text:'编辑',
-                        iconCls:'icon-edit',
-                        handler:function () {
-                            var row = $('#table').treegrid('getSelections');
-                            if(row.length>1||row.length==0)
-                                parent.TramDalog.ErrorAlert("只能选择一条数据编辑",true);
-                            else{
-                                var id = row[0].id;
-                                parent.TramDalog.OpenIframe(650,405,'编辑机构',"/basic/departmentfrom?id="+id,function (index,layerno) {
-                                    Department.saveData(layerno,index);
-                                });
-                            }
-                        }
-                    },'-',{
-                        text:'删除',
-                        iconCls:'icon-remove',
-                        handler:function () {
-                            Department.removeData();
-                        }
-                    },'-',{
                         text:'<input type="text" id="serachbox" class="serachbox" />'
                     },{
                         iconCls:'icon-search',
                         handler:function () {
-                            Department.reLoad();
+                            $('#table').treegrid('reload');
                         }
                     }
 
@@ -86,15 +57,13 @@ var Basic =function () {
                         title: '开关',
                         width: 50,
                         formatter:function (value) {
-                            return value?'已启用':'已关闭';
+                            return value=="1"?'已启用':'已关闭';
                         },
                         editor:{
-                            type:'combobox',
+                            type:'checkbox',
                             options:{
-                                valueField:'id',
-                                textField:'value',
-                                data:[{"id":"true","value":"打开"},{"id":"false","value":"关闭"}],
-                                required:true
+                                on: '1',
+                                off: '0'
                             }
                         }
                     },{
@@ -102,32 +71,29 @@ var Basic =function () {
                         title: '推送',
                         width: 50,
                         formatter:function (value) {
-                            return value?'已启用':'已关闭';
+                            return value=="1"?'已启用':'已关闭';
                         },
                         editor:{
-                            type:'combobox',
+                            type:'checkbox',
                             options:{
-                                valueField:'id',
-                                textField:'value',
-                                data:[{"id":"true","value":"打开"},{"id":"false","value":"关闭"}],
-                                required:true
+                                on: '1',
+                                off: '0'
                             }
                         }
                     },{
-                        field: 'fixe',
+                        field: 'isenable',
                         title: '报警显示',
                         width: 50,
                         formatter:function (value) {
-                            return value?'已启用':'已关闭';
+                            return value=="1"?'已启用':'已关闭';
                         },
                         editor:{
-                            type:'combobox',
+                            type:'checkbox',
                             options:{
-                                valueField:'id',
-                                textField:'value',
-                                data:[{"id":"true","value":"打开"},{"id":"false","value":"关闭"}],
-                                required:true
+                                on: '1',
+                                off: '0'
                             }
+
                         }
                     },{
                         field: 'threshold',
@@ -164,6 +130,12 @@ var Basic =function () {
                 onAfterEdit: function (rowIndex, rowData, changes) {
                     editRow = undefined;
                     var row = rowIndex;
+                    row.customid = rowData.customid==undefined?row.customid:rowData.customid;
+                    row.isenable = rowData.isenable==undefined?row.isenable:rowData.isenable;
+                    row.ispush = rowData.ispush==undefined?row.ispush:rowData.ispush;
+                    row.level = rowData.level==undefined?row.level:rowData.level;
+                    row.threshold = rowData.threshold==undefined?row.threshold:rowData.threshold;
+                    row.turn = rowData.turn==undefined?row.turn:rowData.turn;
                     //像后台更新记录
                     parent.Http.Ajax({
                         url:'/api/v1/operation/updatealarmconfig',

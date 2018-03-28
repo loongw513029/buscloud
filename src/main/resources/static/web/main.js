@@ -80,9 +80,9 @@ var mainPlatform = {
                     animate: true,
                     data: data,
                     onCheck:function (node,checked) {
+                        var index = mainPlatform.getCurrentIframeIndex();
+                        var src = $('.page-iframe:eq('+index+')').attr("src");
                         if(checked){
-                            var index = mainPlatform.getCurrentIframeIndex();
-                            var src = $('.page-iframe:eq('+index+')').attr("src");
                             if($.inArray(src,mainPlatform.signleArray())>=0) {
                                 window.frames[index].Can.TransferData(node.id);
                             }
@@ -90,6 +90,9 @@ var mainPlatform = {
                         if($.inArray(src,mainPlatform.multiArray())>=0){
                             var nodes = $('#easyui-tree').tree('getChecked');
                             window.frames[index].TMap.ReviceParentAlarm(nodes);
+                        }
+                        if(src.indexOf('/map/history')>=0){
+                            window.frames[index].MapHistory.AcceptParentData(node);
                         }
                     },
                     onBeforeCheck:function (node,checked) {
@@ -103,7 +106,7 @@ var mainPlatform = {
                                 $('#easyui-tree').tree('uncheck', tree.target);
                             }
                         }
-                        return true;
+                        return node.edit;
                     }
                 });
             }

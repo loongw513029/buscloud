@@ -4,6 +4,7 @@ import com.sztvis.buscloud.model.dto.AlarmViewModel;
 import com.sztvis.buscloud.service.IAlarmService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -30,6 +31,12 @@ public class AlarmController {
             alarmViewModel = this.iAlarmService.getAlarmViewModel(id);
         ModelAndView modelAndView = new ModelAndView("/alarm/view");
         modelAndView.getModel().put("obj",alarmViewModel);
+        return modelAndView;
+    }
+
+    @RequestMapping("/statics")
+    public ModelAndView statics(){
+        ModelAndView modelAndView = new ModelAndView("/alarm/statics");
         return modelAndView;
     }
 }
