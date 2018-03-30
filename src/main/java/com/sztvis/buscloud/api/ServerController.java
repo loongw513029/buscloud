@@ -2,12 +2,16 @@ package com.sztvis.buscloud.api;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+import com.sztvis.buscloud.core.DateStyle;
 import com.sztvis.buscloud.core.DateUtil;
 import com.sztvis.buscloud.core.helper.ImageHelper;
 import com.sztvis.buscloud.core.helper.StringHelper;
 import com.sztvis.buscloud.model.CanCommon;
 import com.sztvis.buscloud.model.domain.*;
 import com.sztvis.buscloud.model.dto.HostApiModel;
+import com.sztvis.buscloud.model.dto.InspectView;
+import com.sztvis.buscloud.model.dto.PassengerFlowView;
+import com.sztvis.buscloud.model.dto.PayTerminalView;
 import com.sztvis.buscloud.model.dto.api.*;
 import com.sztvis.buscloud.model.dto.response.ApiResult;
 import com.sztvis.buscloud.model.dto.service.SaveAlarmQuery;
@@ -57,6 +61,8 @@ public class ServerController extends BaseApiController{
     private IBasicService iBasicService;
     @Autowired
     private IDispatchService iDispatchService;
+    @Autowired
+    private IInspectService iInspectService;
 
     /**
      * 处理客户端主机数据
@@ -95,10 +101,13 @@ public class ServerController extends BaseApiController{
                 result = RealTimeStateFunc(apiModel);
                 break;
             case KL:
+
                 break;
             case INSPECT:
+                result = OneKeyInspectFunc(apiModel,request);
                 break;
             case PAY_TERMINAL:
+                result = PayRecordFunc(apiModel,request);
                 break;
             default:
                 break;
@@ -476,6 +485,81 @@ public class ServerController extends BaseApiController{
             return ApiResult(true,"实时DVR状态成功",StatusCodeEnum.Success,null);
         }catch (Exception ex){
             return ApiResult(false,"实时DVR状态失败",StatusCodeEnum.Error,ex.getMessage());
+        }
+    }
+
+    private ApiResult PayRecordFunc(HostApiModel apiModel,HttpServletRequest request) throws ParseException {
+        PayTerminalView payTerminalView = JSON.parseObject(apiModel.getMsgInfo().toString(),PayTerminalView.class);
+        payTerminalView.setUpdatetime(DateUtil.getTimestampStr(payTerminalView.getUpdatetime()));
+        TramDeviceInfo deviceInfo = this.iDeviceService.getDeviceInfoByCode(payTerminalView.getDevicecode());
+        if(deviceInfo == null)
+            return ApiResult(false,"不存在编号为"+payTerminalView.getDevicecode()+"的设备",StatusCodeEnum.DataNotFound,null);
+        try{
+            String fileRoot = "imgupload/payterminal/";
+            String filenames= DateUtil.StringToString(DateUtil.getCurrentTime(), DateStyle.YYYY_MM_DD_HH_SS_SSS).replaceAll("-","").replaceAll(" ","").replaceAll(":","")+ 1 + ".png";
+            ImageHelper.generateImage(payTerminalView.getPassengerimage(),fileRoot,filenames,request);
+            String outFileName = "/"+fileRoot+filenames;
+            PayTerminalRecords payTerminalRecords =new PayTerminalRecords();
+            payTerminalRecords.setDeviceCode(deviceInfo.getDevicecode());
+            payTerminalRecords.setDeviceId(deviceInfo.getId());
+            payTerminalRecords.setLocation(payTerminalView.getLocation());
+            payTerminalRecords.setPassengerImage(outFileName);
+            payTerminalRecords.setPayCardNo(payTerminalView.getPaycardno());
+            payTerminalRecords.setPayTime(payTerminalView.getPaytime());
+            payTerminalRecords.setSiteName(payTerminalView.getSitename());
+            payTerminalRecords.setUpdateTime(payTerminalView.getUpdatetime());
+            this.iDeviceService.insertPayTerminalRecords(payTerminalRecords);
+            return ApiResult(true,"保存刷卡记录成功",StatusCodeEnum.Success,null);
+        }
+        catch (Exception ex){
+            return ApiResult(false,"保存刷卡记录失败",StatusCodeEnum.Success,ex.getMessage());
+        }
+    }
+
+    private ApiResult OneKeyInspectFunc(HostApiModel apiModel,HttpServletRequest request) throws ParseException {
+        InspectView inspectView = JSON.parseObject(apiModel.getMsgInfo().toString(),InspectView.class);
+        inspectView.setUpdatetime(DateUtil.getTimestampStr(inspectView.getUpdatetime()));
+        TramDeviceInfo deviceInfo = this.iDeviceService.getDeviceInfoByCode(inspectView.getDevicecode());
+        if(deviceInfo == null)
+            return ApiResult(false,"不存在编号为"+inspectView.getDevicecode()+"的设备",StatusCodeEnum.DataNotFound,null);
+        try{
+            String fileRoot = "imgupload/Inspect/";
+            List<String> imgList = new ArrayList<>();
+            for (String base64str:inspectView.getCarimage()) {
+                String filenames= DateUtil.StringToString(DateUtil.getCurrentTime(), DateStyle.YYYY_MM_DD_HH_SS_SSS).replaceAll("-","").replaceAll(" ","").replaceAll(":","")+ 1 + ".png";
+                ImageHelper.generateImage(base64str,fileRoot,filenames,request);
+                String outFileName = "/"+fileRoot+filenames;
+                imgList.add(outFileName);
+            }
+            OneKeyInspectRecords oneKeyInspectRecords = new OneKeyInspectRecords();
+            oneKeyInspectRecords.setInspectPics(StringHelper.listToString(imgList,','));
+            oneKeyInspectRecords.setDeviceId(deviceInfo.getId());
+            oneKeyInspectRecords.setUpdateTime(inspectView.getUpdatetime());
+            this.iInspectService.insertOneKeyInspectRecords(oneKeyInspectRecords);
+            return ApiResult(true,"一键巡检成功",StatusCodeEnum.Success,null);
+        }
+        catch (Exception ex){
+            return ApiResult(false,"一键巡检失败",StatusCodeEnum.Success,ex.getMessage());
+        }
+    }
+
+    private ApiResult KLFunc(HostApiModel apiModel) throws ParseException {
+        PassengerFlowView passengerFlowView = JSON.parseObject(apiModel.getMsgInfo().toString(),PassengerFlowView.class);
+        passengerFlowView.setUpdatetime(DateUtil.getTimestampStr(passengerFlowView.getUpdatetime()));
+        TramDeviceInfo deviceInfo = this.iDeviceService.getDeviceInfoByCode(passengerFlowView.getDevicecode());
+        if(deviceInfo == null)
+            return ApiResult(false,"不存在编号为"+passengerFlowView.getDevicecode()+"的设备",StatusCodeEnum.DataNotFound,null);
+        try{
+
+            OneKeyInspectRecords oneKeyInspectRecords = new OneKeyInspectRecords();
+            oneKeyInspectRecords.setInspectPics(StringHelper.listToString(imgList,','));
+            oneKeyInspectRecords.setDeviceId(deviceInfo.getId());
+            oneKeyInspectRecords.setUpdateTime(inspectView.getUpdatetime());
+            this.iInspectService.insertOneKeyInspectRecords(oneKeyInspectRecords);
+            return ApiResult(true,"一键巡检成功",StatusCodeEnum.Success,null);
+        }
+        catch (Exception ex){
+            return ApiResult(false,"一键巡检失败",StatusCodeEnum.Success,ex.getMessage());
         }
     }
 

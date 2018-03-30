@@ -176,4 +176,7 @@ public interface DeviceMapper {
 
     @Select("select * from TramChannelInfo where deviceId=#{deviceId}")
     List<TramChannelInfo> GetChannelsByDeviceId(long deviceId);
+
+    @Insert("insert into PayTerminalRecords(deviceId,deviceCode,updateTime,payCardNo,payTime,location,siteName,passengerImage)values(#{deviceId},#{deviceCode},#{updateTime},#{payCardNo},#{payTime},#{location},#{siteName},#{passengerImage})")
+    void insertPayTerminalRecords(PayTerminalRecords payTerminalRecords);
 }

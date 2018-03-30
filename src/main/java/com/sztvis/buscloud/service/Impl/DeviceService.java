@@ -442,5 +442,12 @@ public class DeviceService implements IDeviceService {
     }
 
     @Override
-    public List<TramChannelInfo> GetChannelsByDeviceId(long deviceId){ return this.deviceMapper.GetChannelsByDeviceId(deviceId);};
+    public List<TramChannelInfo> GetChannelsByDeviceId(long deviceId){ return this.deviceMapper.GetChannelsByDeviceId(deviceId);}
+
+    @Override
+    public void insertPayTerminalRecords(PayTerminalRecords payTerminalRecords) {
+        this.deviceMapper.insertPayTerminalRecords(payTerminalRecords);
+    }
+
+
 }
