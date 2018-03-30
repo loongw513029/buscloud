@@ -63,6 +63,8 @@ public class ServerController extends BaseApiController{
     private IDispatchService iDispatchService;
     @Autowired
     private IInspectService iInspectService;
+    @Autowired
+    private IPassengerFlowService iPassengerFlowService;
 
     /**
      * 处理客户端主机数据
@@ -550,16 +552,28 @@ public class ServerController extends BaseApiController{
         if(deviceInfo == null)
             return ApiResult(false,"不存在编号为"+passengerFlowView.getDevicecode()+"的设备",StatusCodeEnum.DataNotFound,null);
         try{
-
-            OneKeyInspectRecords oneKeyInspectRecords = new OneKeyInspectRecords();
-            oneKeyInspectRecords.setInspectPics(StringHelper.listToString(imgList,','));
-            oneKeyInspectRecords.setDeviceId(deviceInfo.getId());
-            oneKeyInspectRecords.setUpdateTime(inspectView.getUpdatetime());
-            this.iInspectService.insertOneKeyInspectRecords(oneKeyInspectRecords);
-            return ApiResult(true,"一键巡检成功",StatusCodeEnum.Success,null);
+            if(passengerFlowView.getNumber1()!=null&&passengerFlowView.getNumber1().length>1){
+                TramPassengerFlow passengerFlow1 = new TramPassengerFlow();
+                passengerFlow1.setDeviceCode(deviceInfo.getDevicecode());
+                passengerFlow1.setDeviceId(deviceInfo.getId());
+                passengerFlow1.setType(1);
+                passengerFlow1.setKlNumber1(passengerFlowView.getNumber1()[0]);
+                passengerFlow1.setKlNumber2(passengerFlowView.getNumber2()[1]);
+                this.iPassengerFlowService.insertPassengerFlow(passengerFlow1);
+            }
+            if(passengerFlowView.getNumber2()!=null&&passengerFlowView.getNumber2().length>1){
+                TramPassengerFlow passengerFlow2 = new TramPassengerFlow();
+                passengerFlow2.setDeviceCode(deviceInfo.getDevicecode());
+                passengerFlow2.setDeviceId(deviceInfo.getId());
+                passengerFlow2.setType(2);
+                passengerFlow2.setKlNumber1(passengerFlowView.getNumber2()[0]);
+                passengerFlow2.setKlNumber2(passengerFlowView.getNumber2()[1]);
+                this.iPassengerFlowService.insertPassengerFlow(passengerFlow2);
+            }
+            return ApiResult(true,"客流上传成功",StatusCodeEnum.Success,null);
         }
         catch (Exception ex){
-            return ApiResult(false,"一键巡检失败",StatusCodeEnum.Success,ex.getMessage());
+            return ApiResult(false,"客流上传失败",StatusCodeEnum.Success,ex.getMessage());
         }
     }
 
