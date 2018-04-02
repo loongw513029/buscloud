@@ -103,7 +103,7 @@ public class ServerController extends BaseApiController{
                 result = RealTimeStateFunc(apiModel);
                 break;
             case KL:
-
+                result = KLFunc(apiModel);
                 break;
             case INSPECT:
                 result = OneKeyInspectFunc(apiModel,request);

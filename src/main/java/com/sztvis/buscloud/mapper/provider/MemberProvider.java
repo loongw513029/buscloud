@@ -1,6 +1,7 @@
 package com.sztvis.buscloud.mapper.provider;
 
 import com.sztvis.buscloud.core.helper.StringHelper;
+import org.apache.ibatis.jdbc.SQL;
 
 import java.util.List;
 import java.util.Map;
@@ -24,5 +25,14 @@ public class MemberProvider {
         if(!StringHelper.isEmpty(username))
             sql+=" and a.username like '%"+username+"%' or a.realname like '%"+username+"%'";
         return  sql;
+    }
+
+    public String getMemberGuidByDepartmentIds(Map<String,Object> map){
+        List<Long> departmentIds = (List<Long>) map.get("departments");
+        SQL sql = new SQL();
+        sql.SELECT("Guid")
+                .FROM("TramMemberInfo")
+                .WHERE("ownershipId in ("+StringHelper.listToString(departmentIds,',')+")");
+        return sql.toString();
     }
 }

@@ -96,4 +96,7 @@ public interface MemberMapper {
 
     @Update("update TramMemberInfo set Photo=#{filePath} where Id=#{userId}")
     void ModifyUserPhoto(@Param("userId") long userId,@Param("filePath") String filePath);
+
+    @SelectProvider(type = MemberProvider.class,method = "getMemberGuidByDepartmentIds")
+    List<String> getMemberUUIDbyDepartmentId(@Param("departments") List<Long> departments);
 }

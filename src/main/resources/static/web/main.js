@@ -151,18 +151,48 @@ var mainPlatform = {
             });
         }
     },
+    //初始化websocket
     initWebSocket:function () {
         var socket = new SockJS("/endpointWisely");
         stompClient = Stomp.over(socket);
-        stompClient.connect({},function (frame) {
-            //所有消息
+        stompClient.connect({login:userId},function (frame) {
             stompClient.subscribe('/topic/getResponse',function (response) {
-                
+                var obj = JSON.parse(response.body);
+                mainPlatform.analyAlarm(obj);
             });
             stompClient.subscribe('/user/'+userId+'/msg',function (response) {
-                
+                var obj = JSON.parse(response.body);
+                mainPlatform.analyAlarm(obj);
             });
         })
+    },
+    analyAlarm:function (obj) {
+        if(obj.type==1)
+            mainPlatform.fiterDeviceStatus(obj.msgInfo);
+        if(obj.type==2)
+            mainPlatform.filterAlarm(obj.msgInfo);
+    },
+    //执行对数行菜单设备状态的填充
+    fiterDeviceStatus:function (obj) {
+        var nodes = $('#easyui-tree').tree('getChildren');
+        for(var i=0;i<nodes.length;i++){
+            var node = nodes[i];
+            if(node.attributes.level == 4&&node.text == obj.code) {
+                if(obj.online){
+                    if(obj.hostSoftType == 0)
+                        $('#easyui-tree').tree('update', {target: node.target,iconCls: 'device-nvr-online'});
+                    if(obj.hostSoftType == 1)
+                        $('#easyui-tree').tree('update', {target: node.target,iconCls: 'device-dvr-online'});
+                    $("#"+node.domId).find("span:eq(5)").show();
+                }else {
+                    $('#easyui-tree').tree('update', {target: node.target, iconCls: 'device-offline'});
+                    $("#"+node.domId).find("span:eq(5)").hide();
+                }
+            }
+        }
+    },
+    filterAlarm:function (obj) {
+
     },
     openAdminInfo:function () {
         parent.TramDalog.OpenIframe(650,405,'用户信息',"/basic/memberfrom?id="+id,function (layerno,index) {

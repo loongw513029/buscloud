@@ -365,9 +365,7 @@ public class DeviceService implements IDeviceService {
                 this.UpdateRealTimeInspect(device.getDevicecode(),DeviceStateFiled.OnlineState,true,3);
             }
             //推送
-            PushModel pushModel = new PushModel();
-            pushModel.setType(1);
-            pushModel.setMsgInfo(this.getCurrentDeviceStatus(device.getId()));
+            PushModel pushModel = new PushModel(1,this.getCurrentDeviceStatus(device.getId()));
             this.iPushService.sendMsg(pushModel);
         }
     }
@@ -395,8 +393,7 @@ public class DeviceService implements IDeviceService {
     public long getDeviceHealthInfo(String deviceCode, String starttime, String endTime) {
         Query query = new Query();
         query.addCriteria(new Criteria("devicecode").is(deviceCode));
-        query.addCriteria(new Criteria("updatetime").lte(endTime));
-        query.addCriteria(new Criteria("updatetime").gte(starttime));
+        query.addCriteria(new Criteria().andOperator(Criteria.where("updatetime").lte(endTime),Criteria.where("updatetime").gte(starttime)));
         return this.mongoTemplate.count(query,TramDeviceHealthInfo.class);
     }
 

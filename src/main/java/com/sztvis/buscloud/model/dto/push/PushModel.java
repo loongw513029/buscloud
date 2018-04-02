@@ -29,4 +29,9 @@ public class PushModel {
     }
 
     private Object msgInfo;
+
+    public PushModel(int type, Object msgInfo) {
+        this.type = type;
+        this.msgInfo = msgInfo;
+    }
 }

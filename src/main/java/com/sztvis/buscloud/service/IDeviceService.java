@@ -234,4 +234,7 @@ public interface IDeviceService {
      * @param payTerminalRecords
      */
     void insertPayTerminalRecords(PayTerminalRecords payTerminalRecords);
+
+
+
 }

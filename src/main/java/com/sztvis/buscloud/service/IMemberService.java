@@ -26,4 +26,8 @@ public interface IMemberService {
     void ChangePassWord(long userId, String oldPwd, String newPwd);
 
     void ModifyUserPhoto(long userId,String filePath);
+
+    List<String> getMemberUUIDbyDepartmentId(List<Long> departmentIds);
+
+    List<String> getMemberUUIDByDeviceCode(String deviceCode);
 }

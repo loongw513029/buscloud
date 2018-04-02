@@ -113,7 +113,12 @@
         </div>
     </div>
 </div>
-
+<script type="text/javascript">
+    var userId = '${user.uuid}';
+    $(window).resize(function(){
+        $('#pf-bd').height($(window).height()-76);
+    }).resize();
+</script>
 <script type="text/javascript" src="/easyui/jquery.min.js"></script>
 <script type="text/javascript" src="/easyui/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="/dist/jquery.cookie.js"></script>
@@ -122,15 +127,7 @@
 <script type="text/javascript" src="/layer/layer.js"></script>
 <script type="text/javascript" src="/web/common.js"></script>
 <script type="text/javascript" src="/web/main.js"></script>
-<!--[if IE 7]>
-<script type="text/javascript">
-    var userId = '${user.uuid}';
-    $(window).resize(function(){
-        $('#pf-bd').height($(window).height()-76);
-    }).resize();
 
-</script>
-<![endif]-->
 
 <script type="text/javascript">
     $('.easyui-tabs1').tabs({

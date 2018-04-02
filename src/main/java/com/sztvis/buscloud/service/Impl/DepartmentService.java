@@ -94,6 +94,26 @@ public class DepartmentService implements IDepartmentService {
         return  this.departmentMapper.getDepartmentListByParentId(departmentInfo.getId());
     }
 
+    @Override
+    public List<Long> getDepartmentInfoBydeviceCode(String deviceCode, boolean isgetparent) {
+        List<Long> list =new ArrayList<>();
+        TramDepartmentInfo departmentInfo = this.departmentMapper.getDepartmentInfoByDeviceCode(deviceCode);
+        list.add(departmentInfo.getId());
+        if(isgetparent){
+            if(departmentInfo.getParentid()!=0){
+                TramDepartmentInfo d= this.departmentMapper.GetDepartmentInfo(departmentInfo.getParentid());
+                list.add(d.getId());
+                return list;
+            }
+            else
+            {
+                return list;
+            }
+        }else{
+            return list;
+        }
+    }
+
     private List<ComboTreeModel> getComboTreeDataOfRecursion(long parentId){
         List<TramDepartmentInfo> list = this.departmentMapper.GetDepartmentsByParentId(parentId);
         List<ComboTreeModel> list2 = new ArrayList<>();

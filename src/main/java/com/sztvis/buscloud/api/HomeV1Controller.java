@@ -62,6 +62,8 @@ public class HomeV1Controller extends BaseApiController {
 
     @Autowired
     private IAlarmService iAlarmService;
+    @Autowired
+    private IHomeService iHomeService;
     /**
      * 获得首页数据
      * @param departmentId 机构Id
@@ -115,7 +117,21 @@ public class HomeV1Controller extends BaseApiController {
             return ApiResult(false, "获取数据成功", StatusCodeEnum.Error, null);
         }
     }
-
+    /**
+     * 获得web页面趋势数据
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/getWebTrends")
+    public ApiResult getWebTrends(long userId){
+        try {
+            WelcomeTrendModel welcomeTrendModel = this.iHomeService.getWelcomeTrendModels(userId);
+            return ApiResult(true, "获取WEB页面趋势数据成功", StatusCodeEnum.Success, welcomeTrendModel);
+        }
+        catch (Exception ex){
+            return ApiResult(false, "获取WEB页面趋势数据失败", StatusCodeEnum.Error, ex.getMessage());
+        }
+    }
     /**
      * 根据线路获得设备列表信息
      * @param lineId 线路ID

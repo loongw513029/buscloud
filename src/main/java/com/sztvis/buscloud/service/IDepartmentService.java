@@ -75,4 +75,13 @@ public interface IDepartmentService {
      */
     List<TramDepartmentInfo> getDepartmentListByCode(String departmentcode);
 
+    /**
+     * 根据设备编码获得机构信息
+     * @param deviceCode 设备编码
+     * @param isgetparent 是否获得顶级结构信息
+     * @return
+     */
+    List<Long> getDepartmentInfoBydeviceCode(String deviceCode,boolean isgetparent);
+
+
 }

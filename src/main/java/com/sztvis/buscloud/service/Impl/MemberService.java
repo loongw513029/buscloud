@@ -129,4 +129,15 @@ public class MemberService implements IMemberService{
     {
         this.memberMapper.ModifyUserPhoto(userId,filePath);
     }
+
+    @Override
+    public List<String> getMemberUUIDbyDepartmentId(List<Long> departmentIds) {
+        return this.memberMapper.getMemberUUIDbyDepartmentId(departmentIds);
+    }
+
+    @Override
+    public List<String> getMemberUUIDByDeviceCode(String deviceCode) {
+        List<Long> departments = this.iDepartmentService.getDepartmentInfoBydeviceCode(deviceCode,true);
+        return this.getMemberUUIDbyDepartmentId(departments);
+    }
 }

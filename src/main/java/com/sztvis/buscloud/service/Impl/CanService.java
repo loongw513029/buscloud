@@ -1,5 +1,6 @@
 package com.sztvis.buscloud.service.Impl;
 
+import com.alibaba.fastjson.JSON;
 import com.sztvis.buscloud.core.DateStyle;
 import com.sztvis.buscloud.core.DateUtil;
 import com.sztvis.buscloud.core.TramException;
@@ -9,10 +10,13 @@ import com.sztvis.buscloud.mapper.CanMapper;
 import com.sztvis.buscloud.mapper.DeviceMapper;
 import com.sztvis.buscloud.model.domain.*;
 import com.sztvis.buscloud.model.dto.*;
+import com.sztvis.buscloud.model.dto.push.PushAlarmModel;
+import com.sztvis.buscloud.model.dto.push.PushModel;
 import com.sztvis.buscloud.model.dto.service.SaveAlarmQuery;
 import com.sztvis.buscloud.service.ICanService;
 import com.sztvis.buscloud.service.IDeviceService;
 import com.sztvis.buscloud.service.IGpsService;
+import com.sztvis.buscloud.service.IPushService;
 import com.sztvis.buscloud.util.DayTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -49,6 +53,8 @@ public class CanService implements ICanService {
     private CanMapper canMapper;
     @Autowired
     private IDeviceService iDeviceService;
+    @Autowired
+    private IPushService iPushService;
 
     @Override
     public TramCanInfo GetCanInfo(String deviceCode, String updateTime) {
@@ -180,6 +186,7 @@ public class CanService implements ICanService {
         if(deviceInfo == null)
             throw new TramException("设备编码不存在！");
         int alarmType=query.getAlarmType();
+        String updateTime = DateUtil.StringToString(query.getAlarmTime(),DateStyle.YYYY_MM_DD_HH_MM_SS);
         TramBasicInfo basicInfo = this.basicMapper.getBasicInfoByCustomId(alarmType);
         //这里加上一天之内已经存在了的报警，将不再增加
 
@@ -190,7 +197,7 @@ public class CanService implements ICanService {
             TramAlarmInfo alarmInfo = new TramAlarmInfo();
             alarmInfo.setDeviceId(deviceInfo.getId());
             alarmInfo.setDeviceCode(deviceInfo.getDevicecode());
-            alarmInfo.setUpdateTime(Timestamp.valueOf(query.getAlarmTime()));
+            alarmInfo.setUpdateTime(Timestamp.valueOf(updateTime));
             alarmInfo.setAlarmType(query.getAlarmType());
             alarmInfo.setParentAlarmType(basicInfo.getParentId());
             alarmInfo.setValue(query.getValue());
@@ -209,7 +216,10 @@ public class CanService implements ICanService {
             long alarmId = alarmInfo.getId();
             //是否需要推送（推送到App,推送到页面）
             if(basicInfo.isPush()){
-
+                String extrias = query.getSpeed()+"|"+query.getDistance()+"|"+(query.isBrake()?1:0);
+                PushAlarmModel pushAlarmModel = new PushAlarmModel(alarmId,deviceInfo.getDevicecode(),basicInfo.getId().intValue(),updateTime,basicInfo.getAlarmName(),"",query.getPath(),extrias,query.getValue());
+                PushModel pushModel = new PushModel(2,pushAlarmModel);
+                this.iPushService.SendToMsgByDeviceCode(deviceInfo.getDevicecode(),pushModel);
             }
         }
     }
@@ -267,7 +277,7 @@ public class CanService implements ICanService {
     }
     public SaveAlarmQuery getAlarmQuery(String deviceCode,long deviceId,String updateTime,int type,String value,String extras,String path){
         SaveAlarmQuery query = new SaveAlarmQuery();
-        String[] extraArray = extras.split(",");
+        String[] extraArray =extras.equals("")?null:extras.split(",");
         TramGpsInfo gpsInfo = this.iGpsService.getLastGpsInfo(deviceCode,updateTime);
         if(extraArray ==null||extraArray.length ==0){
             query.setSpeed(0D);
