@@ -11,7 +11,7 @@ public enum  DeviceStateFiled {
     CanState("CanState"),InternetState("InternetState"),GpsSignelState("GpsSignelState"),SIMBalance("SIMBalance"),
     GpsInspectState("GpsInspectState"),CanInspectState("CanInspectState"),BehaviorInspectState("BehaviorInspectState"),
     RadarInspectState("RadarInspectState"),AdasInspectState("AdasInspectState"),TimingState("TimingState"),OnlineState("OnlineState"),
-    SurplusDiskSize("SurplusDiskSize"),SurplusSdcardSize("SurplusSdcardSize");
+    SurplusDiskSize("SurplusDiskSize"),SurplusSdcardSize("SurplusSdcardSize"),SIMCardNo("SimCardNo");
     private DeviceStateFiled(String value){
         this.value = value;
     }

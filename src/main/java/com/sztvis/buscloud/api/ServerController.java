@@ -454,7 +454,7 @@ public class ServerController extends BaseApiController{
             deviceStatusInfo.setDevicecode(deviceInfo.getDevicecode());
             deviceStatusInfo.setDeviceid(deviceInfo.getId());
             deviceStatusInfo.setGuid(UUID.randomUUID().toString().replaceAll("-", ""));
-            deviceStatusInfo.setType(new Long(hardWareModel.getType())+7);
+            deviceStatusInfo.setType(new Long(hardWareModel.getType())+8);
             deviceStatusInfo.setValue1("True");
             deviceStatusInfo.setValue2(hardWareModel.getValue()+"");
             deviceStatusInfo.setUpdatetime(hardWareModel.getUpdateTime());
@@ -462,7 +462,7 @@ public class ServerController extends BaseApiController{
             HVNVRModel hvnvrModel = new HVNVRModel();
             hvnvrModel.setCode(hardWareModel.getCode());
             hvnvrModel.setUpdateTime(hardWareModel.getUpdateTime());
-            hvnvrModel.setType(hardWareModel.getType() + 7);
+            hvnvrModel.setType(hardWareModel.getType() + 8);
             hvnvrModel.setValue1("True");
             hvnvrModel.setValue2(hardWareModel.getValue() + "");
             this.iDeviceService.updateDeviceNvrStatus(deviceInfo, hvnvrModel);

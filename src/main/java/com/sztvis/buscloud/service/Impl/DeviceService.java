@@ -238,7 +238,10 @@ public class DeviceService implements IDeviceService {
                 Boolean timingState = Boolean.valueOf(hvnvrModel.getValue1());
                 this.UpdateRealTimeInspect(hvnvrModel.getCode(),DeviceStateFiled.TimingState,timingState,3);
                 break;
-            case 8://CPU使用率
+            case 8://sim卡号
+                this.UpdateRealTimeInspect(hvnvrModel.getCode(),DeviceStateFiled.SIMCardNo,hvnvrModel.getValue1(),1);
+                break;
+            case 10://CPU使用率
                 Double cpuUseRate = Double.valueOf(hvnvrModel.getValue2());
                 this.UpdateRealTimeInspect(hvnvrModel.getCode(),DeviceStateFiled.CPUUseRate,cpuUseRate,2);
                 TramBasicInfo basic = this.iBasicService.getBasicInfoByCustomId(1005);
@@ -247,7 +250,7 @@ public class DeviceService implements IDeviceService {
                     this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(),deviceInfo.getId(),
                             hvnvrModel.getUpdateTime(),1005,"CPU使用率过高","",""));
                 break;
-            case 9:
+            case 11:
                 Double cpuTemp = Double.valueOf(hvnvrModel.getValue2());
                 this.UpdateRealTimeInspect(hvnvrModel.getCode(),DeviceStateFiled.CPUTemp,cpuTemp,2);
                 TramBasicInfo basic1 = this.iBasicService.getBasicInfoByCustomId(1006);
@@ -256,7 +259,7 @@ public class DeviceService implements IDeviceService {
                     this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(),deviceInfo.getId(),
                             hvnvrModel.getUpdateTime(),1006,"CPU温度过高","",""));
                 break;
-            case 10:
+            case 12:
                 Double memoryTemp = Double.valueOf(hvnvrModel.getValue2());
                 this.UpdateRealTimeInspect(hvnvrModel.getCode(),DeviceStateFiled.MemoryUseRate,memoryTemp,2);
                 TramBasicInfo basic2 = this.iBasicService.getBasicInfoByCustomId(1007);
@@ -265,7 +268,7 @@ public class DeviceService implements IDeviceService {
                     this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(),deviceInfo.getId(),
                             hvnvrModel.getUpdateTime(),1007,"内存使用率过高","",""));
                 break;
-            case 11:
+            case 13:
                 Double diskTemp = Double.valueOf(hvnvrModel.getValue2());
                 this.UpdateRealTimeInspect(hvnvrModel.getCode(),DeviceStateFiled.DiskTemp,diskTemp,2);
                 TramBasicInfo basic3 = this.iBasicService.getBasicInfoByCustomId(1008);
@@ -273,6 +276,17 @@ public class DeviceService implements IDeviceService {
                 if(diskTemp>=diskTemphrshold)
                     this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(),deviceInfo.getId(),
                             hvnvrModel.getUpdateTime(),1008,"硬盘温度过高","",""));
+                break;
+            case 14://主机网络状态
+
+                break;
+            case 15://Gps信号
+                break;
+            case 16://SIM卡余额
+                Double banance = Double.valueOf(hvnvrModel.getValue1());
+                this.UpdateRealTimeInspect(hvnvrModel.getCode(),DeviceStateFiled.SIMBalance,banance,2);
+                break;
+            case 17://网络信号
                 break;
 
         }

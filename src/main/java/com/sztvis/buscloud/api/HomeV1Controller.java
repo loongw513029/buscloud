@@ -174,7 +174,7 @@ public class HomeV1Controller extends BaseApiController {
             List<AppDropDownModel> info=new ArrayList<>();
             for(TramChannelInfo r:list)
             {
-                AppDropDownModel model=new AppDropDownModel();
+                AppDropDownModel model = new AppDropDownModel();
                 model.setId(r.getNo());
                 model.setName(r.getChannelname());
                 info.add(model);
