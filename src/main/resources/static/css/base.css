@@ -45,4 +45,5 @@ body.panel-noscroll{padding: 5px}
     text-align: center;
     width: 160px
 }
-
+.layui-layer-alarm .layui-layer-content{padding: 0px}
+.layui-layer-alarm .layui-layer-title{background-color: #ff0000}

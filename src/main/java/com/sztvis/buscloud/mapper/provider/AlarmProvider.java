@@ -42,6 +42,7 @@ public class AlarmProvider {
             sb.append(" and a.updatetime<='"+date2+"'");
         if(!StringHelper.isEmpty(keywords))
             sb.append(" and (a.devicecode like '%"+keywords+"%' or b.busnumber like '%"+keywords+"%')");
+        sb.append(" order by a.updatetime desc");
         return  sb.toString();
     }
 

@@ -111,10 +111,11 @@ var TramDalog=function(){
                 ,yes:callback1
             });
         },
-        OpenIframeAndNoBtn:function(width,height,url){
+        OpenIframeAndNoBtn:function(title,width,height,url){
             layer.open({
                 type: 2 //Page层类型
-                ,title:false
+                ,title:title
+                ,skin:'layui-layer-alarm'
                 ,area: [width+'px', height+'px']
                 ,shade: 0.6 //遮罩透明度
                 ,anim: 2 //0-6的动画形式，-1不开启
@@ -145,6 +146,35 @@ var TramDalog=function(){
         },
         CloseLoading:function () {
             layer.close(layerIndex);
+        },
+        /**
+         * 普通图片报警
+         * @param width 宽度
+         * @param height 高度
+         * @param titleArr tab名称集合
+         * @param contentArr 内容集合
+         * @constructor
+         */
+        LayerTab:function (title,width,height,titleArr,contentArr) {
+            // for(var i=0;i<titleArr,length;i++){
+            //     $('#alarm-pics>ul>li:eq('+i+')').text(titleArr[i]);
+            //     $('#alarm-pics .layui-tab-item:eq('+i+')').text(contentArr[i]);
+            // }
+            // $('#alarm-pics').removeClass('hidden');
+            layer.open({
+                type:1,
+                title:title,
+                skin:'layui-layer-demo',
+                area:[width+'px',height+'px'],
+                content:$('#alarm-pics')
+            });
+        },
+        LayerVideoAlarm:function () {
+
+        },
+        tabObj:function (title,content) {
+            this.title = title;
+            this.content = content;
         }
     }
 }();

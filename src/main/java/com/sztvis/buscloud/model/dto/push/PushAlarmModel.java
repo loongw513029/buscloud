@@ -15,6 +15,7 @@ public class PushAlarmModel {
     private String path;
     private String extras;
     private String images;
+    private int customId;
 
     public long getId() {
         return id;
@@ -88,10 +89,20 @@ public class PushAlarmModel {
         this.images = images;
     }
 
-    public PushAlarmModel(long id, String deviceCode, int alarmType, String time, String alarmName, String busNumber, String path, String extras, String images) {
+    public int getCustomId() {
+        return customId;
+    }
+
+    public void setCustomId(int customId) {
+        this.customId = customId;
+    }
+
+
+    public PushAlarmModel(long id, String deviceCode, int alarmType, String time, String alarmName, String busNumber, String path, String extras, String images,int customId) {
         this.id = id;
         this.deviceCode = deviceCode;
         this.alarmType = alarmType;
+        this.customId = customId;
         this.time = time;
         this.alarmName = alarmName;
         this.busNumber = busNumber;

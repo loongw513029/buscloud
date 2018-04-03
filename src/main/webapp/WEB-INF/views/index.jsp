@@ -10,6 +10,7 @@
     <link href="/css/base.css" rel="stylesheet">
     <link href="/fonts/iconfont.css" rel="stylesheet">
     <link href="/css/platform.css" rel="stylesheet">
+    <link href="/layer/theme/default/layer.css" rel="stylesheet" />
 </head>
 <body>
 <div class="container">
@@ -127,8 +128,6 @@
 <script type="text/javascript" src="/layer/layer.js"></script>
 <script type="text/javascript" src="/web/common.js"></script>
 <script type="text/javascript" src="/web/main.js"></script>
-
-
 <script type="text/javascript">
     $('.easyui-tabs1').tabs({
         tabHeight: 44,
@@ -148,37 +147,18 @@
     if(pages === 0){
         $('.pf-nav-prev,.pf-nav-next').hide();
     }
-//    $(document).on('click', '.pf-nav-prev,.pf-nav-next', function(){
-//
-//
-//        if($(this).hasClass('disabled')) return;
-//        if($(this).hasClass('pf-nav-next')){
-//            page++;
-//            $('.pf-nav').stop().animate({'margin-top': -70*page}, 200);
-//            if(page == pages){
-//                $(this).addClass('disabled');
-//                $('.pf-nav-prev').removeClass('disabled');
-//            }else{
-//                $('.pf-nav-prev').removeClass('disabled');
-//            }
-//
-//        }else{
-//            page--;
-//            $('.pf-nav').stop().animate({'margin-top': -70*page}, 200);
-//            if(page == 0){
-//                $(this).addClass('disabled');
-//                $('.pf-nav-next').removeClass('disabled');
-//            }else{
-//                $('.pf-nav-next').removeClass('disabled');
-//            }
-//
-//        }
-//    })
-
-    // setTimeout(function(){
-    //    $('.tabs-panels').height($("#pf-page").height()-46);
-    //    $('.panel-body').height($("#pf-page").height()-76)
-    // }, 200)
 </script>
 </body>
+<!--报警图片DOM-->
+<div id="alarm-pics">
+    <div class="layui-tab layui-tab-card">
+        <ul class="layui-tab-title">
+            <li class="layui-this"></li><li></li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show"></div>
+            <div class="layui-tab-item"></div>
+        </div>
+    </div>
+</div>
 </html>

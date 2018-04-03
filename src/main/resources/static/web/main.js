@@ -192,7 +192,13 @@ var mainPlatform = {
         }
     },
     filterAlarm:function (obj) {
-
+        if(obj.customId==12) {
+            var arr = obj.extras.split(',');
+            var title = obj.alarmName + "-" + obj.deviceCode +"[车速："+arr[0]+"Km/h, 车距："+arr[1]+"米, 刹车："+(arr[2]==1?"有":"没有")+"]";
+            parent.TramDalog.OpenIframeAndNoBtn(title, 652, 538, "/alarm/video?id=" + obj.id);
+        }
+        else
+            parent.TramDalog.OpenIframeAndNoBtn(obj.alarmName+"-"+row.deviceCode,652,538,"/alarm/view?id="+obj.id);
     },
     openAdminInfo:function () {
         parent.TramDalog.OpenIframe(650,405,'用户信息',"/basic/memberfrom?id="+id,function (layerno,index) {

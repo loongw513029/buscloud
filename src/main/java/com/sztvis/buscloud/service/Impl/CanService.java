@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.sztvis.buscloud.core.DateStyle;
 import com.sztvis.buscloud.core.DateUtil;
 import com.sztvis.buscloud.core.TramException;
+import com.sztvis.buscloud.core.helper.StringHelper;
 import com.sztvis.buscloud.mapper.AlarmMapper;
 import com.sztvis.buscloud.mapper.BasicMapper;
 import com.sztvis.buscloud.mapper.CanMapper;
@@ -217,7 +218,7 @@ public class CanService implements ICanService {
             //是否需要推送（推送到App,推送到页面）
             if(basicInfo.isPush()){
                 String extrias = query.getSpeed()+"|"+query.getDistance()+"|"+(query.isBrake()?1:0);
-                PushAlarmModel pushAlarmModel = new PushAlarmModel(alarmId,deviceInfo.getDevicecode(),basicInfo.getId().intValue(),updateTime,basicInfo.getAlarmName(),"",query.getPath(),extrias,query.getValue());
+                PushAlarmModel pushAlarmModel = new PushAlarmModel(alarmId,deviceInfo.getDevicecode(),basicInfo.getId().intValue(),updateTime,basicInfo.getAlarmName(),"",query.getPath(),extrias,query.getValue(), StringHelper.isEmpty(basicInfo.getCustomId())?0:Integer.valueOf(basicInfo.getCustomId()));
                 PushModel pushModel = new PushModel(2,pushAlarmModel);
                 this.iPushService.SendToMsgByDeviceCode(deviceInfo.getDevicecode(),pushModel);
             }

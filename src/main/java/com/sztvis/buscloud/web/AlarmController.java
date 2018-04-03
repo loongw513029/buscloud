@@ -34,6 +34,16 @@ public class AlarmController {
         return modelAndView;
     }
 
+    @RequestMapping("/video")
+    public ModelAndView video(long id) {
+        AlarmViewModel alarmViewModel = new AlarmViewModel();
+        if (id != 0)
+            alarmViewModel = this.iAlarmService.getAlarmViewModel(id);
+        ModelAndView modelAndView = new ModelAndView("/alarm/video");
+        modelAndView.getModel().put("obj", alarmViewModel);
+        return modelAndView;
+    }
+
     @RequestMapping("/statics")
     public ModelAndView statics(){
         ModelAndView modelAndView = new ModelAndView("/alarm/statics");

@@ -18,8 +18,8 @@
 
 <input type="hidden" id="Id" value="${obj.id}" />
 <div id="tview" class="easyui-tabs">
-    <div title="全景图片" ><img src="${obj.value.split(',')[0]}" width="638px" height="478px"/> </div>
-    <div title="前路面" style="display: none;"><img src="${obj.value.split(',')[1]}" width="638px" height="478px"/></div>
+    <div title="全景图片" ><img src="${obj.value.split(',')[0]}" width="638px" height="450px"/> </div>
+    <div title="前路面" style="display: none;"><img src="${obj.value.split(',')[1]}" width="638px" height="450px"/></div>
     <div title="详细信息" data-options="colsable:true" style="display: none;padding:5px">
                 <table class="kv-table">
                     <tr>
