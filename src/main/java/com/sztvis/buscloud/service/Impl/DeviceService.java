@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author longweiqian
@@ -86,6 +87,7 @@ public class DeviceService implements IDeviceService {
             healthInfo.setLocation(gpsInfo.getLongitude()+","+gpsInfo.getLatitude());
         else
             healthInfo.setLocation("");
+        healthInfo.setGuid(UUID.randomUUID().toString());
         this.mongoTemplate.save(healthInfo);
         //有心跳表示在线，下面改变设备的状态
         this.UpdateDeviceStatus(healthInfo.getDevicecode(),true);
