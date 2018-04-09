@@ -1,6 +1,7 @@
 package com.sztvis.buscloud.mapper;
 
 import com.sztvis.buscloud.mapper.provider.DeviceSqlProvider;
+import com.sztvis.buscloud.model.TramDeviceOnLineTimeLongInfo;
 import com.sztvis.buscloud.model.domain.*;
 import com.sztvis.buscloud.model.dto.*;
 import com.sztvis.buscloud.model.dto.api.DeviceFilterSearchResult;
@@ -8,6 +9,7 @@ import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author longweiqian
@@ -20,6 +22,9 @@ public interface DeviceMapper {
 
     @Select("select id from TramDeviceInfo")
     List<Long> getTramDeviceId();
+
+    @Select("select Id,deviceCode from TramDeviceInfo")
+    List<TramDeviceInfo> getTramDeviceCodeId();
 
     @Select("select Id from TramLineInfo where DeparentId in (select Id from TramDepartmentInfo where Id=#{parentId})")
     List<Long> getLineIdsByDepartmentId(Long parentId);
@@ -63,8 +68,32 @@ public interface DeviceMapper {
     @Update("update TramDeviceInfo set deviceStatus=#{value} where deviceCode=#{deviceCode}")
     void udpateDeviceState(@Param("deviceCode") String deviceCode,@Param("value") int value);
 
+    @Update("update TramDeviceInfo set LastOnlineTime=#{time} where devicecode=#{code}")
+    void udpateLastOnlineTime(@Param("time") String time,@Param("code") String code);
+
+    @Select("select * from TramDeviceOnLineTimeLongInfo where DeviceCode=#{code} order by CreateTime desc limit 1")
+    TramDeviceOnLineTimeLongInfo getLongInfo(@Param("code") String code);
+
+    @Insert("insert into TramDeviceOnLineTimeLongInfo(DeviceCode,OnLineTime,OffLineTime,TotalTime,CreateTime)values(#{code},#{time1},#{time2},#{total},#{time3})")
+    void InsertTramDeviceOnLineTimeLongInfo(@Param("code") String code,@Param("time1") String time1,@Param("time2") String time2,@Param("total") int total,@Param("time3") String time3);
+
+    @Update("update TramDeviceOnLineTimeLongInfo set OffLineTime=#{OffLineTime},TotalTime=#{TotalTime} where Id=#{Id}")
+    void updateTramDeviceOnLineTimeLongInfo(@Param("OffLineTime") String OffLineTime,@Param("TotalTime") int TotalTime,@Param("Id") Long Id);
+
+    @Update("update TramDeviceStateInspectRealTimeInfo set #{field}=#{value} where deviceId=#{deviceId}")
+    void updateRealTimeInfo(@Param("field") String field,@Param("deviceId") long deviceId,@Param("value") Object value);
+
+    @Insert("insert TramDeviceStateInspectRealTimeInfo(deviceId,#{field})values(#{deviceId},#{value})")
+    void insertRealTimeInfo(@Param("field") String field,@Param("deviceId") long deviceId,@Param("value") Object value);
+
     @Select("select count(Id) from tramdevicestateinspectrealtimeinfo where deviceCode=#{deviceCode}")
     int getRealtimeInspectCount(String deviceCode);
+
+    @Select("select count(Id) from DeviceOnlineRecords where devicecode=#{code} and updatetime=#{time}")
+    int getCountOnlineRecords(@Param("code") String code,@Param("time") String time);
+
+    @Insert("insert into DeviceOnlineRecords(DeviceCode,updatetime)values(#{code},#{time})")
+    void InsertOnlineRecords(@Param("code") String code,@Param("time") String time);
 
     /**
      * 修改巡检状态
@@ -162,6 +191,9 @@ public interface DeviceMapper {
     @SelectProvider(type = DeviceSqlProvider.class,method = "GetDriverInfoSQL")
     TramDeviceInfo GetDriverInfo(@Param("Id") Long Id,@Param("code") String code);
 
+    @Select("select a.* from TramDriverInfo a left join TramBusInfo b on a.Id = b.DriverId left join TramDeviceInfo c on b.Id = c.BusId where c.DeviceCode = #{code}")
+    TramDeviceInfo GetDriverInfo(@Param("code") String code);
+
     @SelectProvider(type = DeviceSqlProvider.class,method = "GetAppDeviceFilterSearchSQL")
     DeviceFilterSearchResult GetAppDeviceFilterSearch(@Param("Code") String code);
 
@@ -177,6 +209,33 @@ public interface DeviceMapper {
     @Select("select * from TramChannelInfo where deviceId=#{deviceId}")
     List<TramChannelInfo> GetChannelsByDeviceId(long deviceId);
 
-    @Insert("insert into PayTerminalRecords(deviceId,deviceCode,updateTime,payCardNo,payTime,location,siteName,passengerImage)values(#{deviceId},#{deviceCode},#{updateTime},#{payCardNo},#{payTime},#{location},#{siteName},#{passengerImage})")
-    void insertPayTerminalRecords(PayTerminalRecords payTerminalRecords);
+    @Select("select count(Id) from TramDeviceHealthInfo where DeviceCode=#{code} and UpdateTime>=#{date1} and UpdateTime<=#{date2}")
+    int GetCountByDateTime(@Param("code") String code,@Param("date1") String date1,@Param("date2") String date2);
+
+    @SelectProvider(type = DeviceSqlProvider.class,method = "AutoInspectDeviceADASSQL")
+    int AutoInspectDeviceADAS(@Param("SqlType")String SqlType,@Param("deviceId")long deviceId,@Param("start")String start,@Param("end")String end);
+
+    @SelectProvider(type = DeviceSqlProvider.class,method = "AutoInspectDeviceADASSQL")
+    int AutoInspectDeviceADAS(@Param("SqlType")String SqlType,@Param("adasArr")long[] adasArr ,@Param("deviceId")long deviceId,@Param("start")String start,@Param("end")String end);
+
+    @SelectProvider(type = DeviceSqlProvider.class,method = "AutoInspectDeviceADASSQL")
+    TramDeviceStatusInfo AutoInspectDeviceADAS(@Param("SqlType")String SqlType, @Param("deviceId")long deviceId, @Param("type")int type);
+
+    @SelectProvider(type = DeviceSqlProvider.class,method = "AutoInspectDeviceADASSQL")
+    List<TramDeviceInfo> AutoInspectDeviceADAS(@Param("SqlType")String SqlType);
+
+    @Insert("insert into TramDeviceStatusInfo values(#{Guid},#{DeviceId},#{DeviceCode},#{UpdateTime},#{Type},#{Value1},#{Value2},#{Now})")
+    void InsertDeviceStatus(TramDeviceStatusInfo info,@Param("Now") String now);
+
+    @Select("select count(Id) from TramDeviceStateInspectRealTimeInfo where deviceId=#{deviceId}")
+    int DeviceStateInspectRealTime(long deviceId);
+
+    @Insert("insert TramDeviceStateInspectRealTimeInfo(deviceId,#{field})values(#{deviceId},#{value})")
+    void InsertDeviceStateInspectRealTime(@Param("field") String field,@Param("deviceId")long deviceId,@Param("value")Object value);
+
+    @Update("update TramDeviceStateInspectRealTimeInfo set #{field}=#{value} where deviceId=#{deviceId}")
+    void UpdateDeviceStateInspectRealTime(@Param("field") String field,@Param("deviceId")long deviceId,@Param("value")Object value);
+
+    @Select("select a.deviceCode from TramDeviceInfo a left join TramBusInfo b on a.BusId=b.Id where b.DriverId =#{driverId}")
+    List<String> GetDeviceCodeByDriverId(long driverId);
 }

@@ -1,5 +1,6 @@
 package com.sztvis.buscloud.mapper;
 
+import com.sztvis.buscloud.model.domain.Tramdriverinfo;
 import com.sztvis.buscloud.model.dto.ComboTreeModel;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
@@ -16,4 +17,7 @@ public interface DriverMapper {
 
     @Select("select id,drivername as text from tramDriverInfo where departmentid=#{departmentid}")
     List<ComboTreeModel> getDriverComboList(long departmentid);
+
+    @Select("select id,DriverName,Gender,DepartmentId,Status from TramDriverInfo where status=1")
+    List<Tramdriverinfo> GetTramdriverinfo();
 }

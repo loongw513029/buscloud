@@ -1,8 +1,6 @@
 package com.sztvis.buscloud.api;
 
 
-import com.sun.xml.internal.ws.api.policy.PolicyResolver;
-import com.sztvis.buscloud.Application;
 import com.sztvis.buscloud.core.DateStyle;
 import com.sztvis.buscloud.core.DateUtil;
 import com.sztvis.buscloud.core.helper.ImageHelper;
@@ -10,30 +8,14 @@ import com.sztvis.buscloud.core.helper.StringHelper;
 import com.sztvis.buscloud.model.dto.response.ApiResult;
 import com.sztvis.buscloud.model.entity.StatusCodeEnum;
 import com.sztvis.buscloud.service.IMemberService;
-import com.sztvis.buscloud.util.Constant;
-import com.sztvis.buscloud.util.HttpHelp;
-import net.sf.jsqlparser.schema.Server;
-import org.apache.tomcat.jni.Directory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import sun.misc.BASE64Decoder;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.bind.DatatypeConverter;
-import javax.xml.ws.spi.http.HttpContext;
 import java.io.*;
-import java.net.URL;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/upload")

@@ -1,12 +1,6 @@
 package com.sztvis.buscloud.api;
 
 
-import com.alibaba.fastjson.serializer.JSONSerializer;
-import com.fasterxml.jackson.core.JsonFactory;
-import com.sun.deploy.net.protocol.ProtocolType;
-import com.sun.javafx.tk.Toolkit;
-import com.sun.org.apache.xerces.internal.util.Status;
-import com.sztvis.buscloud.api.BaseApiController;
 import com.sztvis.buscloud.core.DateStyle;
 import com.sztvis.buscloud.core.DateUtil;
 import com.sztvis.buscloud.model.AppDeviceViewModel;
@@ -20,14 +14,10 @@ import com.sztvis.buscloud.model.dto.response.ApiResult;
 import com.sztvis.buscloud.model.dto.service.ChartViewModel;
 import com.sztvis.buscloud.model.entity.StatusCodeEnum;
 import com.sztvis.buscloud.service.*;
-import com.sztvis.buscloud.util.HttpHelp;
-import javafx.concurrent.Task;
-import jdk.net.SocketFlow;
-import org.apache.tomcat.util.modeler.BaseModelMBean;
+import com.sztvis.buscloud.core.helper.HttpHelp;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.SocketUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,9 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController

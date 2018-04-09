@@ -201,4 +201,36 @@ public class DeviceSqlProvider {
         else
             return "select Id from TramDeviceInfo where DepartmentId in(select id from TramDepartmentInfo where Id="+ user.getDepartmentId() +" or parentId="+ user.getDepartmentId() +")";
     }
+
+    public String AutoInspectDeviceADASSQL(Map<String,Object> map)
+    {
+        String SqlType = (String)map.get("SqlType");
+        long deviceId = (long)map.get("deviceId");
+        String start = (String)map.get("start");
+        String end = (String)map.get("end");
+        long[] Arr = (long[])map.get("adasArr");
+        int type = (int)map.get("type");
+        SQL sql=new SQL();
+        if (SqlType=="devicesql"||SqlType=="csql"){
+            if (SqlType=="devicesql")
+                sql.SELECT("*").FROM("TramDeviceInfo");
+            else
+                sql.SELECT("*").FROM("TramDeviceStatusInfo").WHERE("deviceCode='"+ deviceId +"' and Type="+type).ORDER_BY("createtime desc limit 1");
+        }
+        else{
+            sql.SELECT("count(Id)");
+            if (SqlType=="adassql")
+                sql.FROM("TramCanAlarmInfo").WHERE(" AlarmKey in ("+ Arr +") and deviceCode='"+ deviceId +"' and updatetime>='"+ start +"' and updatetime<='"+ end +"'");
+            else {
+                if (SqlType=="radarSql")
+                    sql.FROM("TramRadarInfo");
+                if (SqlType=="canSql")
+                    sql.FROM("TramCanInfo");
+                if (SqlType=="gpsSql")
+                    sql.FROM("TramGpsInfo");
+                sql.WHERE("deviceId="+ deviceId +" and UpdateTime>='"+ start +"' and UpdateTime<='"+ end +"'");
+            }
+        }
+        return sql.toString();
+    }
 }

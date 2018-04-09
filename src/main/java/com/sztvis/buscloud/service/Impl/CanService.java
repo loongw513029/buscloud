@@ -26,6 +26,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import sun.rmi.runtime.Log;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -373,7 +374,7 @@ public class CanService implements ICanService {
     public void autoCalcUnsafeData(long deviceId, String updateTime) {
 
         //1.起步不关车门，车速从0递增到5km/h时，车门未关，持续1s
-
+        String end = DateUtil.addMinute(updateTime,1);
     }
 
     @Override
@@ -559,5 +560,53 @@ public class CanService implements ICanService {
     {
         String starttime=DateUtil.addSecond(date,-second);
         return this.canMapper.GetCanInfoBy10sTime(code,starttime,date);
+    }
+
+    @Override
+    public void CalcDeviceCanHistorys(){
+        long[] behaviors = new long[]{ 99, 100, 101, 102, 103, 104, 105, 106, 107, 108 };
+        String start = DateUtil.addDay(DateUtil.getCurrentTime(DateStyle.YYYY_MM_DD),-1);
+        String end = DateUtil.addDay(DateUtil.getCurrentTime(DateStyle.YYYY_MM_DD_23_59_59),-1);
+        List<TramDeviceInfo> list = this.deviceMapper.getTramDeviceCodeId();
+        for (TramDeviceInfo item : list){
+            try{
+                CanHistoryEveryDayInfo model = new CanHistoryEveryDayInfo();
+                model.setDeviceid(item.getId());
+                model.setUpdatetime(start);
+                model.setTotalcarfaultnumber((long)1);
+                String FirstMilage = this.canMapper.GetTop1CanInfo("FirstmilageSql",item.getId(),start);
+                String LastMilage = this.canMapper.GetTop1CanInfo("LastMilage",item.getId(),end);
+                //里程
+                if (!StringHelper.isNotEmpty(FirstMilage) && !StringHelper.isNotEmpty(LastMilage)){
+                    model.setTotalmileage(Math.abs(Double.parseDouble(LastMilage) - Double.parseDouble(FirstMilage)));
+                }
+                else
+                    model.setTotalmileage(0.0);
+                //油耗
+                model.setGasonlieavg(0.0);
+                //电耗
+                model.setElectricavg(0.0);
+                //气耗
+                model.setGasavg(0.0);
+                //故障次数报警数
+                long faultSql2 = new Long(this.canMapper.GetTop1CanInfo("faultSql2",item.getId(),start,end));
+                model.setTotalfaultnumber(new Long(this.canMapper.GetTop1CanInfo("faultSql",item.getId(),start,end)));
+                model.setFaultthreelv(faultSql2);
+                model.setFaultsecondlv(faultSql2);
+                model.setFaultonelv(faultSql2);
+                model.setUnsafenumber(new Long(this.canMapper.GetTop1CanInfo("unsafeSql",item.getId(),start,end)));
+                model.setUnsafedriver(new Long(this.canMapper.GetTop1CanInfo("undriversql",item.getId(),start,end)));
+                Double ss = this.canMapper.GetTop1CanInfo("timelongsql",item.getDevicecode(),start,end);
+                model.setRuntimelong(StringHelper.isNotEmpty(ss)? 0 : ss);
+                model.setSpeedingtotal(new Long(this.canMapper.GetTop1CanInfo("speedingSQL",item.getId(),start,end)));
+                int c = this.canMapper.GetTop1CanInfo("isexitsql",item.getId(),start,end);
+                if (c == 0){
+                    this.canMapper.GetTop1CanInfo("sql",model);
+                }
+            }
+            catch(Exception ex){
+                continue;
+            }
+        }
     }
 }

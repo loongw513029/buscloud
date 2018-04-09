@@ -1,4 +1,4 @@
-package com.sztvis.buscloud.util;
+package com.sztvis.buscloud.core.helper;
 
 import com.sztvis.buscloud.core.DateStyle;
 import com.sztvis.buscloud.core.helper.SecureHelper;

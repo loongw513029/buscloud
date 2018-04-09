@@ -6,6 +6,7 @@ import com.sztvis.buscloud.model.dto.api.DeviceFilterSearchResult;
 import com.sztvis.buscloud.model.dto.api.HVNVRModel;
 import com.sztvis.buscloud.model.entity.DeviceStateFiled;
 
+import java.beans.IntrospectionException;
 import java.util.List;
 
 /**
@@ -190,51 +191,27 @@ public interface IDeviceService {
     List<Long> getDeviceIdsByUserId(long userId);
 
     /**
-     * 获得司机信息
-     * @param Id
-     * @param code
+     * 获得所有设备的DeviceCode
+     * @param
      * @return
      */
-    TramDeviceInfo GetDriverInfo(long Id,String code);
+    List<String> GetAllCarCodes();
 
-    /**
-     * 设备搜索结果
-     * @param code
-     * @return
-     */
+    TramDeviceInfo GetDriverInfo(long Id,String code);
 
     DeviceFilterSearchResult GetAppDeviceFilterSearch(String code);
 
-    /**
-     * 根据机构Id获得该机构下所有设备Id
-     * @param user
-     * @return
-     */
-
     List<Long> GetDeviceIdsByDepartmentId(CurrentUserInfo user);
 
-    /**
-     * 获得设备信息
-     * @param dayType
-     * @param deviceId
-     * @return
-     */
     AppBusViewModel GetAppBusModel(int dayType, long deviceId);
-
-    /**
-     * 获得通道列表
-     * @param deviceId
-     * @return
-     */
 
     List<TramChannelInfo> GetChannelsByDeviceId(long deviceId);
 
-    /**
-     * 新增刷卡记录
-     * @param payTerminalRecords
-     */
-    void insertPayTerminalRecords(PayTerminalRecords payTerminalRecords);
+    int GetCountByDateTime(String code, String date1, String date2);
 
+    void autoStatement() throws IntrospectionException, NoSuchFieldException, IllegalAccessException;
 
+    void AutoInspectDeviceADAS();
 
+    List<String> GetDeviceCodeByDriverId(long driverId);
 }

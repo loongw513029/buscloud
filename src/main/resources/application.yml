@@ -59,3 +59,4 @@ logging:
       sztvis:
         buscloud:
           mapper: debug
+spring
