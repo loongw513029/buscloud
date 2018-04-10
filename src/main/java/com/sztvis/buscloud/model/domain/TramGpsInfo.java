@@ -5,8 +5,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "TramGpsInfo")
 public class TramGpsInfo {
-  @Id
-  private Long id;
   private Long deviceid;
   private String devicecode;
   private String updatetime;
@@ -15,14 +13,6 @@ public class TramGpsInfo {
   private Double speed;
   private Double direction;
   private String locationmode;
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
 
   public Long getDeviceid() {
     return deviceid;

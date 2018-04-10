@@ -35,7 +35,7 @@ public interface LineMapper {
     @SelectProvider(type = LineProvider.class,method = "getLineTreeSQL")
     List<ComboTreeModel> getLineTreeList(@Param("departments") List<Long> departments);
 
-    @Insert("insert into TramLineInfo(guid,linecode,linename,departmentid,lineupmileage,linedownmileage,upsitenum,downsitenum)values(#{guid},#{linecode},#{lienname},#{departmentid},#{lineupmileage},#{linedownmileage},#{upsitenum},#{downsitenum})")
+    @Insert("insert into TramLineInfo(guid,linecode,linename,departmentid,lineupmileage,linedownmileage,upsitenum,downsitenum)values(#{guid},#{linecode},#{linename},#{departmentid},#{lineupmileage},#{linedownmileage},#{upsitenum},#{downsitenum})")
     void saveLine(TramLineInfo lineInfo);
 
     @Update("update TramLineInfo set linecode=#{linecode},linename=#{linename},departmentid=#{departmentid},lineupmileage=#{lineupmileage},linedownmileage=#{linedownmileage},upsitenum=#{upsitenum},downsitenum=#{downsitenum} where id=#{id}")

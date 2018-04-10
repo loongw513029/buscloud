@@ -23,6 +23,8 @@ public class AlarmProvider {
         String date1 = (String)map.get("date1");
         String date2 = (String)map.get("date2");
         String keywords = (String)map.get("keywords");
+        int offset = (Integer)map.get("offset");
+        int limit = (Integer)map.get("limit");
         StringBuilder sb = new StringBuilder();
         sb.append("select a.id,a.deviceid,a.path,a.devicecode,b.busnumber,c.linename,d.departmentname,e.alarmname,a.updatetime,a.location,a.speed,a.distance,a.isbrake,a.value");
         sb.append(" from TramAlarmInfo a left join TramDeviceInfo g on a.deviceid = g.id left join TramBusInfo b on g.busid = b.id");
@@ -42,7 +44,37 @@ public class AlarmProvider {
             sb.append(" and a.updatetime<='"+date2+"'");
         if(!StringHelper.isEmpty(keywords))
             sb.append(" and (a.devicecode like '%"+keywords+"%' or b.busnumber like '%"+keywords+"%')");
-        sb.append(" order by a.updatetime desc");
+        sb.append(" order by a.updatetime desc limit "+(offset-1)*limit+","+limit);
+        return  sb.toString();
+    }
+    public String getAlarmTableListSQLCount(Map<String,Object> map){
+        String departments = StringHelper.listToString((List<Long>)map.get("departments"),',');
+        long departmentId = (Long)map.get("departmentId");
+        long lineId = (Long)map.get("lineId");
+        long type1 = (Long)map.get("type1");
+        long type2 = (Long)map.get("type2");
+        String date1 = (String)map.get("date1");
+        String date2 = (String)map.get("date2");
+        String keywords = (String)map.get("keywords");
+        StringBuilder sb = new StringBuilder();
+        sb.append("select count(a.id)");
+        sb.append(" from TramAlarmInfo a left join TramDeviceInfo g on a.deviceid = g.id left join TramBusInfo b on g.busid = b.id");
+        sb.append(" left join TramLineInfo c on g.lineid = c.id left join TramDepartmentInfo d on g.departmentid = d.id left join TramBasicInfo e on a.alarmType=e.customId");
+        sb.append(" where a.departmentId in ("+departments+")");
+        if(departmentId != 0)
+            sb.append(" and a.departmentId="+departmentId);
+        if(lineId != 0)
+            sb.append(" and c.lineId="+lineId);
+        if(type1 != 0)
+            sb.append(" and a.ParentAlarmType="+type1);
+        if(type2 != 0)
+            sb.append(" and a.AlarmType="+type2);
+        if(!StringHelper.isEmpty(date1))
+            sb.append(" and a.updatetime>='"+date1+"'");
+        if(!StringHelper.isEmpty(date2))
+            sb.append(" and a.updatetime<='"+date2+"'");
+        if(!StringHelper.isEmpty(keywords))
+            sb.append(" and (a.devicecode like '%"+keywords+"%' or b.busnumber like '%"+keywords+"%')");
         return  sb.toString();
     }
 

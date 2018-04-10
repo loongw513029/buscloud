@@ -1,17 +1,20 @@
 package com.sztvis.buscloud.service.Impl;
 
 import com.alibaba.fastjson.JSON;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.sztvis.buscloud.core.DateStyle;
 import com.sztvis.buscloud.core.DateUtil;
 import com.sztvis.buscloud.core.helper.StringHelper;
-import com.sztvis.buscloud.mapper.*;
+import com.sztvis.buscloud.mapper.AlarmMapper;
+import com.sztvis.buscloud.mapper.BasicMapper;
+import com.sztvis.buscloud.mapper.DeviceMapper;
+import com.sztvis.buscloud.mapper.DriverMapper;
 import com.sztvis.buscloud.model.domain.*;
 import com.sztvis.buscloud.model.dto.*;
 import com.sztvis.buscloud.model.dto.api.DeviceFilterSearchResult;
 import com.sztvis.buscloud.model.dto.api.HVNVRModel;
 import com.sztvis.buscloud.model.dto.push.PushModel;
-import com.sztvis.buscloud.model.entity.*;
+import com.sztvis.buscloud.model.entity.BusType;
+import com.sztvis.buscloud.model.entity.DeviceStateFiled;
 import com.sztvis.buscloud.service.*;
 import com.sztvis.buscloud.util.DayTypes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +24,9 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import java.beans.IntrospectionException;
-import java.lang.reflect.Field;
-import java.sql.Timestamp;
 import java.text.ParseException;
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * @author longweiqian
@@ -56,8 +57,6 @@ public class DeviceService implements IDeviceService {
     private IPushService iPushService;
     @Autowired
     private BasicMapper basicMapper;
-    @Autowired
-    private UnSafeMapper unSafeMapper;
 
     @Override
     public TramDeviceInfo getDeviceInfoByCode(String deviceCode) {
@@ -88,6 +87,7 @@ public class DeviceService implements IDeviceService {
             healthInfo.setLocation(gpsInfo.getLongitude()+","+gpsInfo.getLatitude());
         else
             healthInfo.setLocation("");
+        healthInfo.setGuid(UUID.randomUUID().toString());
         this.mongoTemplate.save(healthInfo);
         //有心跳表示在线，下面改变设备的状态
         this.UpdateDeviceStatus(healthInfo.getDevicecode(),true);
@@ -240,7 +240,10 @@ public class DeviceService implements IDeviceService {
                 Boolean timingState = Boolean.valueOf(hvnvrModel.getValue1());
                 this.UpdateRealTimeInspect(hvnvrModel.getCode(),DeviceStateFiled.TimingState,timingState,3);
                 break;
-            case 8://CPU使用率
+            case 8://sim卡号
+                this.UpdateRealTimeInspect(hvnvrModel.getCode(),DeviceStateFiled.SIMCardNo,hvnvrModel.getValue1(),1);
+                break;
+            case 10://CPU使用率
                 Double cpuUseRate = Double.valueOf(hvnvrModel.getValue2());
                 this.UpdateRealTimeInspect(hvnvrModel.getCode(),DeviceStateFiled.CPUUseRate,cpuUseRate,2);
                 TramBasicInfo basic = this.iBasicService.getBasicInfoByCustomId(1005);
@@ -249,7 +252,7 @@ public class DeviceService implements IDeviceService {
                     this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(),deviceInfo.getId(),
                             hvnvrModel.getUpdateTime(),1005,"CPU使用率过高","",""));
                 break;
-            case 9:
+            case 11:
                 Double cpuTemp = Double.valueOf(hvnvrModel.getValue2());
                 this.UpdateRealTimeInspect(hvnvrModel.getCode(),DeviceStateFiled.CPUTemp,cpuTemp,2);
                 TramBasicInfo basic1 = this.iBasicService.getBasicInfoByCustomId(1006);
@@ -258,7 +261,7 @@ public class DeviceService implements IDeviceService {
                     this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(),deviceInfo.getId(),
                             hvnvrModel.getUpdateTime(),1006,"CPU温度过高","",""));
                 break;
-            case 10:
+            case 12:
                 Double memoryTemp = Double.valueOf(hvnvrModel.getValue2());
                 this.UpdateRealTimeInspect(hvnvrModel.getCode(),DeviceStateFiled.MemoryUseRate,memoryTemp,2);
                 TramBasicInfo basic2 = this.iBasicService.getBasicInfoByCustomId(1007);
@@ -267,7 +270,7 @@ public class DeviceService implements IDeviceService {
                     this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(),deviceInfo.getId(),
                             hvnvrModel.getUpdateTime(),1007,"内存使用率过高","",""));
                 break;
-            case 11:
+            case 13:
                 Double diskTemp = Double.valueOf(hvnvrModel.getValue2());
                 this.UpdateRealTimeInspect(hvnvrModel.getCode(),DeviceStateFiled.DiskTemp,diskTemp,2);
                 TramBasicInfo basic3 = this.iBasicService.getBasicInfoByCustomId(1008);
@@ -275,6 +278,17 @@ public class DeviceService implements IDeviceService {
                 if(diskTemp>=diskTemphrshold)
                     this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(),deviceInfo.getId(),
                             hvnvrModel.getUpdateTime(),1008,"硬盘温度过高","",""));
+                break;
+            case 14://主机网络状态
+
+                break;
+            case 15://Gps信号
+                break;
+            case 16://SIM卡余额
+                Double banance = Double.valueOf(hvnvrModel.getValue1());
+                this.UpdateRealTimeInspect(hvnvrModel.getCode(),DeviceStateFiled.SIMBalance,banance,2);
+                break;
+            case 17://网络信号
                 break;
 
         }
@@ -284,9 +298,6 @@ public class DeviceService implements IDeviceService {
     public TramDeviceStateInspectRealtimeInfo getDeviceStateInspectRealTimeInfo(long deviceid) {
         return this.deviceMapper.getDeviceStateInspectRealTimeInfo(deviceid);
     }
-
-    @Override
-    public List<String> GetAllCarCodes(){return this.deviceMapper.getDeviceCodes();}
 
     @Override
     public TramDispatchInfo getLastDispatchInfo(long deviceid) {
@@ -370,113 +381,9 @@ public class DeviceService implements IDeviceService {
                 this.UpdateRealTimeInspect(device.getDevicecode(),DeviceStateFiled.OnlineState,true,3);
             }
             //推送
-            PushModel pushModel = new PushModel();
-            pushModel.setType(1);
-            pushModel.setMsgInfo(this.getCurrentDeviceStatus(device.getId()));
+            PushModel pushModel = new PushModel(1,this.getCurrentDeviceStatus(device.getId()));
             this.iPushService.sendMsg(pushModel);
         }
-    }
-
-    @Override
-    public void autoStatement() throws IntrospectionException, NoSuchFieldException, IllegalAccessException {
-        List<TramDeviceInfo> devices = this.deviceMapper.getAllDevices();
-        String lastTime = DateUtil.getCurrentTime(DateStyle.YYYY_MM_DD);
-        String firstTime = DateUtil.addDay(DateUtil.getCurrentTime(DateStyle.YYYY_MM_DD),-1);
-        for (TramDeviceInfo list:devices){
-            //不安全行为统计
-            Tramunsafereportinfo info=new Tramunsafereportinfo();
-            Class clazz=info.getClass();
-            info.setDeviceid(list.getId());
-            info.setDevicecode(list.getDevicecode());
-            info.setUpdatetime(Timestamp.valueOf(DateUtil.getCurrentTime()));
-            info.setCreatetime(Timestamp.valueOf(DateUtil.getCurrentTime()));
-            for (UnSafeBehaviorTypes dicl : UnSafeBehaviorTypes.values()){
-                String name= dicl.name();
-                Field f=clazz.getField(name);
-                int c=this.unSafeMapper.Countunsafe(list.getId(),dicl.getValue(),firstTime,lastTime);
-                f.set(info,c);
-            }
-            if (this.unSafeMapper.CountTramUnSafeReportInfo(list.getId(),firstTime,lastTime)==0)
-                this.unSafeMapper.InsertReportInfo(info);
-            //行为识别统计
-            Tramunsafereportinfo behaviorInfo = new Tramunsafereportinfo();
-            Class behavior=behaviorInfo.getClass();
-            behaviorInfo.setDeviceid(list.getId());
-            behaviorInfo.setDevicecode(list.getDevicecode());
-            behaviorInfo.setUpdatetime(Timestamp.valueOf(DateUtil.getCurrentTime()));
-            behaviorInfo.setCreatetime(Timestamp.valueOf(DateUtil.getCurrentTime()));
-            for (int i = 99;i < 109;i++){
-                String name= CanAlarmTypes.get(i).name();
-                Field f=behavior.getField(name);
-                int c=this.unSafeMapper.CountCanAlarm(list.getId(),i,firstTime,lastTime);
-                f.set(info,c);
-            }
-            if (this.unSafeMapper.CountBehavior(list.getId(),firstTime,lastTime)==0)
-                this.unSafeMapper.InsertBehavior(behaviorInfo);
-            //ADAS统计
-            Tramunsafereportinfo adasInfo=new Tramunsafereportinfo();
-            Class adas=adasInfo.getClass();
-            adasInfo.setDeviceid(list.getId());
-            adasInfo.setDevicecode(list.getDevicecode());
-            adasInfo.setUpdatetime(Timestamp.valueOf(DateUtil.getCurrentTime()));
-            adasInfo.setCreatetime(Timestamp.valueOf(DateUtil.getCurrentTime()));
-            for (int i=118;i<125;i++){
-                String name=CanAlarmTypes.get(i).name();
-                Field f=adas.getField(name);
-                int c=this.unSafeMapper.CountCanAlarm(list.getId(),i,firstTime,lastTime);
-                f.set(info,c);
-            }
-            if (this.unSafeMapper.CountAdas(list.getId(),firstTime,lastTime)==0)
-                this.unSafeMapper.InsertAdas(adasInfo);
-        }
-    }
-
-    @Override
-    public void AutoInspectDeviceADAS(){
-        long[] beahviorArr = { 99, 100, 101, 102, 103, 104, 105, 106, 107, 108 },
-                adasArr = { 118, 119, 120, 121, 122, 123, 124 };
-        String now = DateUtil.getCurrentTime(DateStyle.YYYY_MM_DD_HH_MM_SS);
-        List<TramDeviceInfo> devices=this.deviceMapper.AutoInspectDeviceADAS("devicesql");
-        for(TramDeviceInfo item : devices){
-            int count = this.deviceMapper.AutoInspectDeviceADAS("adassql",beahviorArr,Long.valueOf(item.getDevicecode()),DateUtil.addDay(now,-3),now);
-            TramDeviceStatusInfo statusInfo=this.deviceMapper.AutoInspectDeviceADAS("csql",Long.valueOf(item.getDevicecode()),DeviceStateTypes.ADASState.getValue());
-            if (statusInfo==null|| DateUtil.getIntervalDays(DateUtil.addDay(statusInfo.getCreatetime(),3),now)>=0){
-                String statusFag = "False";
-                if (count > 0)
-                    statusFag = "True";
-                this.AddDeviceInspectState(item.getId(),item.getDevicecode(),DeviceStateTypes.BehaviorInspectState.getValue(),statusFag,"BehaviorInspectState");
-            }
-            else
-                this.AddDeviceInspectState(item.getId(),item.getDevicecode(),DeviceStateTypes.BehaviorInspectState.getValue(),"False","BehaviorInspectState");
-            int radarCount = this.deviceMapper.AutoInspectDeviceADAS("radarSql",item.getId(),DateUtil.addDay(now,-1),now);
-            this.AddDeviceInspectState(item.getId(),item.getDevicecode(),DeviceStateTypes.RadarInspectState.getValue(),String.valueOf(radarCount>0),"RadarInspectState");
-            int adasCount = this.deviceMapper.AutoInspectDeviceADAS("adassql",adasArr,Long.valueOf(item.getDevicecode()),DateUtil.addDay(now,-1),now);
-            this.AddDeviceInspectState(item.getId(),item.getDevicecode(),DeviceStateTypes.AdasInspectState.getValue(),String.valueOf(adasCount>0),"AdasInspectState");
-            int canCount = this.deviceMapper.AutoInspectDeviceADAS("canSql",item.getId(),DateUtil.addDay(now,-1),now);
-            this.AddDeviceInspectState(item.getId(),item.getDevicecode(),DeviceStateTypes.CanInspectState.getValue(),String.valueOf(canCount>0),"CanInspectState");
-            int gpsCount = this.deviceMapper.AutoInspectDeviceADAS("gpsSql",item.getId(),DateUtil.addDay(now,-1),now);
-            this.AddDeviceInspectState(item.getId(),item.getDevicecode(),DeviceStateTypes.GpsInspectState.getValue(),String.valueOf(gpsCount>0),"GpsInspectState");
-        }
-    }
-
-    private void AddDeviceInspectState(long deviceId,String code,int key,String fag,String field){
-        TramDeviceStatusInfo statInfo = new TramDeviceStatusInfo();
-        statInfo.setDevicecode(code);
-        statInfo.setDeviceid(deviceId);
-        statInfo.setType(Long.valueOf(key));
-        statInfo.setValue1(fag);
-        statInfo.setValue2(fag);
-        statInfo.setUpdatetime(DateUtil.getCurrentTime());
-        this.deviceMapper.InsertDeviceStatus(statInfo,DateUtil.getCurrentTime());
-        this.UpdateRealTimeDeviceStateTable(deviceId,field, Boolean.parseBoolean(fag));
-    }
-
-    private void UpdateRealTimeDeviceStateTable(long deviceId, String field, Object value){
-        int record = this.deviceMapper.DeviceStateInspectRealTime(deviceId);
-        if (record == 0)
-            this.deviceMapper.InsertDeviceStateInspectRealTime(field,deviceId,value);
-        else
-            this.deviceMapper.UpdateDeviceStateInspectRealTime(field,deviceId,value);
     }
 
     @Override
@@ -502,8 +409,7 @@ public class DeviceService implements IDeviceService {
     public long getDeviceHealthInfo(String deviceCode, String starttime, String endTime) {
         Query query = new Query();
         query.addCriteria(new Criteria("devicecode").is(deviceCode));
-        query.addCriteria(new Criteria("updatetime").lte(endTime));
-        query.addCriteria(new Criteria("updatetime").gte(starttime));
+        query.addCriteria(new Criteria().andOperator(Criteria.where("updatetime").lte(endTime),Criteria.where("updatetime").gte(starttime)));
         return this.mongoTemplate.count(query,TramDeviceHealthInfo.class);
     }
 
@@ -552,8 +458,9 @@ public class DeviceService implements IDeviceService {
     public List<TramChannelInfo> GetChannelsByDeviceId(long deviceId){ return this.deviceMapper.GetChannelsByDeviceId(deviceId);}
 
     @Override
-    public int GetCountByDateTime(String code, String date1, String date2){return  this.deviceMapper.GetCountByDateTime(code,date1,date2);}
+    public void insertPayTerminalRecords(PayTerminalRecords payTerminalRecords) {
+        this.deviceMapper.insertPayTerminalRecords(payTerminalRecords);
+    }
 
-    @Override
-    public List<String> GetDeviceCodeByDriverId(long driverId){return this.deviceMapper.GetDeviceCodeByDriverId(driverId);}
+
 }

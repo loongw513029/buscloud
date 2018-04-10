@@ -12,15 +12,19 @@
 <body>
 <div id="cc" class="easyui-layout" style="width:100%;height:100%;margin: 5px">
     <div data-options="region:'west',title:'请选择设备',split:false" style="width:200px;padding: 5px">
+        <div class="easyui-panel" style="height: 300px;overflow: hidden" title="设备列表">
+            <ul id="easyui-tree" class="easyui-tree" checkbox="true" data-options="lines:true"></ul>
+        </div>
+        <br/>
         <input type="text" class="easyui-datebox" id="time1" placeholder="查询开始时间"/><br/><br/>
         <input type="text" class="easyui-datebox" id="time2" placeholder="查询截止时间"/><br/><br/>
         <a href="javascript:;" class="easyui-linkbutton" id="sh">查询</a><br/><br/>
-        <table id="table">
-
-        </table>
     </div>
     <div data-options="region:'center',title:'地图'">
         <div id="map" style="width: 100%;height: 100%;"></div>
+    </div>
+    <div data-options="region:'east',title:'查询结果',split:false" style="width:200px;padding: 5px">
+        <table id="table"></table>
     </div>
 </div>
 <script type="text/javascript" src="/easyui/jquery.min.js"></script>

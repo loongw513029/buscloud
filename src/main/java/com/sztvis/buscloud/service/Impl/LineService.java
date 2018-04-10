@@ -72,7 +72,7 @@ public class LineService implements ILineService {
         lineInfo.setId(lineViewModel.getId());
         lineInfo.setLinecode(lineViewModel.getLinecode());
         lineInfo.setLinename(lineViewModel.getLinename());
-        lineInfo.setDeparentid(lineViewModel.getDepartmentid());
+        lineInfo.setDepartmentid(lineViewModel.getDepartmentid());
         lineInfo.setLineupmileage(Double.valueOf(lineViewModel.getLineupmileage()));
         lineInfo.setLinedownmileage(Double.valueOf(lineViewModel.getLinedownmileage()));
         lineInfo.setDownsitenum(Long.valueOf(lineViewModel.getDownsitenum()));

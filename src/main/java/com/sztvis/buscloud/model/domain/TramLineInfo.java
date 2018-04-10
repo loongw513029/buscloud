@@ -58,11 +58,11 @@ public class TramLineInfo {
     this.linename = linename;
   }
 
-  public Long getDeparentid() {
+  public Long getDepartmentid() {
     return departmentid;
   }
 
-  public void setDeparentid(Long departmentid) {
+  public void setDepartmentid(Long departmentid) {
     this.departmentid = departmentid;
   }
 

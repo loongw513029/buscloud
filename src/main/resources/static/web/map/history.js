@@ -6,6 +6,25 @@ var passedPolyline;
 var MapHistory = function () {
     return {
         init:function () {
+            var treedata = parent.treeData;
+            $('#easyui-tree').tree({
+                lines: true,
+                animate: true,
+                data: treedata,
+                onCheck: function (node, checked) {
+                    SelDeviceId = node.id;
+                    if(!checked){
+                        SelDeviceId = 0;
+                    }
+                },
+                onLoadSuccess:function (node,param) {
+                    $("#easyui-tree").tree('collapseAll');
+                },
+                onBeforeCheck:function (node,checked) {
+                    $('#easyui-tree').tree('getChecked', 'unchecked');
+                }
+            });
+
             map = new AMap.Map('map',{
                 resizeEnable: true,
                 center: [113.325723,23.10328],
@@ -50,6 +69,7 @@ var MapHistory = function () {
                 url: '/api/v1/map/getWebMapHistory',
                 method: 'get',
                 idField: 'id',
+                fit:true,
                 pagination: true,
                 pageNumber: 1,
                 singleSelect: false,
@@ -87,13 +107,13 @@ var MapHistory = function () {
                     }
                 },
                 onLoadSuccess:function (data) {
-                    parent.TramDalog.CloseLayer();
-                    MapHistory.DrawPath(data.result);
                 },
                 onDblClickRow:function (rowIndex, rowData) {
                     
                 }
             });
+            parent.TramDalog.CloseLayer();
+            MapHistory.DrawPath();
             var p = $('#table').datagrid('getPager');
             $(p).pagination({
                 showPageList: false,
@@ -103,26 +123,33 @@ var MapHistory = function () {
             });
         },
         //绘制地图轨迹
-        DrawPath:function (arrs) {
-            for(var i=0;i<arrs.length;i++){
-                var obj = arrs[i];
-                var location = MapHistory.ConvertGpsToAmap(obj.longitude+","+obj.latitude);
-                location= location.split(',');
-                Poliys.push([location[0],location[1]]);
-                if(i==0){
-                    marker = new AMap.Marker({
-                        map: map,
-                        position: [location[0],location[1]],
-                        icon: new AMap.Icon({
-                            image: 'http://webapi.amap.com/images/car.png',
-                            size: new AMap.Size(16,16)
-                        }),
-                        offset: new AMap.Pixel(-26,-13),
-                        autoRotation: true
-                    });
-                    marker.on('moving',function (e) {
-                        passedPolyline.setPath(e.passedPath);
-                    })
+        DrawPath:function () {
+            parent.Http.Ajax({
+                url:'/api/v1/map/getLocations',
+                data:MapHistory.datagridQuery(),
+                type:'get'
+            },function (data) {
+                var arrs= data.result;
+                for(var i=0;i<arrs.length;i++){
+                    var obj = arrs[i].split(',');
+                    var location = {lon:obj[0],lat:obj[1]};// MapHistory.ConvertGpsToAmap(obj[0]+","+obj[1]);
+
+                    Poliys.push([location.lon,location.lat]);
+                    if(i==0){
+                        marker = new AMap.Marker({
+                            map: map,
+                            position: [location.lon,location.lat],
+                            icon: new AMap.Icon({
+                                image: 'http://webapi.amap.com/images/car.png',
+                                size: new AMap.Size(16,16)
+                            }),
+                            offset: new AMap.Pixel(-26,-13),
+                            autoRotation: true
+                        });
+                        marker.on('moving',function (e) {
+                            passedPolyline.setPath(e.passedPath);
+                        })
+                    }
                 }
                 new AMap.Polyline({
                     map: map,
@@ -130,7 +157,7 @@ var MapHistory = function () {
                     strokeColor: '#0c81bf',
                     strokeWeight: 3
                 });
-            }
+            })
         },
         ConvertGpsToAmap:function (location) {
             var loc ="";

@@ -54,7 +54,7 @@ var LineFrom = function () {
                 else{
                     parenta.TramDalog.SuccessAlert(result.info, true);
                     Line.closeWindow();
-                    Line.reLoad();
+                    Line.onLoad();
                 }
             })
         }

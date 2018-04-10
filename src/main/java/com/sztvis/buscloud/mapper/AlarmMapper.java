@@ -28,7 +28,9 @@ public interface AlarmMapper {
     void SaveAlarmInfo(TramAlarmInfo alarmInfo);
 
     @SelectProvider(type = AlarmProvider.class,method = "getAlarmTableListSQL")
-    List<AlarmViewModel> getAlarmTableList(@Param("departments") List<Long> departments,@Param("departmentId") long departmentId,@Param("lineId") long lineId, @Param("type1") long type1, @Param("type2") long type2, @Param("date1") String date1, @Param("date2") String date2, @Param("keywords") String keywords);
+    List<AlarmViewModel> getAlarmTableList(@Param("departments") List<Long> departments,@Param("departmentId") long departmentId,@Param("lineId") long lineId, @Param("type1") long type1, @Param("type2") long type2, @Param("date1") String date1, @Param("date2") String date2, @Param("keywords") String keywords,@Param("offset") int offset,@Param("limit") int limit);
+    @SelectProvider(type = AlarmProvider.class,method = "getAlarmTableListSQLCount")
+    int getAlarmTableListCount(@Param("departments") List<Long> departments,@Param("departmentId") long departmentId,@Param("lineId") long lineId, @Param("type1") long type1, @Param("type2") long type2, @Param("date1") String date1, @Param("date2") String date2, @Param("keywords") String keywords);
 
     @SelectProvider(type = AlarmProvider.class,method = "getMapAlarmListSQL")
     List<AlarmViewModel> getMapAlarmTableList(@Param("devices") String devices,@Param("starttime") String starttime);

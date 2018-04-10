@@ -288,7 +288,7 @@ public class CanService implements ICanService {
         }else{
             query.setSpeed(Double.valueOf(extraArray[0]));
             query.setDistance(Double.valueOf(extraArray[1]));
-            query.setBrake(extraArray[2]=="2");
+            query.setBrake(extraArray[2].equals("2"));
         }
         query.setAlarmTime(updateTime);
         query.setAlarmType(type);

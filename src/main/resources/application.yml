@@ -17,7 +17,7 @@ spring:
       prefix: /WEB-INF/views/
   data:
     mongodb:
-      uri: mongodb://${serverHost}:27017/buscloud
+      uri: mongodb://tvis:sztvis@${serverHost}:27017/buscloud
   datasource:
     url: jdbc:mysql://${serverHost}:3306/buscloud?useUnicode=true&characterEncoding=UTF-8
     username: root

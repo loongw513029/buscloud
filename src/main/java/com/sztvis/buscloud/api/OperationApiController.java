@@ -3,12 +3,14 @@ package com.sztvis.buscloud.api;
 import com.github.pagehelper.PageHelper;
 import com.sztvis.buscloud.core.helper.ListHelper;
 import com.sztvis.buscloud.model.domain.TramBasicInfo;
+import com.sztvis.buscloud.model.domain.TramDriverInfo;
 import com.sztvis.buscloud.model.dto.*;
 import com.sztvis.buscloud.model.dto.response.ApiResult;
 import com.sztvis.buscloud.model.entity.PageBean;
 import com.sztvis.buscloud.model.entity.StatusCodeEnum;
 import com.sztvis.buscloud.service.IBasicService;
 import com.sztvis.buscloud.service.IDeviceService;
+import com.sztvis.buscloud.service.IDriverService;
 import com.sztvis.buscloud.service.ILineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -34,6 +37,8 @@ public class OperationApiController extends BaseApiController{
     private IDeviceService iDeviceService;
     @Autowired
     private IBasicService iBasicService;
+    @Autowired
+    private IDriverService iDriverService;
     /**
      * get line collections show web page
      * @param userId
@@ -191,4 +196,35 @@ public class OperationApiController extends BaseApiController{
         }
     }
 
+    @RequestMapping(value = "/getdriverlist",method = RequestMethod.GET)
+    public ApiResult getDriverList(String drivername,long departmentid,int page,int rows){
+        List<DriverViewModel> list = this.iDriverService.getDriverList(drivername,departmentid,page,rows);
+        int count = this.iDriverService.getDriverListCount(drivername,departmentid);
+        PageBean<DriverViewModel> pageData = new PageBean<>(page, rows, count);
+        pageData.setItems(list);
+        return ApiResult(true, "司机列表获取成功", StatusCodeEnum.Success, pageData);
+    }
+
+    @RequestMapping(value = "/savedriver",method = RequestMethod.POST)
+    public ApiResult SaveDriver(TramDriverInfo driverInfo){
+        try{
+            driverInfo.setStatus(1L);
+            this.iDriverService.SaveAndUpdateDriver(driverInfo);
+            return ApiResult(true,"保存司机信息成功",StatusCodeEnum.Success,null);
+        }catch (Exception ex){
+            return ApiResult(false,"保存司机信息失败",StatusCodeEnum.Error,ex.getMessage());
+        }
+    }
+
+    @RequestMapping(value = "/removedriver",method = RequestMethod.DELETE)
+    public ApiResult removeDriver(String ids){
+        List<String> idsArr = Arrays.asList(ids.split(","));
+        try{
+            this.iDriverService.RemoveDrivers(idsArr);
+            return ApiResult(true,"删除车辆成功",StatusCodeEnum.Success,null);
+        }
+        catch (Exception ex){
+            return ApiResult(false,"删除车辆失败",StatusCodeEnum.Error,null);
+        }
+    }
 }

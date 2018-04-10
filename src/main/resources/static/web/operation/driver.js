@@ -1,19 +1,17 @@
-var currentIndex;
-var Line = function () {
+var Driver= function(){
     return {
         init:function () {
             $('#table').datagrid({
-                url:'/api/v1/operation/linelist',
+                url:'/api/v1/operation/getdriverlist',
                 method:'get',
                 idField:'id',
                 fit:true,
-                fitColumns:true,
                 pagination:true,
                 pageNumber:1,
                 singleSelect:false,
                 pageSize:15,
                 pageList:[15,20,50,100],
-                queryParams:Line.datagridQuery(),
+                queryParams:Driver.datagridQuery(),
                 toolbar:"#toolbar",
                 columns:[[
                     {
@@ -21,38 +19,25 @@ var Line = function () {
                         checkbox: 'true',
                         width: 30
                     },{
-                        field: 'linecode',
-                        title: '线路编码',
+                        field: 'drivername',
+                        title: '司机名称',
                         width: 70
-                    },{
-                        field: 'linename',
-                        title: '线路名称',
-                        width: 120
                     },
                     {
                         field: 'departmentname',
                         title: '所属机构',
                         width: 120
                     },{
-                        field: 'lineupmileage',
-                        title: '上行里程',
-                        width: 50
+                        field: 'gender',
+                        title: '性别',
+                        width: 50,
+                        formatter:function (value,row,index) {
+                            return value == 1 ? "男" : "女";
+                        }
                     },{
-                        field: 'linedownmileage',
-                        title: '下行里程',
-                        width: 50
-                    },{
-                        field: 'upsitenum',
-                        title: '上线站点',
-                        width: 50
-                    },{
-                        field: 'downsitenum',
-                        title: '下行站点',
-                        width: 50
-                    },{
-                        field: 'sort',
-                        title: '排序',
-                        width: 50
+                        field: 'contactphone',
+                        title: '联系电话',
+                        width: 100
                     }
                 ]],
                 loadFilter:function (data) {
@@ -77,23 +62,22 @@ var Line = function () {
                 });
             });
             $('#txtkey').searchbox({
-                prompt:'线路编码或线路名称',
+                prompt:'司机名称',
                 searcher:function (value,name) {
-                    Line.Search(value);
+                    Driver.Search(value);
                 }
             })
         },
         datagridQuery:function () {
             var params = {
-                userId:parent.User.GetUserInfo().id,
-                linename:"",
-                departmentId:0
+                drivername:"",
+                departmentid:0
             };
             return params;
         },
         AddLine:function () {
-            parent.TramDalog.OpenIframe(650,405,'新增路线',"/operation/linefrom?id=0",function (layerno,index) {
-                Line.saveData(layerno);
+            parent.TramDalog.OpenIframe(650,405,'新增司机',"/operation/driverfrom?id=0",function (layerno,index) {
+                Driver.saveData(layerno);
             });
         },
         EditLine:function () {
@@ -102,8 +86,8 @@ var Line = function () {
                 parent.TramDalog.ErrorAlert("只能选择一条数据编辑",true);
             else{
                 var id = row[0].id;
-                parent.TramDalog.OpenIframe(650,405,'编辑路线',"/operation/linefrom?id="+id,function (layerno,index) {
-                    Line.saveData(layerno);
+                parent.TramDalog.OpenIframe(650,405,'编辑司机',"/operation/driverfrom?id="+id,function (layerno,index) {
+                    Driver.saveData(layerno);
                 });
             }
         },
@@ -116,12 +100,12 @@ var Line = function () {
                 Ids.push(row[i].id);
             }
             parent.Http.Ajax({
-                url:'/api/v1/operation/removeline?lineIds='+Ids.join(','),
+                url:'/api/v1/operation/removedriver?ids='+Ids.join(','),
                 type:'delete'
             },function (result) {
                 if(result.success){
                     parent.TramDalog.SuccessAlert(result.info,true);
-                    Line.reLoad();
+                    Driver.onLoad();
                 }else{
                     parent.TramDalog.ErrorAlert(result.info,true);
                 }
@@ -130,16 +114,16 @@ var Line = function () {
         saveData:function (layerno,index) {
             currentIndex = layerno;
             var wd = parent.window.frames["layui-layer-iframe"+layerno];
-            wd.LineFrom.saveData(parent,Line);
+            wd.DriverFrom.saveData(parent,Driver);
         },
         Search:function (value) {
             var query = $('#table').datagrid('options');
             var seldpid = $('#departmentId').combotree('getValue');
             if(seldpid!=0){
-                query.queryParams.departmentId  = seldpid;
+                query.queryParams.departmentid  = seldpid;
             }
-            query.queryParams.linename = value;
-            Line.reLoad();
+            query.queryParams.drivername = value;
+            Driver.onLoad();
         },
         closeWindow:function () {
             parent.layer.close(currentIndex);
@@ -149,4 +133,4 @@ var Line = function () {
         }
     }
 }();
-Line.init();
+Driver.init();

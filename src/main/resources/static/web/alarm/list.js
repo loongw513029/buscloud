@@ -6,7 +6,6 @@ var Alarm = function () {
                 method: 'get',
                 idField: 'id',
                 fit: true,
-                fitColumns: true,
                 pagination: true,
                 pageNumber: 1,
                 singleSelect: false,
@@ -14,7 +13,7 @@ var Alarm = function () {
                 pageList: [15, 20, 50, 100],
                 queryParams: Alarm.datagridQuery(),
                 toolbar: "#toolbar",
-                columns: [[
+                frozenColumns:[[
                     {
                         field: 'id',
                         checkbox: 'true',
@@ -45,12 +44,10 @@ var Alarm = function () {
                         title: '报警类型',
                         width: 100,
                         align: 'center'
-                    }, {
-                        field: 'location',
-                        title: '报警位置',
-                        width: 200,
-                        align: 'center'
-                    }, {
+                    }
+                ]],
+                columns: [[
+                   {
                         field: 'speed',
                         title: '车速',
                         width: 50,
@@ -77,18 +74,25 @@ var Alarm = function () {
                     }, {
                         field: 'updatetime',
                         title: '报警时间',
-                        width: 120
+                        width: 150
+                    },  {
+                        field: 'location',
+                        title: '报警位置',
+                        width: 300,
+                        align: 'center',
+                        formatter:function (value,row,index) {
+                            Alarm.searchLoaction(value,index);
+                        }
                     }, {
                         field: 'value',
                         title: '操作',
                         width: 100,
                         formatter: function (value, row, index) {
                             var h = [];
-                            if(value.indexOf('/storage/')>-1)
+                            if(value.indexOf('/imgupload/')>-1)
                                 h.push("<a href='javascript:;' class='alarm-icon'><span class='iconfont'>&#xf0137;</span></a> ");
                             if(row.path != '')
                                 h.push("<a href='javascript:;' class='alarm-icon'><span class='iconfont'>&#xf01cb;</span></a> ");
-                            h.push("<a href='javascript:;' class='alarm-icon'><span class='iconfont'>&#xf0175;</span></a> ");
                             return h.join('');
                         }
                     }
@@ -112,6 +116,16 @@ var Alarm = function () {
                 searcher:function (value,name) {
                     Alarm.Search(value);
                 }
+            });
+        },
+        searchLoaction:function (locations, index) {
+            var url = "http://restapi.amap.com/v3/assistant/coordinate/convert?locations=" + locations + "&coordsys=gps&output=json&key=e30e5e9f5e8b3132a56321bd016aa1e3";
+            $.getJSON(url, function (data) {
+                var loc = data.locations;
+                var url2 = "http://restapi.amap.com/v3/geocode/regeo?key=e30e5e9f5e8b3132a56321bd016aa1e3&location=" + loc + "&poitype=&radius=1&extensions=base&batch=false&roadlevel=0";
+                $.getJSON(url2, function (data2) {
+                    $(".datagrid-view2 .datagrid-btable tr:eq("+index+")").find("td:eq(4)").text(data2.regeocode.formatted_address);
+                });
             });
         },
         initComboTree:function () {

@@ -54,9 +54,8 @@ public class AlarmApiController extends BaseApiController{
      */
     @RequestMapping("/gettablelist")
     public ApiResult getAlarmList(long userId,long departmentId,long lineId,long type1,long type2,String date1,String date2,String keywords,int page,int rows){
-        PageHelper.startPage(page,rows);
-        List<AlarmViewModel> list = this.iAlarmService.getAlarmTableList(userId,departmentId,lineId,type1,type2,date1,date2,keywords);
-        int count = list.size();
+        List<AlarmViewModel> list = this.iAlarmService.getAlarmTableList(userId,departmentId,lineId,type1,type2,date1,date2,keywords,page,rows);
+        int count =  this.iAlarmService.getAlarmTableListCount(userId,departmentId,lineId,type1,type2,date1,date2,keywords);
         PageBean<AlarmViewModel> pageData = new PageBean<>(page, rows, count);
         pageData.setItems(list);
         return ApiResult(true, "", StatusCodeEnum.Success, pageData);
