@@ -462,5 +462,23 @@ public class DeviceService implements IDeviceService {
         this.deviceMapper.insertPayTerminalRecords(payTerminalRecords);
     }
 
+    public void InspectCanIntegrity(){
+        List<String> codes = this.deviceMapper.getDeviceCodes();
+        for (String code:codes) {
+            String startTime =  DateUtil.addHour(DateUtil.getCurrentTime(),-2);
+            String endTime = DateUtil.getCurrentTime();
+            Query query = new Query();
+            query.addCriteria(new Criteria("devicecode").is(code));
+            query.addCriteria(new Criteria().andOperator(Criteria.where("updatetime").gte(startTime),Criteria.where("updatetime").lte(endTime)));
+            long c1 = this.mongoTemplate.count(query,TramCanInfo.class);
+            query.addCriteria(new Criteria("acts").ne(null));
+            long c2 = this.mongoTemplate.count(query,TramCanInfo.class);
+            if(c1==0||c2==0)
+                this.UpdateRealTimeInspect(code,DeviceStateFiled.IsCanIntegrity,false,3);
+            else
+                this.UpdateRealTimeInspect(code,DeviceStateFiled.IsCanIntegrity,true,3);
+        }
+    }
+
 
 }

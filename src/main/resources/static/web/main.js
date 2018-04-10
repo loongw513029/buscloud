@@ -1,4 +1,5 @@
 var stompClient = null;
+var treeData = null;
 var mainPlatform = {
     signleArray:function(){
         return ['/can/preview'];
@@ -75,6 +76,7 @@ var mainPlatform = {
             },
             success:function (data) {
                 $(".loading").hide();
+                treeData = data;
                 $('#easyui-tree').tree({
                     lines: true,
                     animate: true,
@@ -198,10 +200,10 @@ var mainPlatform = {
             parent.TramDalog.OpenIframeAndNoBtn(title, 652, 538, "/alarm/video?id=" + obj.id);
         }
         else
-            parent.TramDalog.OpenIframeAndNoBtn(obj.alarmName+"-"+row.deviceCode,652,538,"/alarm/view?id="+obj.id);
+            parent.TramDalog.OpenIframeAndNoBtn(obj.alarmName+"-"+obj.deviceCode,652,538,"/alarm/view?id="+obj.id);
     },
     openAdminInfo:function () {
-        parent.TramDalog.OpenIframe(650,405,'用户信息',"/basic/memberfrom?id="+id,function (layerno,index) {
+        parent.TramDalog.OpenIframe(650,405,'用户信息',"/basic/memberfrom?id="+User.GetUserInfo.id,function (layerno,index) {
 
         });
     }

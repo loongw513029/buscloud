@@ -65,4 +65,10 @@ public class MapV1Controller extends BaseApiController{
         PageBean<MapHistoryLocationModel> pageBean = this.iGpsService.getMapHistoryGpsList(deviceId,startTime,endTime,page,rows);
         return ApiResult(true, "历史列表获取成功", StatusCodeEnum.Success, pageBean);
     }
+
+    @RequestMapping(value = "/getLocations",method = RequestMethod.GET)
+    public ApiResult getLocations(long deviceId,String startTime,String endTime){
+        List<String> list = this.iGpsService.getLocations(deviceId,startTime,endTime);
+        return ApiResult(true, "历史列表获取成功", StatusCodeEnum.Success, list);
+    }
 }

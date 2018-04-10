@@ -15,7 +15,8 @@ import java.util.List;
  * @date 2018/1/23 下午3:34
  */
 public interface IAlarmService {
-    List<AlarmViewModel> getAlarmTableList(long userId,long departmentId,long lineId,long type1,long type2,String date1,String date2,String keywords);
+    List<AlarmViewModel> getAlarmTableList(long userId,long departmentId,long lineId,long type1,long type2,String date1,String date2,String keywords,int offest,int limit);
+    int getAlarmTableListCount(long userId,long departmentId,long lineId,long type1,long type2,String date1,String date2,String keywords);
 
     List<AlarmViewModel> getMapAlarmTableList(String devices,String starttime);
 

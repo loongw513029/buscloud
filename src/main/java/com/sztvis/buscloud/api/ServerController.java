@@ -129,7 +129,7 @@ public class ServerController extends BaseApiController{
             return ApiResult(false,"不存在编号为"+healthModel.getCode()+"的设备", StatusCodeEnum.DataNotFound,null);
         TramDeviceHealthInfo healthInfo = new TramDeviceHealthInfo();
         healthInfo.setDevicecode(healthModel.getCode());
-        healthInfo.setUpdatetime(new Timestamp(System.currentTimeMillis()));
+        healthInfo.setUpdatetime(DateUtil.getCurrentTime(DateStyle.YYYY_MM_DD_HH_MM_SS));
         this.iDeviceService.AddDeviceHealthInfo(healthInfo);
         return ApiResult(true,"设备"+healthModel.getCode()+"心跳增加成功!",StatusCodeEnum.Success,null);
     }
@@ -223,13 +223,15 @@ public class ServerController extends BaseApiController{
                 }
                 //报警
                 if (AlarmTypesContrast.contains(key)) {
-                    SaveAlarmQuery query = new SaveAlarmQuery();
-                    query.setAlarmTime(updateTime);
-                    query.setAlarmType(key);
-                    query.setDeviceCode(deviceInfo.getDevicecode());
-                    query.setDeviceId(deviceInfo.getId());
-                    query.setValue(maps.get(key).toString());
-                    this.iCanService.AddAlarmInfo(query);
+                    if(maps.get(key)==2) {
+                        SaveAlarmQuery query = new SaveAlarmQuery();
+                        query.setAlarmTime(updateTime);
+                        query.setAlarmType(key);
+                        query.setDeviceCode(deviceInfo.getDevicecode());
+                        query.setDeviceId(deviceInfo.getId());
+                        query.setValue(maps.get(key).toString());
+                        this.iCanService.AddAlarmInfo(query);
+                    }
                 }
                 //can状态
                 if (ActsContrast.contains(key)) {
@@ -244,7 +246,7 @@ public class ServerController extends BaseApiController{
             }
             //运算不安全行为
             this.iCanService.autoCalcUnsafeData(deviceInfo.getId(),updateTime);
-            //this.iDeviceService.UpdateRealTimeInspect(deviceInfo.getDevicecode(), DeviceStateFiled.CanState,1);
+            this.iDeviceService.UpdateRealTimeInspect(deviceInfo.getDevicecode(), DeviceStateFiled.CanState,true,3);
             return  ApiResult(true,"设备"+deviceInfo.getDevicecode()+"Can增加成功!",StatusCodeEnum.Success,null);
         }catch (Exception ex){
             return  ApiResult(false,"设备"+deviceInfo.getDevicecode()+"Can增加失败!",StatusCodeEnum.Error,ex.getMessage());
@@ -480,7 +482,7 @@ public class ServerController extends BaseApiController{
                 if (m.isOnline()) {
                     TramDeviceHealthInfo healthInfo = new TramDeviceHealthInfo();
                     healthInfo.setDevicecode(m.getCode());
-                    healthInfo.setUpdatetime(new Timestamp(System.currentTimeMillis()));
+                    healthInfo.setUpdatetime(DateUtil.getCurrentTime(DateStyle.YYYY_MM_DD_HH_MM_SS));
                     this.iDeviceService.AddDeviceHealthInfo(healthInfo);
                 }
             }

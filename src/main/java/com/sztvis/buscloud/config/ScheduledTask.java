@@ -39,4 +39,12 @@ public class ScheduledTask {
     public void EveryDayCanHandle(){
         this.iDeviceService.autoCanSignleStatis();
     }
+
+    /**
+     * 每两小时巡检一次CAN完整性
+     */
+    @Scheduled(cron = "0 0 0/2 * * ?")
+    public void CanIntegrityInspect(){
+        this.iDeviceService.InspectCanIntegrity();
+    }
 }

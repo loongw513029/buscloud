@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class TramDeviceHealthInfo {
   private String guid;
   private String devicecode;
-  private java.sql.Timestamp updatetime;
+  private String updatetime;
   private String location;
 
   public String getGuid() {
@@ -26,11 +26,11 @@ public class TramDeviceHealthInfo {
     this.devicecode = devicecode;
   }
 
-  public java.sql.Timestamp getUpdatetime() {
+  public String getUpdatetime() {
     return updatetime;
   }
 
-  public void setUpdatetime(java.sql.Timestamp updatetime) {
+  public void setUpdatetime(String updatetime) {
     this.updatetime = updatetime;
   }
 

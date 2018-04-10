@@ -1,13 +1,16 @@
 package com.sztvis.buscloud.model.domain;
 
-public class Tramdriverinfo {
-  private Long id;
-  private String guid;
-  private String drivername;
-  private Long gender;
-  private Long departmentid;
-  private Long status;
-  private String DriverHeaderImg;
+import java.util.UUID;
+
+public class TramDriverInfo {
+  private Long id=0L;
+  private String guid = UUID.randomUUID().toString();
+  private String drivername="";
+  private Long gender = 1L;
+  private Long departmentid = 1L;
+  private String contactphone = "";
+  private Long status = 1L;
+  private String driverheaderimg = "";
   public Long getId() {
     return id;
   }
@@ -56,11 +59,19 @@ public class Tramdriverinfo {
     this.status = status;
   }
 
-  public String getDriverHeaderImg() {
-    return DriverHeaderImg;
+  public String getDriverheaderimg() {
+    return driverheaderimg;
   }
 
-  public void setDriverHeaderImg(String driverHeaderImg) {
-    DriverHeaderImg = driverHeaderImg;
+  public void setDriverheaderimg(String driverheaderimg) {
+    this.driverheaderimg = driverheaderimg;
+  }
+
+  public String getContactphone() {
+    return contactphone;
+  }
+
+  public void setContactphone(String contactphone) {
+    this.contactphone = contactphone;
   }
 }

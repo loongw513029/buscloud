@@ -42,9 +42,15 @@ public class AlarmService implements IAlarmService{
     @Autowired
     private CanMapper canMapper;
     @Override
-    public List<AlarmViewModel> getAlarmTableList(long userId, long departmentId, long lineId, long type1, long type2, String date1, String date2, String keywords) {
+    public List<AlarmViewModel> getAlarmTableList(long userId, long departmentId, long lineId, long type1, long type2, String date1, String date2, String keywords,int offset,int limit) {
         List<Long> departmens = this.iDepartmentService.GetDepartmentIdsByUserId(userId);
-        return this.alarmMapper.getAlarmTableList(departmens,departmentId,lineId,type1,type2,date1,date2,keywords);
+        return this.alarmMapper.getAlarmTableList(departmens,departmentId,lineId,type1,type2,date1,date2,keywords,offset,limit);
+    }
+
+    @Override
+    public int getAlarmTableListCount(long userId, long departmentId, long lineId, long type1, long type2, String date1, String date2, String keywords) {
+        List<Long> departmens = this.iDepartmentService.GetDepartmentIdsByUserId(userId);
+        return this.alarmMapper.getAlarmTableListCount(departmens,departmentId,lineId,type1,type2,date1,date2,keywords);
     }
 
     @Override

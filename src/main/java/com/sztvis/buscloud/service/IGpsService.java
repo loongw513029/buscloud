@@ -77,5 +77,13 @@ public interface IGpsService {
      */
     PageBean<MapHistoryLocationModel> getMapHistoryGpsList(long deviceId, String startTime, String endTime, int page, int rows);
 
+    /**
+     * 获得条件内所有坐标点
+     * @param deviceId
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    List<String> getLocations(long deviceId,String startTime,String endTime);
     long GetCountBy10sGps(long deviceId, String date, int second);
 }

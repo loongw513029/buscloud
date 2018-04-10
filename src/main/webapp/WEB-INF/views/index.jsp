@@ -80,7 +80,7 @@
             </div>
         </div>
     </div>
-    <div id="pf-bd">
+    <div id="pf-bd" class="toggle">
         <!--左侧设备列表-->
         <div id="pf-sider">
             <h2 class="pf-model-name">
@@ -88,7 +88,7 @@
                 <span class="pf-name">车辆列表</span>
                 <span class="toggle-icon"></span>
             </h2>
-            <div class="loading"><img src="/images/loading.gif" /> <br/>数据加载中</div>
+            <div class="loading"><img src="/images/loading.gif" /> <br/>设备加载中...</div>
             <ul id="easyui-tree" class="easyui-tree" checkbox="true" data-options="lines:true">
 
             </ul>

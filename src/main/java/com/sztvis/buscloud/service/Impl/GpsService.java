@@ -15,6 +15,7 @@ import com.sztvis.buscloud.model.entity.SpringDataPageable;
 import com.sztvis.buscloud.service.ICanService;
 import com.sztvis.buscloud.service.IDeviceService;
 import com.sztvis.buscloud.service.IGpsService;
+import com.sztvis.buscloud.util.GPSUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -159,7 +160,6 @@ public class GpsService implements IGpsService{
         List<MapHistoryLocationModel> list2 = new ArrayList<>();
         for (TramGpsInfo gps:pagelist.getContent()) {
             MapHistoryLocationModel model = new MapHistoryLocationModel();
-            model.setId(gps.getId());
             model.setLatitude(gps.getLatitude());
             model.setLongitude(gps.getLongitude());
             model.setUpdateTime(gps.getUpdatetime());
@@ -168,6 +168,23 @@ public class GpsService implements IGpsService{
         }
         pageBean.setItems(list2);
         return pageBean;
+    }
+
+    @Override
+    public List<String> getLocations(long deviceId, String startTime, String endTime) {
+        Query query = new Query();
+        query.addCriteria(new Criteria("deviceid").is(deviceId));
+        query.addCriteria(new Criteria().andOperator(Criteria.where("updatetime").lte(endTime),
+                Criteria.where("updatetime").lte(startTime)));
+        Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC,"updatetime"));
+        query.with(sort);
+        List<TramGpsInfo> list = this.mongoTemplate.find(query,TramGpsInfo.class);
+        List<String> list2 = new ArrayList<>();
+        for (TramGpsInfo g:list) {
+            double[] d = GPSUtil.gps84_To_Gcj02(Double.valueOf(g.getLatitude()),Double.valueOf(g.getLongitude()));
+            list2.add(d[1]+","+d[0]);
+        }
+        return list2;
     }
 
     @Override

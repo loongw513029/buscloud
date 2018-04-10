@@ -235,6 +235,11 @@ public interface IDeviceService {
      */
     void insertPayTerminalRecords(PayTerminalRecords payTerminalRecords);
 
+    /**
+     * 巡检CAN完整性
+     */
+    void InspectCanIntegrity();
+
 
 
 }

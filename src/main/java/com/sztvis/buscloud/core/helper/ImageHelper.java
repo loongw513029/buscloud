@@ -2,13 +2,12 @@ package com.sztvis.buscloud.core.helper;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.ResourceUtils;
+import org.springframework.web.multipart.MultipartFile;
 import sun.misc.BASE64Decoder;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.util.UUID;
 
 /**
  * @author longweiqian
@@ -46,6 +45,24 @@ public class ImageHelper {
             return false;
         }
 
+    }
+
+    public static String saveImage(MultipartFile multipartFile,String path) throws IOException {
+        File file = new File(path);
+        if(!file.exists()){
+            file.mkdirs();
+        }
+        FileInputStream fileInputStream = (FileInputStream)multipartFile.getInputStream();
+        String fileName = UUID.randomUUID().toString().replaceAll("-","")+".png";
+        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(path+File.separator+fileName));
+        byte[] bs = new byte[1024];
+        int len;
+        while ((len = fileInputStream.read(bs)) != -1){
+            bos.write(bs,0,len);
+        }
+        bos.flush();
+        bos.close();
+        return fileName;
     }
 
 }
