@@ -3,6 +3,7 @@ package com.sztvis.buscloud.service.Impl;
 import com.alibaba.fastjson.JSON;
 import com.sztvis.buscloud.core.DateStyle;
 import com.sztvis.buscloud.core.DateUtil;
+import com.sztvis.buscloud.core.helper.EnumHelper;
 import com.sztvis.buscloud.core.helper.StringHelper;
 import com.sztvis.buscloud.mapper.*;
 import com.sztvis.buscloud.model.domain.*;
@@ -24,6 +25,7 @@ import java.beans.IntrospectionException;
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -510,7 +512,7 @@ public class DeviceService implements IDeviceService {
             info.setDevicecode(list.getDevicecode());
             info.setUpdatetime(Timestamp.valueOf(DateUtil.getCurrentTime()));
             info.setCreatetime(Timestamp.valueOf(DateUtil.getCurrentTime()));
-            for (UnSafeBehaviorTypes dicl : UnSafeBehaviorTypes.values()){
+            for (DeviceStateFiled dicl : DeviceStateFiled.values()){
                 String name= dicl.name();
                 Field f=clazz.getField(name);
                 int c=this.unSafeMapper.Countunsafe(list.getId(),dicl.getValue(),firstTime,lastTime);
@@ -519,14 +521,14 @@ public class DeviceService implements IDeviceService {
             if (this.unSafeMapper.CountTramUnSafeReportInfo(list.getId(),firstTime,lastTime)==0)
                 this.unSafeMapper.InsertReportInfo(info);
             //行为识别统计
-            Tramunsafereportinfo behaviorInfo = new Tramunsafereportinfo();
+            Trambehaviorreportinfo behaviorInfo = new Trambehaviorreportinfo();
             Class behavior=behaviorInfo.getClass();
             behaviorInfo.setDeviceid(list.getId());
             behaviorInfo.setDevicecode(list.getDevicecode());
             behaviorInfo.setUpdatetime(Timestamp.valueOf(DateUtil.getCurrentTime()));
             behaviorInfo.setCreatetime(Timestamp.valueOf(DateUtil.getCurrentTime()));
             for (int i = 99;i < 109;i++){
-                String name= CanAlarmTypes.get(i).name();
+                String name= EnumHelper.getName(i);
                 Field f=behavior.getField(name);
                 int c=this.unSafeMapper.CountCanAlarm(list.getId(),i,firstTime,lastTime);
                 f.set(info,c);
@@ -534,14 +536,14 @@ public class DeviceService implements IDeviceService {
             if (this.unSafeMapper.CountBehavior(list.getId(),firstTime,lastTime)==0)
                 this.unSafeMapper.InsertBehavior(behaviorInfo);
             //ADAS统计
-            Tramunsafereportinfo adasInfo=new Tramunsafereportinfo();
+            Tramadasreportinfo adasInfo=new Tramadasreportinfo();
             Class adas=adasInfo.getClass();
             adasInfo.setDeviceid(list.getId());
             adasInfo.setDevicecode(list.getDevicecode());
             adasInfo.setUpdatetime(Timestamp.valueOf(DateUtil.getCurrentTime()));
             adasInfo.setCreatetime(Timestamp.valueOf(DateUtil.getCurrentTime()));
             for (int i=118;i<125;i++){
-                String name=CanAlarmTypes.get(i).name();
+                String name= EnumHelper.getName(i);
                 Field f=adas.getField(name);
                 int c=this.unSafeMapper.CountCanAlarm(list.getId(),i,firstTime,lastTime);
                 f.set(info,c);
@@ -553,30 +555,30 @@ public class DeviceService implements IDeviceService {
 
     @Override
     public void AutoInspectDeviceADAS(){
-        long[] beahviorArr = { 99, 100, 101, 102, 103, 104, 105, 106, 107, 108 },
-                adasArr = { 118, 119, 120, 121, 122, 123, 124 };
-        String now = DateUtil.getCurrentTime(DateStyle.YYYY_MM_DD_HH_MM_SS);
-        List<TramDeviceInfo> devices=this.deviceMapper.AutoInspectDeviceADAS("devicesql");
-        for(TramDeviceInfo item : devices){
-            int count = this.deviceMapper.AutoInspectDeviceADAS("adassql",beahviorArr,Long.valueOf(item.getDevicecode()),DateUtil.addDay(now,-3),now);
-            TramDeviceStatusInfo statusInfo=this.deviceMapper.AutoInspectDeviceADAS("csql",Long.valueOf(item.getDevicecode()),DeviceStateTypes.ADASState.getValue());
-            if (statusInfo==null|| DateUtil.getIntervalDays(DateUtil.addDay(statusInfo.getCreatetime(),3),now)>=0){
-                String statusFag = "False";
-                if (count > 0)
-                    statusFag = "True";
-                this.AddDeviceInspectState(item.getId(),item.getDevicecode(),DeviceStateTypes.BehaviorInspectState.getValue(),statusFag,"BehaviorInspectState");
-            }
-            else
-                this.AddDeviceInspectState(item.getId(),item.getDevicecode(), DeviceStateTypes.BehaviorInspectState.getValue(),"False","BehaviorInspectState");
-            int radarCount = this.deviceMapper.AutoInspectDeviceADAS("radarSql",item.getId(),DateUtil.addDay(now,-1),now);
-            this.AddDeviceInspectState(item.getId(),item.getDevicecode(),DeviceStateTypes.RadarInspectState.getValue(),String.valueOf(radarCount>0),"RadarInspectState");
-            int adasCount = this.deviceMapper.AutoInspectDeviceADAS("adassql",adasArr,Long.valueOf(item.getDevicecode()),DateUtil.addDay(now,-1),now);
-            this.AddDeviceInspectState(item.getId(),item.getDevicecode(),DeviceStateTypes.AdasInspectState.getValue(),String.valueOf(adasCount>0),"AdasInspectState");
-            int canCount = this.deviceMapper.AutoInspectDeviceADAS("canSql",item.getId(),DateUtil.addDay(now,-1),now);
-            this.AddDeviceInspectState(item.getId(),item.getDevicecode(),DeviceStateTypes.CanInspectState.getValue(),String.valueOf(canCount>0),"CanInspectState");
-            int gpsCount = this.deviceMapper.AutoInspectDeviceADAS("gpsSql",item.getId(),DateUtil.addDay(now,-1),now);
-            this.AddDeviceInspectState(item.getId(),item.getDevicecode(),DeviceStateTypes.GpsInspectState.getValue(),String.valueOf(gpsCount>0),"GpsInspectState");
-        }
+//        long[] beahviorArr = { 99, 100, 101, 102, 103, 104, 105, 106, 107, 108 },
+//                adasArr = { 118, 119, 120, 121, 122, 123, 124 };
+//        String now = DateUtil.getCurrentTime(DateStyle.YYYY_MM_DD_HH_MM_SS);
+//        List<TramDeviceInfo> devices=this.deviceMapper.AutoInspectDeviceADAS("devicesql");
+//        for(TramDeviceInfo item : devices){
+//            int count = this.deviceMapper.AutoInspectDeviceADAS("adassql",beahviorArr,Long.valueOf(item.getDevicecode()),DateUtil.addDay(now,-3),now);
+//            TramDeviceStatusInfo statusInfo=this.deviceMapper.AutoInspectDeviceADAS("csql",Long.valueOf(item.getDevicecode()),DeviceStateFiled.AdasInspectState.getValue());
+//            if (statusInfo==null|| DateUtil.getIntervalDays(DateUtil.addDay(statusInfo.getCreatetime(),3),now)>=0){
+//                String statusFag = "False";
+//                if (count > 0)
+//                    statusFag = "True";
+//                this.AddDeviceInspectState(item.getId(),item.getDevicecode(),DeviceStateFiled.BehaviorInspectState.getValue(),statusFag,"BehaviorInspectState");
+//            }
+//            else
+//                this.AddDeviceInspectState(item.getId(),item.getDevicecode(), DeviceStateFiled.BehaviorInspectState.getValue(),"False","BehaviorInspectState");
+//            int radarCount = this.deviceMapper.AutoInspectDeviceADAS("radarSql",item.getId(),DateUtil.addDay(now,-1),now);
+//            this.AddDeviceInspectState(item.getId(),item.getDevicecode(),DeviceStateFiled.RadarInspectState.getValue(),String.valueOf(radarCount>0),"RadarInspectState");
+//            int adasCount = this.deviceMapper.AutoInspectDeviceADAS("adassql",adasArr,Long.valueOf(item.getDevicecode()),DateUtil.addDay(now,-1),now);
+//            this.AddDeviceInspectState(item.getId(),item.getDevicecode(),DeviceStateFiled.AdasInspectState.getValue(),String.valueOf(adasCount>0),"AdasInspectState");
+//            int canCount = this.deviceMapper.AutoInspectDeviceADAS("canSql",item.getId(),DateUtil.addDay(now,-1),now);
+//            this.AddDeviceInspectState(item.getId(),item.getDevicecode(),DeviceStateFiled.CanInspectState.getValue(),String.valueOf(canCount>0),"CanInspectState");
+//            int gpsCount = this.deviceMapper.AutoInspectDeviceADAS("gpsSql",item.getId(),DateUtil.addDay(now,-1),now);
+//            this.AddDeviceInspectState(item.getId(),item.getDevicecode(),DeviceStateFiled.GpsInspectState.getValue(),String.valueOf(gpsCount>0),"GpsInspectState");
+//
     }
 
     @Override

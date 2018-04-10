@@ -93,7 +93,7 @@ public class DeviceSqlProvider {
         List<Long> departments = (List<Long>)map.get("departments");
         long departmentid = (Long)map.get("departmentid");
         long lineid = (Long)map.get("lineid");
-        int type = (Integer)map.get("type");
+        String type = (String)map.get("type");
         String keywords = (String)map.get("keywords");
         StringBuilder sb = new StringBuilder();
         sb.append("select a.deviceid,a.videotape,a.video,a.harddisk,a.sdcard,a.cpuuserate,a.cputemp,a.mermoryuserate,a.disktemp,a.gpsstate,a.canstate,a.internetstate,a.gpssignelstate,a.onlinestate,a.simbalance,a.gpsinspectstate,a.caninspectstate,a.behaviorinspectstate,a.radarinspectstate,a.adasinspectstate,a.timingstate,a.deviceCode,a.surplusDiskSize,a.surplusSdcardSize,b.id as departmentid,b.departmentname,c.id as lineid,c.linename");

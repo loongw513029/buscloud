@@ -4,6 +4,8 @@ import com.sztvis.buscloud.model.IndexModel;
 import com.sztvis.buscloud.mapper.provider.UnSafeProvider;
 import com.sztvis.buscloud.model.UnSafeListViewModel;
 import com.sztvis.buscloud.model.UnSafeQuery;
+import com.sztvis.buscloud.model.domain.Tramadasreportinfo;
+import com.sztvis.buscloud.model.domain.Trambehaviorreportinfo;
 import com.sztvis.buscloud.model.domain.Tramunsafereportinfo;
 import com.sztvis.buscloud.util.DayTypes;
 import org.apache.ibatis.annotations.Insert;
@@ -18,7 +20,7 @@ public interface UnSafeMapper {
     List<UnSafeListViewModel> GetUnsafeList(@Param("query")UnSafeQuery query, @Param("deviceIds") List<Long> deviceIds, @Param("types") DayTypes types);
 
     @Select("select count(Id) from TramUnSafeBehaviorInfo where deviceId=#{deviceId} and UnSafeType=#{UnSafeType} and ApplyTime>=#{start} and ApplyTime<=#{end}")
-    int Countunsafe(@Param("deviceId")long deviceId,@Param("UnSafeType")long UnSafeType,@Param("start")String start,@Param("end") String end);
+    int Countunsafe(@Param("deviceId")long deviceId,@Param("UnSafeType")String UnSafeType,@Param("start")String start,@Param("end") String end);
 
     @Select("select count(Id) from TramUnSafeReportInfo where deviceId=#{deviceId} and UpdateTime>=#{start} and UpdateTime<=#{end}")
     int CountTramUnSafeReportInfo(@Param("deviceId")long deviceId,@Param("start")String start,@Param("end") String end);
@@ -36,10 +38,10 @@ public interface UnSafeMapper {
     int CountAdas(@Param("deviceId")long deviceId,@Param("start")String start,@Param("end") String end);
 
     @Insert("insert into TramBehaviorReportInfo(DeviceId,DeviceCode,UpdateTime,LevelOneFatigue,LevelTwoFatigue,Smoking,Calling,StaredDown,Yawn,GazedAround,Chating,LeavePost,Occlusion,CreateTime)values(#{DeviceId},#{DeviceCode},#{UpdateTime},#{LevelOneFatigue},#{LevelTwoFatigue},#{Smoking},#{Calling},#{StaredDown},#{Yawn},#{GazedAround},#{Chating},#{LeavePost},#{Occlusion},#{CreateTime})")
-    void InsertBehavior(Tramunsafereportinfo behaviorInfo);
+    void InsertBehavior(Trambehaviorreportinfo behaviorInfo);
 
     @Insert("insert into TramAdasReportInfo(DeviceId,DeviceCode,UpdateTime,CarDistanceRemind,DangerDistance,RollLeftRoad,RoolRightRoad,LowSpeedBump,FaceBumpAlarm,BumpPerson,CreateTime)values(#{DeviceId}, #{DeviceCode}, #{UpdateTime}, #{CarDistanceRemind}, #{DangerDistance}, #{RollLeftRoad}, #{RoolRightRoad}, #{LowSpeedBump}, #{FaceBumpAlarm}, #{BumpPerson}, #{CreateTime})")
-    void InsertAdas(Tramunsafereportinfo adas);
+    void InsertAdas(Tramadasreportinfo adas);
 
     @Select("select * updateTime from TramUnSafeIndexInfo where driverId=#{driverId} order by updatetime desc limit 1")
     String GetlastTime(long driverId);
