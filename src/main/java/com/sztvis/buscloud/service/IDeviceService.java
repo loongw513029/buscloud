@@ -6,6 +6,7 @@ import com.sztvis.buscloud.model.dto.api.DeviceFilterSearchResult;
 import com.sztvis.buscloud.model.dto.api.HVNVRModel;
 import com.sztvis.buscloud.model.entity.DeviceStateFiled;
 
+import java.beans.IntrospectionException;
 import java.util.List;
 
 /**
@@ -241,5 +242,12 @@ public interface IDeviceService {
     void InspectCanIntegrity();
 
     List<String> GetAllCarCodes(CurrentUserInfo user);
+    int GetCountByDateTime(String code, String date1, String date2);
+
+    void autoStatement() throws IntrospectionException, NoSuchFieldException, IllegalAccessException;
+
+    void AutoInspectDeviceADAS();
+
+    List<String> GetDeviceCodeByDriverId(long driverId);
 
 }
