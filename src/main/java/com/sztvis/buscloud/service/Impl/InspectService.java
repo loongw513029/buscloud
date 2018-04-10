@@ -16,7 +16,6 @@ public class InspectService implements IInspectService {
 
     @Autowired
     private InspectMapper inspectMapper;
-    @Override
     public void insertOneKeyInspectRecords(OneKeyInspectRecords oneKeyInspectRecords) {
         this.inspectMapper.insertInspectRecords(oneKeyInspectRecords);
     }

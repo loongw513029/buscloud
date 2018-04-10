@@ -19,7 +19,6 @@ import java.util.Map;
 @Repository
 public interface DeviceMapper {
 
-
     @Select("select id from TramDeviceInfo")
     List<Long> getTramDeviceId();
 
@@ -34,6 +33,9 @@ public interface DeviceMapper {
 
     @Select("select DeviceCode from TramDeviceInfo where lineId in #{lineIds}")
     List<String> getDeviceCodesByLineIds(List<Long> lineIds);
+
+    @Select("select DeviceCode from TramDeviceInfo where Id in #{Id}")
+    List<String> getDeviceCodesBIds(List<Long> Id);
 
     @Select("select deviceCode from TramDeviceInfo")
     List<String> getDeviceCodes();
@@ -192,7 +194,7 @@ public interface DeviceMapper {
     TramDeviceInfo GetDriverInfo(@Param("Id") Long Id,@Param("code") String code);
 
     @Select("select a.* from TramDriverInfo a left join TramBusInfo b on a.Id = b.DriverId left join TramDeviceInfo c on b.Id = c.BusId where c.DeviceCode = #{code}")
-    TramDeviceInfo GetDriverInfo(@Param("code") String code);
+    TramDeviceInfo GetDriverInfos(@Param("code") String Code);
 
     @SelectProvider(type = DeviceSqlProvider.class,method = "GetAppDeviceFilterSearchSQL")
     DeviceFilterSearchResult GetAppDeviceFilterSearch(@Param("Code") String code);
@@ -214,14 +216,8 @@ public interface DeviceMapper {
 
     @SelectProvider(type = DeviceSqlProvider.class,method = "AutoInspectDeviceADASSQL")
     int AutoInspectDeviceADAS(@Param("SqlType")String SqlType,@Param("deviceId")long deviceId,@Param("start")String start,@Param("end")String end);
-
-    @SelectProvider(type = DeviceSqlProvider.class,method = "AutoInspectDeviceADASSQL")
     int AutoInspectDeviceADAS(@Param("SqlType")String SqlType,@Param("adasArr")long[] adasArr ,@Param("deviceId")long deviceId,@Param("start")String start,@Param("end")String end);
-
-    @SelectProvider(type = DeviceSqlProvider.class,method = "AutoInspectDeviceADASSQL")
     TramDeviceStatusInfo AutoInspectDeviceADAS(@Param("SqlType")String SqlType, @Param("deviceId")long deviceId, @Param("type")int type);
-
-    @SelectProvider(type = DeviceSqlProvider.class,method = "AutoInspectDeviceADASSQL")
     List<TramDeviceInfo> AutoInspectDeviceADAS(@Param("SqlType")String SqlType);
 
     @Insert("insert into TramDeviceStatusInfo values(#{Guid},#{DeviceId},#{DeviceCode},#{UpdateTime},#{Type},#{Value1},#{Value2},#{Now})")
@@ -238,4 +234,7 @@ public interface DeviceMapper {
 
     @Select("select a.deviceCode from TramDeviceInfo a left join TramBusInfo b on a.BusId=b.Id where b.DriverId =#{driverId}")
     List<String> GetDeviceCodeByDriverId(long driverId);
+
+    @Insert("insert into PayTerminalRecords(deviceId,deviceCode,updateTime,payCardNo,payTime,location,siteName,passengerImage)values(#{deviceId},#{deviceCode},#{updateTime},#{payCardNo},#{payTime},#{location},#{siteName},#{passengerImage})")
+    void insertPayTerminalRecords(PayTerminalRecords payTerminalRecords);
 }

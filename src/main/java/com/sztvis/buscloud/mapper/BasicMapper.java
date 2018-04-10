@@ -12,6 +12,7 @@ import com.sztvis.buscloud.model.dto.ComboTreeModel;
 import com.sztvis.buscloud.model.dto.response.RoleViewModel;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -79,5 +80,14 @@ public interface BasicMapper {
     List<TramBasicInfo> Types();
 
     @Select("select AlarmName from TramBasicInfo where Id=#{Id}")
-   String BasicName(int Id);
+    String BasicName(int Id);
+
+    @Select("select * from TramBasicInfo")
+    List<TramBasicInfo> GetAlarmBasicList();
+
+    @Insert("insert into TramAlarmTypeInfo(TypeName,ParentId)values(#{TypeName},#{ParentId})")
+    void InsertAlarmType(@Param("TypeName") String TypeName,@Param("ParentId") Long ParentId);
+
+    @Update("update TramAlarmTypeInfo set TypeName={TypeName} where Id={Id}")
+    void UpdateAlarmType(@Param("TypeName") String TypeName,@Param("Id") Long Id);
 }

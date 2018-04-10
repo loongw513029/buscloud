@@ -512,7 +512,7 @@ public class ServerController extends BaseApiController{
             payTerminalRecords.setPayTime(payTerminalView.getPaytime());
             payTerminalRecords.setSiteName(payTerminalView.getSitename());
             payTerminalRecords.setUpdateTime(payTerminalView.getUpdatetime());
-            this.iDeviceService.insertPayTerminalRecords(payTerminalRecords);
+            //this.iDeviceService.insertPayTerminalRecords(payTerminalRecords);
             return ApiResult(true,"保存刷卡记录成功",StatusCodeEnum.Success,null);
         }
         catch (Exception ex){
@@ -539,7 +539,7 @@ public class ServerController extends BaseApiController{
             oneKeyInspectRecords.setInspectPics(StringHelper.listToString(imgList,','));
             oneKeyInspectRecords.setDeviceId(deviceInfo.getId());
             oneKeyInspectRecords.setUpdateTime(inspectView.getUpdatetime());
-            this.iInspectService.insertOneKeyInspectRecords(oneKeyInspectRecords);
+            //this.iInspectService.insertOneKeyInspectRecords(oneKeyInspectRecords);
             return ApiResult(true,"一键巡检成功",StatusCodeEnum.Success,null);
         }
         catch (Exception ex){

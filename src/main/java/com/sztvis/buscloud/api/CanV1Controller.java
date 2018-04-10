@@ -50,4 +50,10 @@ public class CanV1Controller extends BaseApiController {
         return ApiResult(true,"CAN历史获取成功", StatusCodeEnum.Success,canViewModel);
     }
 
+    @RequestMapping("/test")
+    public ApiResult test(long deviceId, String updateTime){
+        this.iCanService.autoCalcStartTravelSpeeding(deviceId,updateTime);
+        return ApiResult(true,"CAN历史获取成功", StatusCodeEnum.Success,null);
+    }
+
 }

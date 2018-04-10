@@ -1,5 +1,6 @@
 package com.sztvis.buscloud.core;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -31,6 +32,12 @@ public class DateUtil {
         Date day=new Date();
         SimpleDateFormat df = new SimpleDateFormat(dateStyle.getValue());
         return df.format(day);
+    }
+
+    public static Timestamp getCurrentTimes(){
+        Date day=new Date();
+        Timestamp timestamp = new Timestamp(day.getTime());
+        return timestamp;
     }
     /**
      * 获取SimpleDateFormat
@@ -259,6 +266,24 @@ public class DateUtil {
             }
         }
         return dateString;
+    }
+
+    /**
+     * 将日期转化为timestamp类型。失败返回null。
+     * @param Date 日期
+     * @param parttern 日期格式
+     * @return 日期timestamp类型
+     */
+    public static Timestamp GetTimestamp(String Date, String parttern){
+        SimpleDateFormat sf = new SimpleDateFormat(parttern);
+        Date date = null;
+        try {
+            date = sf.parse(Date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Timestamp dateSql = new Timestamp(date.getTime());
+        return dateSql;
     }
 
     /**
@@ -710,6 +735,17 @@ public class DateUtil {
         return Integer.parseInt(String.valueOf(between_days));
     }
 
+    public static int secondBetween(String smdate,String bdate) throws ParseException{
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(sdf.parse(smdate));
+        long time1 = cal.getTimeInMillis();
+        cal.setTime(sdf.parse(bdate));
+        long time2 = cal.getTimeInMillis();
+        long between_days=(time2-time1)/(1000);
+        return Integer.parseInt(String.valueOf(between_days));
+    }
+
     public static int minuteBetween(String smdate,String bdate) throws ParseException{
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Calendar cal = Calendar.getInstance();
@@ -717,7 +753,7 @@ public class DateUtil {
         long time1 = cal.getTimeInMillis();
         cal.setTime(sdf.parse(bdate));
         long time2 = cal.getTimeInMillis();
-        long between_days=(time2-time1)/1000;
+        long between_days=(time2-time1)/(1000*60);
         return Integer.parseInt(String.valueOf(between_days));
     }
     public static int monthsBetween(String smdate,String bdate) throws ParseException{

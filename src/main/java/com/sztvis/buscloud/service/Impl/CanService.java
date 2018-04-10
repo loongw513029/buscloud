@@ -1,6 +1,10 @@
 package com.sztvis.buscloud.service.Impl;
 
 import com.alibaba.fastjson.JSON;
+import com.mongodb.AggregationOutput;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+import com.sun.xml.internal.org.jvnet.fastinfoset.RestrictedAlphabet;
 import com.sztvis.buscloud.core.DateStyle;
 import com.sztvis.buscloud.core.DateUtil;
 import com.sztvis.buscloud.core.TramException;
@@ -9,16 +13,16 @@ import com.sztvis.buscloud.mapper.AlarmMapper;
 import com.sztvis.buscloud.mapper.BasicMapper;
 import com.sztvis.buscloud.mapper.CanMapper;
 import com.sztvis.buscloud.mapper.DeviceMapper;
+import com.sztvis.buscloud.model.DataAlarmConfigViewModel;
 import com.sztvis.buscloud.model.domain.*;
 import com.sztvis.buscloud.model.dto.*;
 import com.sztvis.buscloud.model.dto.push.PushAlarmModel;
 import com.sztvis.buscloud.model.dto.push.PushModel;
 import com.sztvis.buscloud.model.dto.service.SaveAlarmQuery;
-import com.sztvis.buscloud.service.ICanService;
-import com.sztvis.buscloud.service.IDeviceService;
-import com.sztvis.buscloud.service.IGpsService;
-import com.sztvis.buscloud.service.IPushService;
+import com.sztvis.buscloud.model.entity.UnSafeBehaviorTypes;
+import com.sztvis.buscloud.service.*;
 import com.sztvis.buscloud.util.DayTypes;
+import org.eclipse.jdt.internal.compiler.env.AccessRestriction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -27,11 +31,13 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import sun.rmi.runtime.Log;
+import tk.mybatis.mapper.entity.Example;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author longweiqian
@@ -57,6 +63,8 @@ public class CanService implements ICanService {
     private IDeviceService iDeviceService;
     @Autowired
     private IPushService iPushService;
+    @Autowired
+    private IConfigService iConfigService;
 
     @Override
     public TramCanInfo GetCanInfo(String deviceCode, String updateTime) {
@@ -371,10 +379,341 @@ public class CanService implements ICanService {
     }
 
     @Override
-    public void autoCalcUnsafeData(long deviceId, String updateTime) {
+    public void autoCalcUnsafeData(long deviceId, String updateTime) throws ParseException {
 
-        //1.起步不关车门，车速从0递增到5km/h时，车门未关，持续1s
-        String end = DateUtil.addMinute(updateTime,1);
+    }
+
+    //车辆起步不关车门
+    @Override
+    public void autoCalcUnsafeGoingData(long deviceId, String updateTime) throws ParseException {
+        String end = DateUtil.addSecond(updateTime,-1);
+        Query query = new Query(Criteria.where("updatetime").gte(updateTime).lte(end).and("deviceid").is(deviceId));
+        List<TramCanInfo> judge = mongoTemplate.find(query,TramCanInfo.class);
+        if (judge.size()>=2) {
+            if (!StringHelper.isEmpty(judge.get(0).getSpeed()) && !StringHelper.isEmpty(judge.get(1).getSpeed())){
+                Double speed2 = Double.parseDouble(judge.get(0).getSpeed());
+                Double speed1 = Double.parseDouble(judge.get(1).getSpeed());
+                String date2 = judge.get(0).getUpdatetime();
+                String date1 = judge.get(1).getUpdatetime();
+                if (speed1==0 && speed2 - speed1>=5) {
+                    for (TramCanInfo list : judge) {
+                        List<TramCanActinfo> info = list.getActs();
+                        List<TramCanActinfo> info1 = info.stream().filter(x -> x.getCustomId() == 23 || x.getCustomId() == 21).collect(Collectors.toList());
+                        for (TramCanActinfo list1 : info1) {
+                            if (list1.getValue().equals(2)) {
+                                TramUnsafeBehaviorInfo usSafeInfo = new TramUnsafeBehaviorInfo();
+                                TramDeviceInfo deviceInfo = this.iDeviceService.GetDriverInfo(deviceId, null);
+                                if (deviceInfo != null) {
+                                    usSafeInfo.setDeviceid(deviceInfo.getId());
+                                    usSafeInfo.setDevicecode(deviceInfo.getDevicecode());
+                                    usSafeInfo.setApplytime(new Timestamp(DateUtil.StringToDate(updateTime).getTime()));
+                                    usSafeInfo.setCreatetime(DateUtil.getCurrentTimes());
+                                    usSafeInfo.setSpeed(speed2);
+                                    usSafeInfo.setUnsafetime(new Long(DateUtil.secondBetween(date2, date1)));
+                                    usSafeInfo.setUnsafetype(new Long(UnSafeBehaviorTypes.CarGoingThenUnCloseDoor.getValue()));
+                                    TramGpsInfo Gpsinfo = this.iGpsService.getLastGpsInfo(deviceInfo.getDevicecode(), updateTime);
+                                    if (Gpsinfo != null)
+                                        usSafeInfo.setLocation(Gpsinfo.getLongitude().concat(",").concat(Gpsinfo.getLatitude()));
+                                    this.insertUnsafeData(usSafeInfo);
+                                }
+                            }
+                        }
+                    }
+                }
+                }
+            }
+    }
+
+    //车辆未停稳开车门
+    @Override
+    public void autoCalcUnsafeStopingData(long deviceId, String updateTime) throws ParseException {
+        String end = DateUtil.addSecond(updateTime,-1);
+        Query query = new Query(Criteria.where("updatetime").gte(updateTime).lte(end).and("deviceid").is(deviceId));
+        List<TramCanInfo> judge = mongoTemplate.find(query,TramCanInfo.class);
+        if (judge.size()>=2) {
+            if (!StringHelper.isEmpty(judge.get(0).getSpeed()) && !StringHelper.isEmpty(judge.get(1).getSpeed())){
+                Double speed2 = Double.parseDouble(judge.get(0).getSpeed());
+                Double speed1 = Double.parseDouble(judge.get(1).getSpeed());
+                String date2 = judge.get(0).getUpdatetime();
+                String date1 = judge.get(1).getUpdatetime();
+                if (speed1==0 && speed2 - speed1>=5) {
+                    for (TramCanInfo list : judge) {
+                        List<TramCanActinfo> info = list.getActs();
+                        List<TramCanActinfo> info1 = info.stream().filter(x -> x.getCustomId() == 23 || x.getCustomId() == 21).collect(Collectors.toList());
+                        for (TramCanActinfo list1 : info1) {
+                            if (list1.getValue().equals(2)) {
+                                TramUnsafeBehaviorInfo usSafeInfo = new TramUnsafeBehaviorInfo();
+                                TramDeviceInfo deviceInfo = this.iDeviceService.GetDriverInfo(deviceId, null);
+                                if (deviceInfo != null) {
+                                    usSafeInfo.setDeviceid(deviceInfo.getId());
+                                    usSafeInfo.setDevicecode(deviceInfo.getDevicecode());
+                                    usSafeInfo.setApplytime(new Timestamp(DateUtil.StringToDate(updateTime).getTime()));
+                                    usSafeInfo.setCreatetime(DateUtil.getCurrentTimes());
+                                    usSafeInfo.setSpeed(speed2);
+                                    usSafeInfo.setUnsafetime(new Long(DateUtil.secondBetween(date2, date1)));
+                                    usSafeInfo.setUnsafetype(new Long(UnSafeBehaviorTypes.CarUnStopingThenOpenDoor.getValue()));
+                                    TramGpsInfo Gpsinfo = this.iGpsService.getLastGpsInfo(deviceInfo.getDevicecode(), updateTime);
+                                    if (Gpsinfo != null)
+                                        usSafeInfo.setLocation(Gpsinfo.getLongitude().concat(",").concat(Gpsinfo.getLatitude()));
+                                    this.insertUnsafeData(usSafeInfo);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    //急刹车
+    @Override
+    public void autoCalcEmergencyBrake(long deviceId, String updateTime){
+        String end = DateUtil.addSecond(updateTime,-1);
+        Query query = new Query(Criteria.where("updatetime").is(end).and("deviceid").is(deviceId));
+        Query query1 = new Query(Criteria.where("updatetime").is(updateTime).and("deviceid").is(deviceId));
+        TramCanInfo prev = mongoTemplate.findOne(query,TramCanInfo.class);
+        TramCanInfo next = mongoTemplate.findOne(query1,TramCanInfo.class);
+        if (next!= null && prev!= null){
+            String SpeedPrev = prev.getSpeed();
+            String SpeedNext = next.getSpeed();
+            if (!StringHelper.isEmpty(SpeedPrev) && !StringHelper.isEmpty(SpeedNext)){
+                Double spnext = Double.parseDouble(SpeedNext);
+                Double spprev = Double.parseDouble(SpeedPrev);
+                if (spnext - spprev >=15){
+                    TramUnsafeBehaviorInfo usSafeInfo = new TramUnsafeBehaviorInfo();
+                    TramDeviceInfo deviceInfo = this.iDeviceService.GetDriverInfo(deviceId, null);
+                    if (deviceInfo != null) {
+                        usSafeInfo.setDeviceid(deviceInfo.getId());
+                        usSafeInfo.setDevicecode(deviceInfo.getDevicecode());
+                        usSafeInfo.setApplytime(new Timestamp(DateUtil.StringToDate(updateTime).getTime()));
+                        usSafeInfo.setCreatetime(DateUtil.getCurrentTimes());
+                        usSafeInfo.setSpeed(spnext);
+                        usSafeInfo.setUnsafetime(new  Long(1));
+                        usSafeInfo.setUnsafetype(new Long(UnSafeBehaviorTypes.EmergencyBrake.getValue()));
+                        TramGpsInfo Gpsinfo = this.iGpsService.getLastGpsInfo(deviceInfo.getDevicecode(), updateTime);
+                        if (Gpsinfo != null)
+                            usSafeInfo.setLocation(Gpsinfo.getLongitude().concat(",").concat(Gpsinfo.getLatitude()));
+                        this.insertUnsafeData(usSafeInfo);
+                    }
+                }
+            }
+        }
+    }
+
+    // 空档滑行
+    @Override
+    public void autoCalcNeutralAndTravel(long deviceId, String updateTime){
+        String end = DateUtil.addSecond(updateTime,-7);
+        Query query = new Query(Criteria.where("updatetime").gte(end).lte(updateTime).and("deviceid").is(deviceId).and("speed").gte(20));
+        long count = mongoTemplate.count(query,TramCanInfo.class);
+        if (count>=7){
+            TramUnsafeBehaviorInfo usSafeInfo = new TramUnsafeBehaviorInfo();
+            TramDeviceInfo deviceInfo = this.iDeviceService.GetDriverInfo(deviceId, null);
+            if (deviceInfo != null) {
+                usSafeInfo.setDeviceid(deviceInfo.getId());
+                usSafeInfo.setDevicecode(deviceInfo.getDevicecode());
+                usSafeInfo.setApplytime(new Timestamp(DateUtil.StringToDate(updateTime).getTime()));
+                usSafeInfo.setCreatetime(DateUtil.getCurrentTimes());
+                usSafeInfo.setUnsafetime(new  Long(1));
+                usSafeInfo.setUnsafetype(new Long(UnSafeBehaviorTypes.NeutralAndTravel.getValue()));
+                this.insertUnsafeData(usSafeInfo);
+            }
+        }
+    }
+
+    //急减速
+    @Override
+    public void autoCalcQuickSlowDown(long deviceId, String updateTime){
+        String end = DateUtil.addSecond(updateTime,-1);
+        Query query = new Query(Criteria.where("updatetime").is(updateTime).and("deviceid").is(deviceId));
+        Query query1 = new Query(Criteria.where("updatetime").is(end).and("deviceid").is(deviceId));
+        TramCanInfo prev = mongoTemplate.findOne(query,TramCanInfo.class);
+        TramCanInfo next = mongoTemplate.findOne(query1,TramCanInfo.class);
+        if (next!= null && prev!= null){
+            String SpeedPrev = prev.getSpeed();
+            String SpeedNext = next.getSpeed();
+            if (!StringHelper.isEmpty(SpeedPrev) && !StringHelper.isEmpty(SpeedNext)){
+                Double spnext = Double.parseDouble(SpeedNext);
+                Double spprev = Double.parseDouble(SpeedPrev);
+                if (spnext - spprev >= -10){
+                    TramUnsafeBehaviorInfo usSafeInfo = new TramUnsafeBehaviorInfo();
+                    TramDeviceInfo deviceInfo = this.iDeviceService.GetDriverInfo(deviceId, null);
+                    if (deviceInfo != null) {
+                        usSafeInfo.setDeviceid(deviceInfo.getId());
+                        usSafeInfo.setDevicecode(deviceInfo.getDevicecode());
+                        usSafeInfo.setApplytime(new Timestamp(DateUtil.StringToDate(updateTime).getTime()));
+                        usSafeInfo.setCreatetime(DateUtil.getCurrentTimes());
+                        usSafeInfo.setSpeed(spnext);
+                        usSafeInfo.setUnsafetime(new  Long(1));
+                        usSafeInfo.setUnsafetype(new Long(UnSafeBehaviorTypes.QuickSlowDown.getValue()));
+                        TramGpsInfo Gpsinfo = this.iGpsService.getLastGpsInfo(deviceInfo.getDevicecode(), updateTime);
+                        if (Gpsinfo != null)
+                            usSafeInfo.setLocation(Gpsinfo.getLongitude().concat(",").concat(Gpsinfo.getLatitude()));
+                        this.insertUnsafeData(usSafeInfo);
+                    }
+                }
+            }
+        }
+    }
+
+    //倒车超速
+    @Override
+    public void autiCalcReversingSpeeding(long deviceId, String updateTime){
+        String end = DateUtil.addSecond(updateTime,-1);
+        Query query = new Query(Criteria.where("updatetime").is(updateTime).and("deviceid").is(deviceId).and("speed").gte(20));
+        Query query1 = new Query(Criteria.where("updatetime").is(end).and("deviceid").is(deviceId));
+        Query query2 = new Query(Criteria.where("updatetime").is(updateTime).and("deviceid").is(deviceId));
+        long count = mongoTemplate.count(query,TramCanInfo.class);
+        TramCanInfo prev = mongoTemplate.findOne(query1,TramCanInfo.class);
+        TramCanInfo next = mongoTemplate.findOne(query2,TramCanInfo.class);
+        Double Speedprev = Double.parseDouble(prev.getSpeed());
+        Double Speednext = Double.parseDouble(next.getSpeed());
+        if (count>=1 || Speednext-Speedprev>=5){
+            TramUnsafeBehaviorInfo usSafeInfo = new TramUnsafeBehaviorInfo();
+            TramDeviceInfo deviceInfo = this.iDeviceService.GetDriverInfo(deviceId, null);
+            if (deviceInfo != null) {
+                usSafeInfo.setDeviceid(deviceInfo.getId());
+                usSafeInfo.setDevicecode(deviceInfo.getDevicecode());
+                usSafeInfo.setApplytime(new Timestamp(DateUtil.StringToDate(updateTime).getTime()));
+                usSafeInfo.setCreatetime(DateUtil.getCurrentTimes());
+                usSafeInfo.setUnsafetime(new  Long(1));
+                usSafeInfo.setUnsafetype(new Long(UnSafeBehaviorTypes.ReversingSpeeding.getValue()));
+                this.insertUnsafeData(usSafeInfo);
+            }
+        }
+    }
+
+    //急加速
+    @Override
+    public void autoCalcRevvingUp(long deviceId, String updateTime){
+        String end = DateUtil.addSecond(updateTime,-1);
+        Query query = new Query(Criteria.where("updatetime").is(end).and("deviceid").is(deviceId));
+        Query query1 = new Query(Criteria.where("updatetime").is(updateTime).and("deviceid").is(deviceId));
+        TramCanInfo prev = mongoTemplate.findOne(query,TramCanInfo.class);
+        TramCanInfo next = mongoTemplate.findOne(query1,TramCanInfo.class);
+        if (next!= null && prev!= null){
+            String SpeedPrev = prev.getSpeed();
+            String SpeedNext = next.getSpeed();
+            if (!StringHelper.isEmpty(SpeedPrev) && !StringHelper.isEmpty(SpeedNext)){
+                Double spnext = Double.parseDouble(SpeedNext);
+                Double spprev = Double.parseDouble(SpeedPrev);
+                if (spnext - spprev >=10){
+                    TramUnsafeBehaviorInfo usSafeInfo = new TramUnsafeBehaviorInfo();
+                    TramDeviceInfo deviceInfo = this.iDeviceService.GetDriverInfo(deviceId, null);
+                    if (deviceInfo != null) {
+                        usSafeInfo.setDeviceid(deviceInfo.getId());
+                        usSafeInfo.setDevicecode(deviceInfo.getDevicecode());
+                        usSafeInfo.setApplytime(new Timestamp(DateUtil.StringToDate(updateTime).getTime()));
+                        usSafeInfo.setCreatetime(DateUtil.getCurrentTimes());
+                        usSafeInfo.setSpeed(spnext);
+                        usSafeInfo.setUnsafetime(new  Long(1));
+                        usSafeInfo.setUnsafetype(new Long(UnSafeBehaviorTypes.QuickSlowDown.getValue()));
+                        TramGpsInfo Gpsinfo = this.iGpsService.getLastGpsInfo(deviceInfo.getDevicecode(), updateTime);
+                        if (Gpsinfo != null)
+                            usSafeInfo.setLocation(Gpsinfo.getLongitude().concat(",").concat(Gpsinfo.getLatitude()));
+                        this.insertUnsafeData(usSafeInfo);
+                    }
+                }
+            }
+        }
+    }
+
+    // 超速
+    @Override
+    public void autoCalcSpeedingTravel(long deviceId, String updateTime) throws Exception {
+        String end = DateUtil.addSecond(updateTime,-10);
+        TramDeviceInfo Infos = this.iDeviceService.GetDriverInfo(deviceId, null);
+        if (Infos.getSpeeduse()!=1)
+            return;
+        DataAlarmConfigViewModel data = this.iConfigService.GetAllConfigs();
+        Double limitSpeed = Double.parseDouble(data.getValue().toString());
+        Query query = new Query(Criteria.where("updatetime").gte(end).lte(updateTime).and("deviceid").is(deviceId));
+        List<Double> SpeedQuery = new ArrayList<>();
+        if (Infos.getSpeeduse() == 2){
+            List<TramGpsInfo> Info = mongoTemplate.find(query.with(new Sort(Sort.Direction.DESC,"updatetime")),TramGpsInfo.class);
+            for (TramGpsInfo itme:Info){
+                SpeedQuery.add(itme.getSpeed());
+            }
+        }
+        else{
+            List<TramCanInfo> Info = mongoTemplate.find(query.with(new Sort(Sort.Direction.DESC, "updatetime")),TramCanInfo.class);
+            for (TramCanInfo itme : Info){
+                SpeedQuery.add(itme.getSpeed()==null?null:Double.parseDouble(itme.getSpeed()));
+            }
+        }
+        List<Double> NullSpeed = SpeedQuery.stream().filter(x -> x!=null).collect(Collectors.toList());
+        List<Double> Speed = NullSpeed.stream().filter(x -> x>=limitSpeed).collect(Collectors.toList());
+        int count = SpeedQuery.size();
+        int count1 = NullSpeed.size();
+        int count2 = Speed.size();
+        if (count == count1 && count1 == count2 && count!=0){
+            TramUnsafeBehaviorInfo usSafeInfo = new TramUnsafeBehaviorInfo();
+            TramDeviceInfo deviceInfo = this.iDeviceService.GetDriverInfo(deviceId, null);
+            if (deviceInfo != null) {
+                usSafeInfo.setDeviceid(deviceInfo.getId());
+                usSafeInfo.setDevicecode(deviceInfo.getDevicecode());
+                usSafeInfo.setApplytime(new Timestamp(DateUtil.StringToDate(end).getTime()));
+                usSafeInfo.setCreatetime(DateUtil.getCurrentTimes());
+                usSafeInfo.setSpeed(SpeedQuery.get(0));
+                usSafeInfo.setUnsafetime(new  Long(10));
+                usSafeInfo.setUnsafetype(new Long(UnSafeBehaviorTypes.SpeedingTravel.getValue()));
+                TramGpsInfo Gpsinfo = this.iGpsService.getLastGpsInfo(deviceInfo.getDevicecode(), end);
+                if (Gpsinfo != null)
+                    usSafeInfo.setLocation(Gpsinfo.getLongitude().concat(",").concat(Gpsinfo.getLatitude()));
+                this.insertUnsafeData(usSafeInfo);
+            }
+        }
+    }
+
+    // 起步急加速
+    @Override
+    public void autoCalcStartTravelSpeeding(long deviceId, String updateTime){
+        String end = DateUtil.addSecond(updateTime,-1);
+        Query query = new Query(Criteria.where("updatetime").is(end).and("deviceid").is(deviceId));
+        Query query1 = new Query(Criteria.where("updatetime").is(updateTime).and("deviceid").is(deviceId));
+        TramCanInfo prev = mongoTemplate.findOne(query.with(new Sort(Sort.Direction.DESC,"updatetime")),TramCanInfo.class);
+        TramCanInfo next = mongoTemplate.findOne(query1.with(new Sort(Sort.Direction.DESC,"updatetime")),TramCanInfo.class);
+        if (next!= null && prev!= null){
+            Double SpeedPrev = Double.parseDouble(prev.getSpeed());
+            Double SpeedNext = Double.parseDouble(next.getSpeed());
+            if (SpeedPrev==0 && SpeedNext >= 0){
+                if (SpeedNext - SpeedPrev >=7){
+                    TramUnsafeBehaviorInfo usSafeInfo = new TramUnsafeBehaviorInfo();
+                    TramDeviceInfo deviceInfo = this.iDeviceService.GetDriverInfo(deviceId, null);
+                    if (deviceInfo != null) {
+                        usSafeInfo.setDeviceid(deviceInfo.getId());
+                        usSafeInfo.setDevicecode(deviceInfo.getDevicecode());
+                        usSafeInfo.setApplytime(new Timestamp(DateUtil.StringToDate(updateTime).getTime()));
+                        usSafeInfo.setCreatetime(DateUtil.getCurrentTimes());
+                        usSafeInfo.setSpeed(SpeedNext);
+                        usSafeInfo.setUnsafetime(new  Long(1));
+                        usSafeInfo.setUnsafetype(new Long(UnSafeBehaviorTypes.StartTravelSpeeding.getValue()));
+                        TramGpsInfo Gpsinfo = this.iGpsService.getLastGpsInfo(deviceInfo.getDevicecode(), updateTime);
+                        if (Gpsinfo != null)
+                            usSafeInfo.setLocation(Gpsinfo.getLongitude().concat(",").concat(Gpsinfo.getLatitude()));
+                        this.insertUnsafeData(usSafeInfo);
+                    }
+                }
+            }
+        }
+    }
+
+    //夜间行驶
+    @Override
+    public void autoCalcTravelAtNight(long deviceId, String updateTime){
+        if (DateUtil.getHour(updateTime)>=23 || DateUtil.getHour(updateTime)<=7){
+            TramUnsafeBehaviorInfo usSafeInfo = new TramUnsafeBehaviorInfo();
+            TramDeviceInfo deviceInfo = this.iDeviceService.GetDriverInfo(deviceId, null);
+            if (deviceInfo != null) {
+                usSafeInfo.setDeviceid(deviceInfo.getId());
+                usSafeInfo.setDevicecode(deviceInfo.getDevicecode());
+                usSafeInfo.setApplytime(new Timestamp(DateUtil.StringToDate(updateTime).getTime()));
+                usSafeInfo.setCreatetime(DateUtil.getCurrentTimes());
+                usSafeInfo.setUnsafetime(new  Long(1));
+                usSafeInfo.setUnsafetype(new Long(UnSafeBehaviorTypes.TravelAtNight.getValue()));
+                this.insertUnsafeData(usSafeInfo);
+            }
+        }
     }
 
     @Override

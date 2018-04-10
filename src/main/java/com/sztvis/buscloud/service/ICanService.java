@@ -8,6 +8,7 @@ import com.sztvis.buscloud.model.dto.CanViewModel;
 import com.sztvis.buscloud.model.dto.DispatchModel;
 import com.sztvis.buscloud.model.dto.service.SaveAlarmQuery;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
@@ -117,7 +118,7 @@ public interface ICanService {
      * 统计不安全数据
      * @param deviceId
      */
-    void autoCalcUnsafeData(long deviceId,String updateTime);
+    void autoCalcUnsafeData(long deviceId,String updateTime) throws ParseException;
 
     /**
      * 增加不安全行为数据
@@ -164,4 +165,84 @@ public interface ICanService {
     int GetCanInfoBy10sTime(String code, String date, int second);
 
     void CalcDeviceCanHistorys();
+
+    /**
+     * 车辆起步不关车门
+     * @param deviceId
+     * @param updateTime
+     * @return
+     */
+    void autoCalcUnsafeGoingData(long deviceId, String updateTime) throws ParseException;
+
+    /**
+     * 车辆未停稳开车门
+     * @param deviceId
+     * @param updateTime
+     * @return
+     */
+    void autoCalcUnsafeStopingData(long deviceId, String updateTime) throws ParseException;
+
+    /**
+     * 急刹车
+     * @param deviceId
+     * @param updateTime
+     * @return
+     */
+    void autoCalcEmergencyBrake(long deviceId, String updateTime);
+
+    /**
+     * 空档滑行
+     * @param deviceId
+     * @param updateTime
+     * @return
+     */
+    void autoCalcNeutralAndTravel(long deviceId, String updateTime);
+
+    /**
+     * 急减速
+     * @param deviceId
+     * @param updateTime
+     * @return
+     */
+    void autoCalcQuickSlowDown(long deviceId, String updateTime);
+
+    /**
+     * 倒车超速
+     * @param deviceId
+     * @param updateTime
+     * @return
+     */
+    void autiCalcReversingSpeeding(long deviceId, String updateTime);
+
+    /**
+     * 急加速
+     * @param deviceId
+     * @param updateTime
+     * @return
+     */
+    void autoCalcRevvingUp(long deviceId, String updateTime);
+
+    /**
+     * 超速
+     * @param deviceId
+     * @param updateTime
+     * @return
+     */
+    void autoCalcSpeedingTravel(long deviceId, String updateTime) throws Exception;
+
+    /**
+     * 起步急加速
+     * @param deviceId
+     * @param updateTime
+     * @return
+     */
+    void autoCalcStartTravelSpeeding(long deviceId, String updateTime);
+
+    /**
+     * 夜间行驶
+     * @param deviceId
+     * @param updateTime
+     * @return
+     */
+    void autoCalcTravelAtNight(long deviceId, String updateTime);
 }

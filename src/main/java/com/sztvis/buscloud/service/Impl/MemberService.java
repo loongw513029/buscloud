@@ -35,8 +35,6 @@ public class MemberService implements IMemberService{
     @Autowired
     private IDepartmentService iDepartmentService;
     @Autowired
-    private DeviceMapper deviceMapper;
-    @Autowired
     private BasicService basicService;
 
     /**

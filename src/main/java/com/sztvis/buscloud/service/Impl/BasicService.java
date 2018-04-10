@@ -2,19 +2,23 @@ package com.sztvis.buscloud.service.Impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+import com.github.pagehelper.PageHelper;
 import com.sztvis.buscloud.core.RedisUtil;
 import com.sztvis.buscloud.core.helper.StringHelper;
 import com.sztvis.buscloud.mapper.*;
 import com.sztvis.buscloud.model.domain.*;
+import com.sztvis.buscloud.model.dto.AlarmViewModel;
 import com.sztvis.buscloud.model.dto.BasicViewModel;
 import com.sztvis.buscloud.model.dto.ComboTreeModel;
 import com.sztvis.buscloud.model.dto.response.RoleViewModel;
+import com.sztvis.buscloud.model.entity.PageBean;
 import com.sztvis.buscloud.service.IBasicService;
 import com.sztvis.buscloud.util.Constant;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.jsp.tagext.PageData;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -209,4 +213,7 @@ public class BasicService implements IBasicService{
         TramMemberInfo user=this.memberMapper.getMemberById(userId);
         return this.basicMapper.GetAlarmKeysByUserId(userId,user.getRolelv());
     }
+
+
+
 }

@@ -7,8 +7,9 @@ import com.sztvis.buscloud.mapper.DriverMapper;
 import com.sztvis.buscloud.mapper.UnSafeMapper;
 import com.sztvis.buscloud.model.UnSafeListViewModel;
 import com.sztvis.buscloud.model.UnSafeQuery;
+import com.sztvis.buscloud.model.domain.TramDeviceInfo;
+import com.sztvis.buscloud.model.domain.TramDriverInfo;
 import com.sztvis.buscloud.model.domain.TramMemberInfo;
-import com.sztvis.buscloud.model.domain.Tramdriverinfo;
 import com.sztvis.buscloud.model.dto.CurrentUserInfo;
 import com.sztvis.buscloud.model.entity.CanAlarmTypes;
 import com.sztvis.buscloud.model.entity.PageBean;
@@ -62,9 +63,9 @@ public class UnSafeService implements IUnSafeService {
         int IndexUnit = this.iSiteSettingService.GetSiteSettings(1).getIndexUnit();
         String now = DateUtil.getCurrentTime();
         if (IndexUnit > 0){
-            List<Tramdriverinfo> drivers=this.driverMapper.GetTramdriverinfo();
-            for (Tramdriverinfo item : drivers){
-                List<String> codes = this.iDeviceService.GetDeviceCodeByDriverId(item.getId());
+            List<TramDriverInfo> drivers=this.driverMapper.getDrivers();
+            for (TramDriverInfo item : drivers){
+                List<String> codes = this.driverMapper.GetDeviceCodeByDriverId(item.getId());
                 String lastTime = this.unSafeMapper.GetlastTime(item.getId());
                 switch(IndexUnit){
                     case 1:

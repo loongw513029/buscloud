@@ -240,6 +240,6 @@ public interface IDeviceService {
      */
     void InspectCanIntegrity();
 
-
+    List<String> GetAllCarCodes(CurrentUserInfo user);
 
 }

@@ -1,4 +1,9 @@
 package com.sztvis.buscloud.service;
 
-public class IConfigService {
+import com.sztvis.buscloud.model.DataAlarmConfigViewModel;
+
+import java.util.Map;
+
+public interface IConfigService {
+    DataAlarmConfigViewModel GetAllConfigs()throws Exception;
 }

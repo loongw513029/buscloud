@@ -20,7 +20,7 @@ public class FlowService implements IFlowService{
 
     @Override
     public void SensusAlarmVideo(){
-        List<String> codes = this.ideviceService.GetAllCarCodes();
+        List<String> codes = this.ideviceService.GetAllCarCodes(null);
         String now = DateUtil.getCurrentTime();
         String time = DateUtil.addDay(now,-1);
         for (String code : codes){
