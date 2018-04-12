@@ -47,3 +47,21 @@ body.panel-noscroll{padding: 5px}
 }
 .layui-layer-alarm .layui-layer-content{padding: 0px}
 .layui-layer-alarm .layui-layer-title{background-color: #ff0000}
+.alearySelectDevice{
+    height: 30px;
+    width: 178px;
+    float: left;
+    line-height: 30px;
+    font-size: 14px;
+}
+#vh-panel .l-btn{
+    padding: 0px;
+    height: 20px;
+    float: left;
+    margin-right: 2px;
+}
+#vh-panel .l-btn .l-btn-text{
+    line-height: 20px;
+    padding: 0px 3px;
+    margin: 0px;
+}

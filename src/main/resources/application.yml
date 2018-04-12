@@ -1,10 +1,16 @@
 serverHost: 120.78.128.247
+forward:
+  host: 112.74.192.192
+  getfilelisturl: http://${forward.host}:9200/Transmit/Server/
 server:
   port: 8080
   session:
     timeout: 7200
   tomcat:
     uri-encoding: UTF-8
+  jsp-servlet:
+    init-parameters:
+      development: true
 spring:
   http:
     encoding:

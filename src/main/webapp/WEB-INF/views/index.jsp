@@ -114,11 +114,16 @@
         </div>
     </div>
 </div>
+<div id="ocxbox" style="display: none; width: 790px;height: 440px">
+    <object id="ocx" classid="clsid:4EBC3418-4FF1-3A8F-8D1C-BDB084E6E0D4" style="width: 100%;height:100%;background: #000000">
+        <param name="_Version" value="1.1.0">
+        <param name="_ExtentX" value="2646">
+        <PARAM name="_ExtentY" value="1323">
+        <PARAM name="_StockProps" value="0" width="100%" height="100%">
+    </object>
+</div>
 <script type="text/javascript">
     var userId = '${user.uuid}';
-    $(window).resize(function(){
-        $('#pf-bd').height($(window).height()-76);
-    }).resize();
 </script>
 <script type="text/javascript" src="/easyui/jquery.min.js"></script>
 <script type="text/javascript" src="/easyui/jquery.easyui.min.js"></script>

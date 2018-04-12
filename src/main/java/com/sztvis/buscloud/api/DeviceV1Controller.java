@@ -2,6 +2,8 @@ package com.sztvis.buscloud.api;
 
 import com.github.pagehelper.PageHelper;
 import com.sztvis.buscloud.model.UnSafeQuery;
+import com.sztvis.buscloud.model.domain.TramCanInfo;
+import com.sztvis.buscloud.model.domain.TramChannelInfo;
 import com.sztvis.buscloud.model.domain.TramDeviceInfo;
 import com.sztvis.buscloud.model.dto.*;
 import com.sztvis.buscloud.model.dto.response.ApiResult;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -88,6 +91,29 @@ public class DeviceV1Controller extends BaseApiController{
         catch (Exception ex){
             return ApiResult(true, "巡检列表获取失败", StatusCodeEnum.Error, null);
         }
+    }
+
+    /**
+     * 获得通道列表，适用于历史回放界面通道列表
+     * @param deviceId
+     * @return
+     */
+    @RequestMapping("/getChannels")
+    public ApiResult getChannelsByDeviceId(long deviceId){
+        TramDeviceInfo deviceInfo = this.iDeviceService.getDeviceInfoById(deviceId);
+        List<TramChannelInfo> list = this.iDeviceService.GetChannelsByDeviceId(deviceId);
+        if(list==null||list.size()==0){
+            list = new ArrayList<>();
+            for(int i=0;i<deviceInfo.getVideochannel();i++){
+                TramChannelInfo channelInfo = new TramChannelInfo();
+                channelInfo.setChannelname("通道"+(i+1));
+                channelInfo.setNo(i);
+                channelInfo.setDeviceid(deviceId);
+                channelInfo.setSupportptz(false);
+                list.add(channelInfo);
+            }
+        }
+        return ApiResult(true,"获得通道列表成功",StatusCodeEnum.Success,list);
     }
 
 

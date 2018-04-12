@@ -175,6 +175,37 @@ var TramDalog=function(){
         tabObj:function (title,content) {
             this.title = title;
             this.content = content;
+        },
+        fullScreenVideo:function (code,type,clientip,channel,closecallback) {
+            layer.open({
+                type: 1,
+                title: false,
+                closeBtn:1,
+                area: ['800px','450px'],
+                skin: 'layui-layer-nobg',
+                shadeClose: true,
+                content:$('#ocxbox'),
+                cancel:function () {
+                    $('#ocxbox').hide();
+                    var ocx = document.getElementById('ocx');
+                    try{
+                        ocx.Stop();
+                    }catch (err){
+
+                    }
+                    closecallback();
+                },
+                success: function(layero, index){
+                    $('#ocxbox').show();
+                    var ocx = document.getElementById('ocx');
+                    try{
+                        ocx.StartPreview(parent.Main.getServerIP(),type,code,clientip,channel,1);
+                    }catch (err){
+
+                    }
+                }
+            });
+
         }
     }
 }();
@@ -216,7 +247,14 @@ var Main =function () {
             });
             $.ajaxSettings.async = true;
             return address;
+        },
+        getServerIP:function () {
+            return "112.74.192.192";
+        },
+        getContentHeight:function () {
+            return {width: $('.tabs-panels').width(),height:$('.tabs-panels').height()};
         }
+
     }
 }();
 
