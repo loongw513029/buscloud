@@ -30,4 +30,8 @@ public interface IMemberService {
     List<String> getMemberUUIDbyDepartmentId(List<Long> departmentIds);
 
     List<String> getMemberUUIDByDeviceCode(String deviceCode);
+
+    CurrentUserInfo Logins(LoginParams loginParams);
+
+    String getpwd(String username);
 }

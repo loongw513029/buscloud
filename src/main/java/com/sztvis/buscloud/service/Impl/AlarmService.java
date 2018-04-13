@@ -206,4 +206,70 @@ public class AlarmService implements IAlarmService{
        viewModel.setCount(this.canMapper.GetTotal(date1,date2,Devices,AlarmKeys));
        return viewModel;
     }
+
+    @Override
+    public WelcomeTrendModel getAlarmChartList(long lineId, int type1,long userid, String type2,String date2,String date3,String code,long departmentId){
+        int days = 7;
+        if (StringHelper.isNotEmpty(date2)&&StringHelper.isNotEmpty(date3)){
+            days = DateUtil.getIntervalDays(date3,date2);
+        }
+        else if (StringHelper.isEmpty(date2) || StringHelper.isEmpty(date3)){
+            date3 = DateUtil.getCurrentTime();
+            date2 = DateUtil.addDay(date3,-6);
+        }
+        List<String> time = new ArrayList<>();
+        List<List<Integer>> list = new ArrayList<>();
+        List<Integer> list1 = null;
+        List<String> title = new ArrayList<>();
+        List<Long> deviceIds = this.iBasicService.getDeviceIdsByRoleLv(userid);
+        if (StringHelper.isEmpty(type1) && StringHelper.isEmpty(type2)){
+            for (String rs : canMapper.GetAlarmChartList1(String.valueOf(type1),null))
+            {
+                title.add(rs);
+            }
+        }
+        else if (StringHelper.isEmpty(type1) && !StringHelper.isEmpty(type2)){
+            if (type1 == 17){
+                for (String rs : canMapper.GetAlarmChartList1(null,type2))
+                {
+                    title.add(rs);
+                }
+            }
+            else{
+                for (String rs : canMapper.GetAlarmChartList1(null,type2))
+                {
+                    title.add(rs);
+                }
+            }
+        }
+        else
+        {
+            title.add("报警总数");
+        }
+        for (String i : title){
+            list1 = new ArrayList<>();
+            for(int i4 = 1;i4 < days + 1; i4++){
+                int r = 0;
+                if (StringHelper.isEmpty(departmentId)){
+                    if (StringHelper.isNotEmpty(type1) && type1 == 17)
+                        r = canMapper.GetAlarmChartList("indexsql",code,lineId,deviceIds,type1,type2,date2,date3,departmentId);
+                    else {
+                        r = canMapper.GetAlarmChartList("sql",code,lineId,deviceIds,type1,type2,date2,date3,departmentId);
+                    }
+                }
+                else
+                    r = canMapper.GetAlarmChartList("sql",code,lineId,deviceIds,type1,type2,date2,date3,departmentId);
+                int num = StringHelper.isEmpty(r) ? 0 : r;
+                list1.add(num);
+            }
+            list.add(list1);
+        }
+        for (int t = 1;t < days + 1;t++){
+            time.add(DateUtil.getDay(DateUtil.addDay(date3,-t))+"日");
+        }
+        WelcomeTrendModel model = new WelcomeTrendModel();
+        model.setUnsafes(list);
+        model.setUnsafeXalias(time);
+        return  model;
+    }
 }

@@ -59,7 +59,7 @@ public interface LineMapper {
     @Select("select Id from TramLineInfo where DepartmentId in(select Id from TramDepartmentInfo where Id=#{OwnershipId} or ParentId=#{OwnershipId})")
     List<Long> LineId(Long OwnershipId);
 
-    @Select("select * from TramChannelInfo where DeviceId=#{deviceId} order by No asc")
+    @Select("select * from TramChannelInfo where Id=#{deviceId} order by No asc")
     List<TramChannelInfo> GetChannlsByDeviceId(Long deviceId);
 
 }

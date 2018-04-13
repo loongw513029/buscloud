@@ -5,6 +5,8 @@ server:
     timeout: 7200
   tomcat:
     uri-encoding: UTF-8
+  jsp-servlet:
+    init-parameters:
 spring:
   http:
     encoding:
@@ -28,7 +30,6 @@ spring:
       max-wait: 10000
       min-idle: 5
       initial-size: 5
-
 mybatis:
   type-aliases-package: com.sztvis.buscloud.model.domain
   mapper-locations: classpath:/mybatis/*.xml
@@ -59,3 +60,5 @@ logging:
       sztvis:
         buscloud:
           mapper: debug
+shiro:
+    configLocation: classpath:/ehcache-shiro.xml

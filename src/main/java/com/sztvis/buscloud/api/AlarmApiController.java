@@ -1,5 +1,6 @@
 package com.sztvis.buscloud.api;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.sztvis.buscloud.core.helper.StringHelper;
 import com.sztvis.buscloud.model.domain.TramCanInfo;
@@ -8,6 +9,7 @@ import com.sztvis.buscloud.model.dto.BicycleViewModel;
 import com.sztvis.buscloud.model.dto.CanAlarmInfo;
 import com.sztvis.buscloud.model.domain.TramGpsInfo;
 import com.sztvis.buscloud.model.dto.AlarmViewModel;
+import com.sztvis.buscloud.model.dto.WelcomeTrendModel;
 import com.sztvis.buscloud.model.dto.api.AppAlarmChartModel;
 import com.sztvis.buscloud.model.dto.response.ApiResult;
 import com.sztvis.buscloud.model.entity.PageBean;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -144,6 +147,18 @@ public class AlarmApiController extends BaseApiController{
             if (StringHelper.isNotEmpty(lineId) && lineId != 0)
                 nullable = lineId;
             AppAlarmChartModel model = this.iAlarmService.GetAppAlarmCharts(userId, nullable, type);
+            return ApiResult(true, "获取数据成功", StatusCodeEnum.Success, model);
+        }
+        catch (Exception ex) {
+            return ApiResult(false, "获取数据失败", StatusCodeEnum.Error, null);
+        }
+    }
+
+    @RequestMapping(value = "/getalarmcharts1",method = RequestMethod.GET)
+    public ApiResult GetAlarmCharts1(long userid,long lineId,int type1,String type2,String date2,String date3,String code,long departmentId)
+    {
+        try {
+            WelcomeTrendModel model = this.iAlarmService.getAlarmChartList(lineId,type1,userid,type2,date2,date3,code,departmentId);
             return ApiResult(true, "获取数据成功", StatusCodeEnum.Success, model);
         }
         catch (Exception ex) {

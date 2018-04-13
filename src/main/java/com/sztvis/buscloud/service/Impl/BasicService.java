@@ -164,7 +164,7 @@ public class BasicService implements IBasicService{
         }
         if(roleLv==0)
         {
-            if (user.getUsername()=="admin")
+            if (user.getUsername().equals("admin"))
                 return this.deviceMapper.getTramDeviceId();
             else
                 return this.deviceMapper.getLineIdsByDepartmentId(ownershipId);

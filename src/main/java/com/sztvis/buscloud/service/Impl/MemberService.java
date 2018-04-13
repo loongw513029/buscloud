@@ -14,10 +14,20 @@ import com.sztvis.buscloud.model.dto.LoginParams;
 import com.sztvis.buscloud.model.dto.MemberViewModel;
 import com.sztvis.buscloud.service.IDepartmentService;
 import com.sztvis.buscloud.service.IMemberService;
+import org.apache.ibatis.executor.result.ResultMapException;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.crypto.hash.Md5Hash;
+import org.apache.shiro.crypto.hash.SimpleHash;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -44,6 +54,7 @@ public class MemberService implements IMemberService{
      */
     @Override
     public CurrentUserInfo Login(LoginParams loginParams){
+        System.out.println(loginParams.getPassword());
         if(StringHelper.isEmpty(loginParams.getUsername())||StringHelper.isEmpty(loginParams.getPassword())){
             throw new TramException("参数不完整！");
         }
@@ -71,6 +82,55 @@ public class MemberService implements IMemberService{
         //Tramloginlogfo logInfo = new Tramloginlogfo();
         //logInfo.setAccesstoken();
                 return currentUserInfo;
+    }
+    @Override
+    public CurrentUserInfo Logins(LoginParams loginParams){
+        TramMemberInfo memberInfo = memberMapper.getMemberByUsername(loginParams.getUsername());
+        System.out.println(loginParams.getPassword());
+        Object Md5 = new SimpleHash("MD5",loginParams.getPassword(),null,1024);
+        Subject currentUser = SecurityUtils.getSubject();
+        if (currentUser.isAuthenticated()==false){
+            System.out.println(Md5.toString());
+            UsernamePasswordToken token = new UsernamePasswordToken(loginParams.getUsername(), Md5.toString()); // 获取当前的Subject
+            //token.setRememberMe(true);
+            //System.out.println(token.getPassword());
+            try{
+                currentUser.login(token);
+                Session session = currentUser.getSession();
+                session.setAttribute("username",loginParams.getUsername());
+                System.out.println("验证完毕!!!!!!!!!!!!");
+            }
+            catch (IncorrectCredentialsException e){
+                throw new ResultMapException("密码错误");
+            }
+            catch (AuthenticationException e){
+                System.out.println(e.getMessage().toString());
+                throw new ResultMapException("其他错误");
+            }
+
+        }
+        CurrentUserInfo currentUserInfo = memberMapper.GetCurrentUserInfo(memberInfo.getId());
+        TramDepartmentInfo departmentinfo = departmentMapper.GetDepartmentInfo(currentUserInfo.getDepartmentId());
+        currentUserInfo.setDepartmentName(departmentinfo.getDepartmentname());
+        currentUserInfo.setDeviceScopes(basicService.GetDeviceScopeByUserId(currentUserInfo.getId()));
+        if(departmentinfo.getParentid()!=0){
+            departmentinfo=departmentMapper.GetDepartmentInfo(departmentinfo.getParentid());
+        }
+        AppRoleModel roleModel =new AppRoleModel();
+        roleModel.setAppName(departmentinfo.getAppname());
+        roleModel.setHaveCan(departmentinfo.getIslookcan()==1);
+        roleModel.setHaveGps(true);
+        roleModel.setHaveVedio(departmentinfo.getIshavevedio()==1);
+        currentUserInfo.setAppConf(roleModel);
+        //Tramloginlogfo logInfo = new Tramloginlogfo();
+        //logInfo.setAccesstoken();
+        return currentUserInfo;
+    }
+
+    @Override
+    public String getpwd(String username){
+        TramMemberInfo info = memberMapper.getMemberByUsername(username);
+        return info.getPassword();
     }
 
     @Override
@@ -138,4 +198,5 @@ public class MemberService implements IMemberService{
         List<Long> departments = this.iDepartmentService.getDepartmentInfoBydeviceCode(deviceCode,true);
         return this.getMemberUUIDbyDepartmentId(departments);
     }
+
 }

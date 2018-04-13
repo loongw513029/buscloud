@@ -115,4 +115,18 @@ public class SiteSettingService implements ISiteSettingService {
         }
         return model;
     }
+
+    @Override
+    public void SaveSetting(String key, Object value,int type){
+        SiteSettingsInfo model=new SiteSettingsInfo();
+        Field[] item = model.getClass().getFields();
+        if(Arrays.stream(item).allMatch(x->x.getName()==key)){
+
+        }
+        model = this.SiteSettingMapper.GetGetSiteSettingsKey(key,type);
+        if (model == null)
+            this.SiteSettingMapper.InsertSaveSetting(key,value,type);
+        else
+            this.SiteSettingMapper.updateSaveSetting(key,value,type);
+    }
 }

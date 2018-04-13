@@ -6,5 +6,7 @@ import com.sztvis.buscloud.model.dto.service.ChartViewModel;;import java.lang.re
 public interface ISiteSettingService {
     ChartViewModel GetAppCharts(long userId, long lineId);
 
-    public SiteSettingsInfo GetSiteSettings(int type) throws IllegalAccessException, NoSuchFieldException, NoSuchMethodException, InvocationTargetException;
+    SiteSettingsInfo GetSiteSettings(int type) throws IllegalAccessException, NoSuchFieldException, NoSuchMethodException, InvocationTargetException;
+
+    void SaveSetting(String key, Object value,int type);
 }

@@ -11,7 +11,6 @@ import com.sztvis.buscloud.model.dto.response.ApiResult;
 import com.sztvis.buscloud.model.entity.StatusCodeEnum;
 import com.sztvis.buscloud.service.IMemberService;
 import com.sztvis.buscloud.util.Constant;
-import com.sztvis.buscloud.util.HttpHelp;
 import net.sf.jsqlparser.schema.Server;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.jni.Directory;

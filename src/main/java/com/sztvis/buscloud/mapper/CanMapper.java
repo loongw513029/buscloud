@@ -49,4 +49,10 @@ public interface CanMapper {
     Double GetTop1CanInfo(@Param("type")String type,@Param("devicecode")String devicecode,@Param("start")String start,@Param("end")String end);
     int GetTop1CanInfo(@Param("type")String type,@Param("deviceId")long deviceId,@Param("start")String start,@Param("end")String end,@Param("arr")int[] arr);
 
+    @SelectProvider(type = CanProvider.class,method = "GetAlarmChartList")
+    int GetAlarmChartList(@Param("sqlname") String sql,@Param("code") String code,@Param("lineId") long lineId,@Param("deviceIds")List<Long> deviceIds,@Param("type")int type,@Param("type2")String type2,@Param("start")String start,@Param("end")String end,@Param("departmentId")long departmentId);
+
+    @SelectProvider(type = CanProvider.class,method = "GetAlarmChartList1")
+    List<String> GetAlarmChartList1(@Param("value1") String value1,@Param("value2") String value2);
+
 }

@@ -8,27 +8,42 @@
     <link rel="stylesheet" href="/easyui/uimaker/easyui.css">
     <link rel="stylesheet" href="/easyui/uimaker/icon.css">
     <link rel="stylesheet" href="/fonts/iconfont.css">
+    <link rel="stylesheet" href="/css/workbench.css">
     <link href="/css/base.css" rel="stylesheet">
     <style>
         .layui-layer-content{padding: 0px}
     </style>
 </head>
-<body>
-<div id="toolbar" style="padding:5px;height:auto">
-    <div style="margin-bottom:5px">
-        <div style="display: inline-block">
-            <input class="easyui-text" style="width:12%" id="departmentId">
-            <input class="easyui-text" style="width:10%" id="lineId">
-            <input class="easyui-text" style="width:13%" id="type1" />
-            <input class="easyui-text" style="width:13%" id="type2" />
-            <input class="easyui-datebox" style="width:10%" id="date1" placeholder="开始时间"/>
-            <input class="easyui-datebox" style="width:10%" id="date2" placeholder="截止时间"/>
-            <input id="txtkey"/>
-        </div>
-    </div>
-</div>
+<%--<body>--%>
+<%--<div class="center-items chart0 clearfix">--%>
+    <%--<div class="chart0-item">--%>
+        <%--<div class="item-inner">--%>
+            <%--<div class="item-content">--%>
+                <%--<div class="content-hd">车辆故障趋势图</div>--%>
+                <%--<div class="chart-chart" id="chart0"></div>--%>
+            <%--</div>--%>
+        <%--</div>--%>
+    <%--</div>--%>
+<%--</div>--%>
+<%--<div id="toolbar" style="padding:5px;height:auto">--%>
+    <%--<div style="margin-bottom:5px">--%>
+        <%--<div style="display: inline-block">--%>
+            <%--<input class="easyui-text" style="width:12%" id="departmentId">--%>
+            <%--<input class="easyui-text" style="width:10%" id="lineId">--%>
+            <%--<input class="easyui-text" style="width:13%" id="type1" />--%>
+            <%--<input class="easyui-text" style="width:13%" id="type2" />--%>
+            <%--<input class="easyui-datebox" style="width:10%" id="date1" placeholder="开始时间"/>--%>
+            <%--<input class="easyui-datebox" style="width:10%" id="date2" placeholder="截止时间"/>--%>
+            <%--<input id="txtkey"/>--%>
+        <%--</div>--%>
+    <%--</div>--%>
+<%--</div>--%>
+<%--<i>123456</i>--%>
+<%--<a>456789</a>--%>
 <script type="text/javascript" src="/easyui/jquery.min.js"></script>
 <script type="text/javascript" src="/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/dist/highcharts.js"></script>
+<script type="text/javascript" src="/dist/highcharts-zh_CN.js"></script>
 <script type="text/javascript" src="/easyui/easyui-lang-zh_CN.js"></script>
 <script type="text/javascript" src="/web/alarm/statis.js"></script>
 </body>

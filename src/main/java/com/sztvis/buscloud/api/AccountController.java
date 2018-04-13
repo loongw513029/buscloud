@@ -1,5 +1,6 @@
 package com.sztvis.buscloud.api;
 
+import com.sztvis.buscloud.config.ShiroCasConfiguration;
 import com.sztvis.buscloud.core.RedisUtil;
 import com.sztvis.buscloud.core.TramException;
 import com.sztvis.buscloud.core.helper.StringHelper;
@@ -9,6 +10,8 @@ import com.sztvis.buscloud.model.dto.api.ModifyPwdForm;
 import com.sztvis.buscloud.model.dto.response.ApiResult;
 import com.sztvis.buscloud.model.entity.StatusCodeEnum;
 import com.sztvis.buscloud.service.IMemberService;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -46,8 +49,8 @@ public class AccountController extends BaseApiController{
             userInfo.setAccessToken(uuid);
             if(loginParams.getLogintype()==3) {
                 httpSession.setAttribute("user",userInfo);
-
             }
+            System.out.println(loginParams.getPassword());
             return ApiResult(true,"登录成功", StatusCodeEnum.Success,userInfo);
         }
         catch (TramException ex){

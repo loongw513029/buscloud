@@ -49,4 +49,5 @@ public class AlarmController {
         ModelAndView modelAndView = new ModelAndView("/alarm/statics");
         return modelAndView;
     }
+
 }
