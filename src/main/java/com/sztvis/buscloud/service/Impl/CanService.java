@@ -1,10 +1,5 @@
 package com.sztvis.buscloud.service.Impl;
 
-import com.alibaba.fastjson.JSON;
-import com.mongodb.AggregationOutput;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-import com.sun.xml.internal.org.jvnet.fastinfoset.RestrictedAlphabet;
 import com.sztvis.buscloud.core.DateStyle;
 import com.sztvis.buscloud.core.DateUtil;
 import com.sztvis.buscloud.core.TramException;
@@ -22,7 +17,6 @@ import com.sztvis.buscloud.model.dto.service.SaveAlarmQuery;
 import com.sztvis.buscloud.model.entity.UnSafeBehaviorTypes;
 import com.sztvis.buscloud.service.*;
 import com.sztvis.buscloud.util.DayTypes;
-import org.eclipse.jdt.internal.compiler.env.AccessRestriction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -30,8 +24,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
-import sun.rmi.runtime.Log;
-import tk.mybatis.mapper.entity.Example;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;

@@ -1,5 +1,6 @@
 package com.sztvis.buscloud.service.Impl;
 
+import com.sztvis.buscloud.model.domain.TramChannelInfo;
 import com.sztvis.buscloud.model.domain.TramDepartmentInfo;
 import com.sztvis.buscloud.model.domain.TramDeviceInfo;
 import com.sztvis.buscloud.model.domain.TramLineInfo;
@@ -51,7 +52,7 @@ public class TreeService implements ITreeService {
         List<TramDepartmentInfo> dlist = iDepartmentService.GetParentsByParentId(departmentId);
         for(int i=0;i<dlist.size();i++){
             TreeModel model =new TreeModel();
-            model.setState("open");
+            model.setState(i==0?"open":"closed");
             model.setId(dlist.get(i).getId());
             model.setText(dlist.get(i).getDepartmentname());
             model.setChecked(false);
@@ -91,15 +92,36 @@ public class TreeService implements ITreeService {
         List<TramDeviceInfo> dlist = iDeviceService.GetDevicesByLineId(lineId);
         for(int i=0;i<dlist.size();i++){
             TreeModel model =new TreeModel();
-            model.setState("open");
+            model.setState("closed");
             model.setId(dlist.get(i).getId());
             model.setText(dlist.get(i).getDevicecode());
             model.setChecked(false);
             model.setIconCls(dlist.get(i).getDevicestatus()==1?(dlist.get(i).getHostsofttype()==0?"device-nvr-online":"device-dvr-online"):"device-offline");
             model.setEdit(dlist.get(i).getDevicestatus()==1);
+            model.setChildren(this.getChannelListByDeviceId(dlist.get(i).getId()));
             TreeAttributeModel m2=new TreeAttributeModel();
             m2.setIsdevice(true);
             m2.setLevel(4);
+            model.setAttributes(m2);
+            list.add(model);
+        }
+        return list;
+    }
+    private List<TreeModel> getChannelListByDeviceId(long deviceId){
+        List<TreeModel> list=new ArrayList<>();
+        List<TramChannelInfo> dlist = iDeviceService.GetChannelsByDeviceId(deviceId);
+        for(int i=0;i<dlist.size();i++){
+            TreeModel model =new TreeModel();
+            model.setState("open");
+            model.setId(deviceId);
+            model.setText(dlist.get(i).getChannelname());
+            model.setChecked(false);
+            model.setIconCls("");
+            model.setEdit(true);
+            TreeAttributeModel m2=new TreeAttributeModel();
+            m2.setIsdevice(false);
+            m2.setChannel(dlist.get(i).getNo());
+            m2.setLevel(5);
             model.setAttributes(m2);
             list.add(model);
         }

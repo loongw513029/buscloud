@@ -1,11 +1,16 @@
 var stompClient = null;
 var treeData = null;
 var mainPlatform = {
+    //只能单选的页面
     signleArray:function(){
-        return ['/can/preview'];
+        return ['/can/preview','/video/history'];
     },
     multiArray:function () {
-        return ['/video/preview','/map/preview'];
+        return ['/map/preview'];
+    },
+    //必选先选设备的页面
+    mustCheckArray:function () {
+        return ['/video/history'];
     },
     init: function(){
 
@@ -22,17 +27,15 @@ var mainPlatform = {
             $('.pf-nav-item').removeClass('current');
             $(this).addClass('current');
 
-            // 渲染对应侧边菜单
-            var m = $(this).data('menu');
-            self.render(menu[m]);
+            // // 渲染对应侧边菜单
+            // var m = $(this).data('menu');
+            // self.render(menu[m]);
         });
-
         $(document).on('click', '.sider-nav li', function() {
             $('.sider-nav li').removeClass('current');
             $(this).addClass('current');
             //$('iframe').attr('src', $(this).data('src'));
         });
-
         $(document).on('click', '.pf-logout', function() {
             TramDalog.Confirm("您确定要退出吗",['确定','取消'],function(){
                 Http.Ajax({
@@ -53,19 +56,26 @@ var mainPlatform = {
                 $(window).resize();
             },300)
         });
-        function closeTree() {
-            
-        }
         $(document).on('click', '.pf-modify-pwd', function() {
             $('#pf-page').find('iframe').eq(0).attr('src', 'backend/modify_pwd.html')
         });
-
         $(document).on('click', '.pf-notice-item', function() {
             $('#pf-page').find('iframe').eq(0).attr('src', 'backend/notice.html')
         });
         $(document).on('click','.nav-item',function () {
             var text = $(this).attr("title");
             var url = $(this).attr("_href");
+            if($.inArray(url,mainPlatform.mustCheckArray())>=0){
+                var nodes = $('#easyui-tree').tree('getChecked');
+                if(nodes.length==0) {
+                    TramDalog.ErrorAlert('请先选择设备', true);
+                    return;
+                }
+                if(nodes.length>1){
+                    TramDalog.ErrorAlert('只能选择一台设备',true);
+                    return;
+                }
+            }
             mainPlatform.addTab(text,url);
         });
         $.ajax({
@@ -80,6 +90,7 @@ var mainPlatform = {
                 $('#easyui-tree').tree({
                     lines: true,
                     animate: true,
+                    cascadeCheck:false,
                     data: data,
                     onCheck:function (node,checked) {
                         var index = mainPlatform.getCurrentIframeIndex();
@@ -95,6 +106,9 @@ var mainPlatform = {
                         }
                         if(src.indexOf('/map/history')>=0){
                             window.frames[index].MapHistory.AcceptParentData(node);
+                        }
+                        if(src.indexOf('/video/preview')>=0){
+                            window.frames[index].VideoPreview.Preview(node.id,checked,node.attributes.channel,node);
                         }
                     },
                     onBeforeCheck:function (node,checked) {
@@ -186,9 +200,14 @@ var mainPlatform = {
                     if(obj.hostSoftType == 1)
                         $('#easyui-tree').tree('update', {target: node.target,iconCls: 'device-dvr-online'});
                     $("#"+node.domId).find("span:eq(5)").show();
+                    $("#"+node.domId).find("span:eq(3)").attr("class",node.state =="open"?"tree-hit tree-expanded":"tree-hit tree-collapsed");
                 }else {
                     $('#easyui-tree').tree('update', {target: node.target, iconCls: 'device-offline'});
                     $("#"+node.domId).find("span:eq(5)").hide();
+                    $("#"+node.domId).find("span:eq(3)").attr("class","tree-indent tree-joinbottom");
+                    if(node.state == 'open'){
+                        $("#easyui-tree").tree('collapse',node.target);
+                    }
                 }
             }
         }
@@ -206,6 +225,12 @@ var mainPlatform = {
         parent.TramDalog.OpenIframe(650,405,'用户信息',"/basic/memberfrom?id="+User.GetUserInfo.id,function (layerno,index) {
 
         });
+    },
+    unCheckNode:function (target) {
+        $('#easyui-tree').tree('uncheck',target);
+    },
+    getCheckedNodes:function () {
+        return $('#easyui-tree').tree('getChecked');
     }
 };
 

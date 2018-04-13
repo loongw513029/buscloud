@@ -88,12 +88,16 @@ public class HttpHelp {
         return httpClient;
     }
 
+    public HttpHelp() {
+    }
+
     /**
       * 发送Post请求
       *
       * @param httpPost
       * @return
       */
+
     private static String sendHttpPost(HttpPost httpPost)
     {
         CloseableHttpClient httpClient=null;
