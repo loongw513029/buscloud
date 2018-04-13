@@ -12,5 +12,5 @@ import java.util.List;
 
 public interface IMenuService {
 
-    List<MenuModel> GetExtNavDataMenu(Long ParentId);
+    List<MenuModel> GetExtNavDataMenu(Long ParentId,long roleId);
 }

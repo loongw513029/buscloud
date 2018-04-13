@@ -75,8 +75,15 @@ var Role = function () {
                 $('#parentId').combotree('setValue',data.parentId);
                 var arr = data.roleIds.split(',');
                 for(var i=0;i<menuArr.length;i++){
-                    if($.inArray(menuArr[i].id+"",arr)>-1){
-                        menuArr[i].checked = true;
+                    if(menuArr[i].children.length==0){
+                        if ($.inArray(menuArr[i].id + "", arr) > -1) {
+                            menuArr[i].checked = true;
+                        }
+                    }
+                    for(var j=0;j<menuArr[i].children.length;j++) {
+                        if ($.inArray(menuArr[i].children[j].id + "", arr) > -1) {
+                            menuArr[i].children[j].checked = true;
+                        }
                     }
                 }
                 $('#easyui-tree1').tree({
@@ -86,9 +93,13 @@ var Role = function () {
         },
         AddRole:function () {
             var nodes = $('#easyui-tree1').tree('getChecked');
+            var nodes2 = $('#easyui-tree1').tree('getChecked','indeterminate');
             var roleIds = [];
             for(var i=0;i<nodes.length;i++){
                 roleIds.push(nodes[i].id);
+            }
+            for(var j=0;j<nodes2.length;j++){
+                roleIds.push(nodes2[j].id);
             }
             if(roleIds.length==0){
                 parent.TramDalog.ErrorAlert('请授权!',true);

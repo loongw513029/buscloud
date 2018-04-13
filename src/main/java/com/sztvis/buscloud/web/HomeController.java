@@ -25,7 +25,7 @@ public class HomeController extends BaseController{
     @RequestMapping("/index")
     public ModelAndView index(){
         ModelAndView modelAndView = new ModelAndView("index");
-        modelAndView.getModel().put("navs",iMenuService.GetExtNavDataMenu(0L));
+        modelAndView.getModel().put("navs",iMenuService.GetExtNavDataMenu(0L,getUserInfo().getRoleId()));
         modelAndView.getModel().put("user",getUserInfo());
         return modelAndView;
     }

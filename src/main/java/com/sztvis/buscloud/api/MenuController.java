@@ -28,7 +28,7 @@ public class MenuController extends BaseApiController{
     @RequestMapping("navlist")
     public ApiResult GetExtNavData(){
         Long ParentId = 0L;
-        List<MenuModel> data = menuService.GetExtNavDataMenu(ParentId);
+        List<MenuModel> data = menuService.GetExtNavDataMenu(ParentId,getCurrentUserInfo().getRoleId());
         return ApiResult(true,"导航菜单获得成功", StatusCodeEnum.Success,data);
     }
 }

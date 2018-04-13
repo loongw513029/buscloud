@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @date 2018/1/18 上午11:02
  */
 public class RoleViewModel implements Serializable{
-    private long id;
+    private long id=0;
     private String rolename;
     private String remark;
     private String roleIds;

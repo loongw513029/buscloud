@@ -10,7 +10,7 @@
     <link href="/css/base.css" rel="stylesheet">
 </head>
 <body>
-<body class="easyui-layout" style="margin: 5px">
+<body class="easyui-layout" style="margin: 5px" ondragstart="window.event.returnValue=false" oncontextmenu="window.event.returnValue=false" onselectstart="event.returnValue=false">
     <div data-options="region:'west',title:'角色列表（右键删除*）',split:true" style="width:250px;">
         <ul id="easyui-tree" class="easyui-tree" checkbox="true" data-options="lines:true">
 
@@ -20,7 +20,7 @@
         </div>
     </div>
     <div data-options="region:'center',title:'角色编辑'" style="padding:5px;">
-        <input type="hidden" id="Id" />
+        <input type="hidden" id="Id" value="0"/>
         <table id="table1" class="kv-table">
             <tr>
                 <td class="kv-label">角色名称</td>

@@ -216,8 +216,10 @@ public interface DeviceMapper {
 
     @SelectProvider(type = DeviceSqlProvider.class,method = "AutoInspectDeviceADASSQL")
     int AutoInspectDeviceADAS(@Param("SqlType")String SqlType,@Param("deviceId")long deviceId,@Param("start")String start,@Param("end")String end);
+
     int AutoInspectDeviceADAS(@Param("SqlType")String SqlType,@Param("adasArr")long[] adasArr ,@Param("deviceId")long deviceId,@Param("start")String start,@Param("end")String end);
     TramDeviceStatusInfo AutoInspectDeviceADAS(@Param("SqlType")String SqlType, @Param("deviceId")long deviceId, @Param("type")String type);
+
     List<TramDeviceInfo> AutoInspectDeviceADAS(@Param("SqlType")String SqlType);
 
     @Insert("insert into TramDeviceStatusInfo values(#{Guid},#{DeviceId},#{DeviceCode},#{UpdateTime},#{Type},#{Value1},#{Value2},#{Now})")

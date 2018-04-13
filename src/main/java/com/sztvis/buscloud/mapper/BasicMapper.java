@@ -44,6 +44,7 @@ public interface BasicMapper {
     RoleViewModel getRoleInfo(long id);
 
     @Insert("insert into TramRoleInfo(rolename,remark,parentid,departmentId,lv)values(#{rolename},#{remark},#{parentid},1,1)")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
     void insertRoleInfo(TramRoleInfo roleInfo);
 
     @Update("update TramRoleInfo set rolename=#{rolename},remark=#{remark},parentid=#{parentid} where id=#{id}")
