@@ -37,16 +37,15 @@ var mainPlatform = {
             //$('iframe').attr('src', $(this).data('src'));
         });
         $(document).on('click', '.pf-logout', function() {
-            TramDalog.Confirm("您确定要退出吗",['确定','取消'],function(){
+            layer.confirm('您确定要退出吗?',{icon:3,title:'退出登录'},function (index) {
                 Http.Ajax({
                     url:'/api/v1/account/loginout',
                     type:'get'
                 },function (result) {
+                    layer.close(index);
                     if(result.success)
                         location.href= '/login';
-                },function (error) {
-
-                })
+                },function (error) {});
             });
         });
         //左侧菜单收起
@@ -55,9 +54,6 @@ var mainPlatform = {
             setTimeout(function(){
                 $(window).resize();
             },300)
-        });
-        $(document).on('click', '.pf-modify-pwd', function() {
-            $('#pf-page').find('iframe').eq(0).attr('src', 'backend/modify_pwd.html')
         });
         $(document).on('click', '.pf-notice-item', function() {
             $('#pf-page').find('iframe').eq(0).attr('src', 'backend/notice.html')
@@ -123,6 +119,27 @@ var mainPlatform = {
                             }
                         }
                         return node.edit;
+                    },
+                    onClick:function (node) {
+                        if(node.attributes.state) {
+                            Http.Ajax({
+                                url: '/api/v1/device/getstatus?deviceId=' + node.id,
+                                type: 'get'
+                            }, function (result) {
+                                var data = result.result;
+                                var doms = [];
+                                doms.push("<p class='ds-item " + (data.isOnline ? 'active' : '') + "'>状 态: <i class='layui-icon'>&#xe617;</i></p>");
+                                doms.push("<p class='ds-item " + (data.canState ? 'active' : '') + "'>CAN: <i class='layui-icon'>&#xe617;</i></p>");
+                                doms.push("<p class='ds-item " + (data.gpsState ? 'active' : '') + "'>GPS: <i class='layui-icon'>&#xe617;</i></p>");
+                                doms.push("<p class='ds-item'>司 机: " + (data.driverName == undefined ? '无' : data.driverName) + "</p>");
+                                layer.tips(doms.join(''), "#" + node.domId + " span:eq(6)", {
+                                    tips: [2, '#428bca'],
+                                    time: 5000
+                                });
+                            }, function (err) {
+                                console.log(err);
+                            });
+                        }
                     }
                 });
             }
@@ -213,6 +230,8 @@ var mainPlatform = {
         }
     },
     filterAlarm:function (obj) {
+        if(layerIndex)
+            layer.close(layerIndex);
         if(obj.customId==12) {
             var arr = obj.extras.split(',');
             var title = obj.alarmName + "-" + obj.deviceCode +"[车速："+arr[0]+"Km/h, 车距："+arr[1]+"米, 刹车："+(arr[2]==1?"有":"没有")+"]";
@@ -222,8 +241,8 @@ var mainPlatform = {
             parent.TramDalog.OpenIframeAndNoBtn(obj.alarmName+"-"+obj.deviceCode,652,538,"/alarm/view?id="+obj.id);
     },
     openAdminInfo:function () {
-        parent.TramDalog.OpenIframe(650,405,'用户信息',"/basic/memberfrom?id="+User.GetUserInfo.id,function (layerno,index) {
-
+        parent.TramDalog.OpenIframe(650,405,'用户信息',"/basic/memberfrom?id="+User.GetUserInfo().id,function (layerno,index) {
+        layer.close(layerno);
         });
     },
     unCheckNode:function (target) {
@@ -231,6 +250,50 @@ var mainPlatform = {
     },
     getCheckedNodes:function () {
         return $('#easyui-tree').tree('getChecked');
+    },
+    ModifyPwd:function () {
+        layer.open({
+            type:1,
+            area:['400px','300px'],
+            title:'修改密码',
+            shade:0.6,
+            maxmin:false,
+            anim:1,
+            content:$('#editPwd'),
+            btn:['确定','取消'],
+            yes:function (index,layero) {
+                var oldpwd = $('input[name="oldpwd"]').val(),
+                    newpwd = $('input[name="newpwd"]').val(),
+                    newpwd1 = $('input[name="newpwd1"]').val();
+                if(oldpwd==''||newpwd==''||newpwd1==''){
+                    TramDalog.ErrorAlert('输入信息不完整!',true);
+                    return;
+                }
+                if(newpwd1!=newpwd){
+                    TramDalog.ErrorAlert('两次密码输入不一致!',true);
+                    return;
+                }
+                var data = {
+                    userid:User.GetUserInfo().id,
+                    oldpwd:oldpwd,
+                    newpwd:newpwd1
+                };
+                Http.Ajax({
+                    type:'post',
+                    data:data,
+                    url:'/api/v1/account/ModifyPwd'
+                },function (result) {
+                   if(result.success){
+                       TramDalog.SuccessAlert('修改密码成功,请重新登录！',true);
+                   }else
+                       TramDalog.ErrorAlert(result.info,true);
+                },function () {
+                });
+            },
+            btn2:function (index,layero) {
+                layer.close(index);
+            }
+        })
     }
 };
 

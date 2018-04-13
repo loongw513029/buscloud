@@ -11,6 +11,7 @@
     <link href="/fonts/iconfont.css" rel="stylesheet">
     <link href="/css/platform.css" rel="stylesheet">
     <link href="/layer/theme/default/layer.css" rel="stylesheet" />
+    <link href="/layui/css/layui.css" rel="stylesheet"/>
 </head>
 <body>
 <div class="container">
@@ -52,9 +53,9 @@
         <!--头部右侧用户布局-->
         <div class="pf-user">
             <div class="pf-user-photo">
-                <img src="images/main/user.png" alt="">
+                <img src="${(user.photo==null||user.photo=='')?'images/main/user.png':user.photo}" alt="" width="40px" height="40px">
             </div>
-            <h4 class="pf-user-name ellipsis">uimaker</h4>
+            <h4 class="pf-user-name ellipsis">${user.realName}</h4>
             <i class="iconfont xiala">&#xf0170;</i>
             <div class="pf-user-panel">
                 <ul class="pf-user-opt">
@@ -65,13 +66,13 @@
                         </a>
                     </li>
                     <li class="pf-modify-pwd">
-                        <a href="">
+                        <a href="javascript:;" onclick="mainPlatform.ModifyPwd()">
                             <i class="iconfont">&#xf00c9;</i>
                             <span class="pf-opt-name">修改密码</span>
                         </a>
                     </li>
                     <li class="pf-logout">
-                        <a href="login.html">
+                        <a href="javascript:;">
                             <i class="iconfont">&#xf0204;</i>
                             <span class="pf-opt-name">退出</span>
                         </a>
@@ -121,6 +122,26 @@
         <PARAM name="_ExtentY" value="1323">
         <PARAM name="_StockProps" value="0" width="100%" height="100%">
     </object>
+</div>
+<div id="editPwd" style="display: none;width: 92%">
+    <div class="layui-form-item">
+        <label class="layui-form-label">原密码</label>
+        <div class="layui-input-block">
+            <input type="password" name="oldpwd" lay-verify="oldpwd" autocomplete="off" placeholder="原密码" class="layui-input" />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">新密码</label>
+        <div class="layui-input-block">
+            <input type="password" name="newpwd" lay-verify="newpwd" autocomplete="off" placeholder="新密码" class="layui-input" />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">请确认</label>
+        <div class="layui-input-block">
+            <input type="password" name="newpwd1" lay-verify="newpwd1" autocomplete="off" placeholder="请确认新密码" class="layui-input" />
+        </div>
+    </div>
 </div>
 <script type="text/javascript">
     var userId = '${user.uuid}';

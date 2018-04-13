@@ -60,8 +60,15 @@ public class UploadController extends BaseApiController {
         }
     }
 
+    /**
+     * 上传图片 1：司机头像 2：用户头像
+     * @param type
+     * @param multipartFile
+     * @param request
+     * @return
+     */
     @RequestMapping("/uploadfile")
-    public ApiResult uploadImg(@RequestParam("file") MultipartFile multipartFile,HttpServletRequest request){
+    public ApiResult uploadImg(int type,@RequestParam("file") MultipartFile multipartFile,HttpServletRequest request){
         if(multipartFile.isEmpty()|| StringUtils.isBlank(multipartFile.getOriginalFilename())){
             throw  new TramException("图片不能为空");
         }
@@ -71,6 +78,11 @@ public class UploadController extends BaseApiController {
         }
         String root_fileName = multipartFile.getOriginalFilename();
         String filePath = "imgupload/driver/";
+        if(type==2)
+        {
+            filePath="imgupload/member/";
+        }
+        filePath+=DateUtil.getCurrentTime(DateStyle.YYYY_MM_DD)+"/";
         String file_path = request.getSession().getServletContext().getRealPath(filePath);
         String filename = "";
         try {

@@ -55,4 +55,6 @@ public interface CanMapper {
     @SelectProvider(type = CanProvider.class,method = "GetAlarmChartList1")
     List<String> GetAlarmChartList1(@Param("value1") String value1,@Param("value2") String value2);
 
+    @Select("select count(Id) from TramAlarmInfo where deviceId=#{deviceId} and alarmType=#{key} and updateTime=#{updateTime}")
+    int getAlarmCountByKeyAndUpdateTime(@Param("deviceId") long deviceId,@Param("key") int key,@Param("updateTime") String updateTime);
 }

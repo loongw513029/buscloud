@@ -116,5 +116,15 @@ public class DeviceV1Controller extends BaseApiController{
         return ApiResult(true,"获得通道列表成功",StatusCodeEnum.Success,list);
     }
 
+    /**
+     * 点击设备获取即时状态
+     * @param deviceId
+     * @return
+     */
+    @RequestMapping("/getstatus")
+    public ApiResult getDeviceStatus(long deviceId){
+        DeviceStatusPushModel model = this.iDeviceService.getCurrentDeviceStatus(deviceId);
+        return ApiResult(true,"获得设备状态成功",StatusCodeEnum.Success,model);
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.sztvis.buscloud.service.Impl;
 
+import com.sztvis.buscloud.core.DateStyle;
 import com.sztvis.buscloud.core.DateUtil;
 import com.sztvis.buscloud.mapper.BasicMapper;
 import com.sztvis.buscloud.mapper.CanMapper;
@@ -65,7 +66,7 @@ public class HomeService implements IHomeService {
         DayTypes dayTypes = new DayTypes().getDayByType(2);
         int day = 0;
         try {
-           day = DateUtil.daysBetween(dayTypes.getStartTime(), dayTypes.getEndTime());
+           day = DateUtil.daysBetween(dayTypes.getStartTime(), dayTypes.getEndTime(), DateStyle.YYYY_MM_DD);
         } catch (ParseException e) {
             e.printStackTrace();
         }

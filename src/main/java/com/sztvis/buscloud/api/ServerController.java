@@ -323,9 +323,10 @@ public class ServerController extends BaseApiController{
                     String[] pics = JSON.parseObject(alarmModel.getValue1().toString(), new TypeReference<String[]>() {
                     });
                     String imgFileName = UUID.randomUUID().toString().replaceAll("-", "")+"_"+alarmModel.getCode()+"_"+alarmModel.getUpdateTime().replaceAll(":","").replace(" ","").replaceAll("-","");
-                    ImageHelper.generateImage(pics[0], "imgupload/ADAS/", imgFileName + "_0.jpg",request);
-                    ImageHelper.generateImage(pics[1], "imgupload/ADAS/", imgFileName + "_1.jpg",request);
-                    String imgValue1 = "/imgupload/ADAS/" + imgFileName + "_0.jpg", imgValue2 = "/imgupload/ADAS/" + imgFileName + "_1.jpg";
+                    String time = DateUtil.StringToString(alarmModel.getUpdateTime(),DateStyle.YYYY_MM_DD);
+                    ImageHelper.generateImage(pics[0], "imgupload/ADAS/"+time+"/", imgFileName + "_0.jpg",request);
+                    ImageHelper.generateImage(pics[1], "imgupload/ADAS/"+time+"/", imgFileName + "_1.jpg",request);
+                    String imgValue1 = "/imgupload/ADAS/"+time+"/" + imgFileName + "_0.jpg", imgValue2 = "/imgupload/ADAS/" +time+"/"+ imgFileName + "_1.jpg";
                     List<Double> extras = JSON.parseObject(alarmModel.getValue2().toString(), new TypeReference<List<Double>>() {
                     });
                     this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(), deviceInfo.getId(), alarmModel.getUpdateTime(), alarmModel.getType(), imgValue1 + "," + imgValue2, StringHelper.listToString(extras, ','), alarmModel.getPath()));

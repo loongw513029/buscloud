@@ -3,6 +3,11 @@ package com.sztvis.buscloud.config;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import org.apache.catalina.Context;
+import org.apache.catalina.webresources.StandardRoot;
+import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
+import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
+import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -83,4 +88,6 @@ public class MVCConfiguration extends WebMvcConfigurerAdapter {
         factory.setMaxRequestSize("10MB");
         return factory.createMultipartConfig();
     }
+
+
 }

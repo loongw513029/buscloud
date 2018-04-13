@@ -342,7 +342,10 @@
         $(this).closest(".attached").find("ul").addClass("hide");
         $(this).closest(".attached").find("ul." + $(this).attr("attached")).removeClass("hide");
     })
-
+    $(window).resize(function(){
+        var obj = parent.Main.getContentHeight();
+        $('.center-part').width(obj.width-325);
+    }).resize();
 </script>
 </body>
 </html>

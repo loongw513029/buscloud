@@ -237,4 +237,7 @@ public interface DeviceMapper {
 
     @Insert("insert into PayTerminalRecords(deviceId,deviceCode,updateTime,payCardNo,payTime,location,siteName,passengerImage)values(#{deviceId},#{deviceCode},#{updateTime},#{payCardNo},#{payTime},#{location},#{siteName},#{passengerImage})")
     void insertPayTerminalRecords(PayTerminalRecords payTerminalRecords);
+
+    @Update("update TramDeviceInfo set LastOnlineTime=#{lastTime} where id=#{deviceId}")
+    void updateDeviceLastTime(@Param("deviceId") long deviceId,@Param("lastTime") String lastTime);
 }

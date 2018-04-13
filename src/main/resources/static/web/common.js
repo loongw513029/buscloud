@@ -66,11 +66,6 @@ var TramDalog=function(){
             else
                 layer.alert(title,{icon:0});
         },
-        Confirm:function (title,btns,callback1,callback2) {
-            layer.confirm(title,{btn:btns},callback1,function () {
-                layer.close();
-            });
-        },
         /**
          * 打开自定义window
          * @param width 宽度
@@ -112,7 +107,7 @@ var TramDalog=function(){
             });
         },
         OpenIframeAndNoBtn:function(title,width,height,url){
-            layer.open({
+            layerIndex=layer.open({
                 type: 2 //Page层类型
                 ,title:title
                 ,skin:'layui-layer-alarm'

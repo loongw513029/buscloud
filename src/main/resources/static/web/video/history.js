@@ -6,6 +6,7 @@ var VideoHistory = function () {
             var node = parent.mainPlatform.getCheckedNodes();
             tdeviceId = node[0].id;
             devicecode = node[0].text;
+            $('.alearySelectDevice').text('已选择设备：'+devicecode);
             parent.Http.Ajax({
                 type:'get',
                 url:'/api/v1/device/getChannels?deviceId='+tdeviceId

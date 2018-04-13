@@ -58,7 +58,8 @@ var UserFrom = function () {
                 ownershipid:ownershipid==""?0:ownershipid,
                 roleid:roleid==""?0:roleid,
                 phone:phone,
-                status:status?1:0
+                status:status?1:0,
+                photo:$('#image').attr("src")=='/images/upload_img.png'?"":$('#image').attr("src")
             };
             parent.Http.Ajax({
                 type:'post',
@@ -71,6 +72,31 @@ var UserFrom = function () {
                     parenta.TramDalog.SuccessAlert(result.info, true);
                     User.closeWindow();
                     User.reLoad();
+                }
+            })
+        },
+        Cover:function (obj) {
+            UserFrom.upload(obj.id,function (data) {
+                if(data.success){
+                    $("#image").attr("src",data.result);
+                }else {
+                    if(pt) pt.TramDalog.ErrorAlert(data.result, true);
+                }
+            })
+        },
+        upload:function (feid,callback) {
+            $.ajaxFileUpload({
+                fileElementId:feid,
+                url:'/api/v1/upload/uploadfile?type=2',
+                type:'post',
+                dataType:'json',
+                secureuri:false,
+                async:true,
+                success:function (data) {
+                    if(callback) callback.call(this,data);
+                },
+                error:function (data,status,e) {
+                    console.error(e);
                 }
             })
         }

@@ -88,7 +88,7 @@ html {
 #pf-hd .pf-nav-wrap .pf-nav-ww {
     float: left;
     height: 60px;
-    width: 625px;
+    width: 700px;
 }
 
 #pf-hd .pf-nav-prev,#pf-hd .pf-nav-next {
@@ -133,13 +133,13 @@ html {
 
 #pf-hd .pf-user .pf-user-photo {
     float: left;
-    margin: 6px 10px 0 0;
     width: 48px;
     height: 48px
 }
 
 #pf-hd .pf-user .pf-user-photo img {
-    margin: 4px
+    margin: 4px;
+    border-radius: 20px;
 }
 
 #pf-hd .pf-user .pf-user-name {

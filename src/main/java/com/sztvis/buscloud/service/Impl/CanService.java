@@ -189,39 +189,42 @@ public class CanService implements ICanService {
             throw new TramException("设备编码不存在！");
         int alarmType=query.getAlarmType();
         String updateTime = DateUtil.StringToString(query.getAlarmTime(),DateStyle.YYYY_MM_DD_HH_MM_SS);
-        TramBasicInfo basicInfo = this.basicMapper.getBasicInfoByCustomId(alarmType);
-        //这里加上一天之内已经存在了的报警，将不再增加
+        int c = this.canMapper.getAlarmCountByKeyAndUpdateTime(query.getDeviceId(),query.getAlarmType(),updateTime);
+        if(c==0) {
+            TramBasicInfo basicInfo = this.basicMapper.getBasicInfoByCustomId(alarmType);
+            //这里加上一天之内已经存在了的报警，将不再增加
 
-        //判断报警类型是否打开
-        if(basicInfo.isTurn()){
-            //获得该设备最后一条gps数据
-            TramGpsInfo gpsInfo = this.iGpsService.getLastGpsInfo(query.getDeviceCode(),query.getAlarmTime());
-            TramAlarmInfo alarmInfo = new TramAlarmInfo();
-            alarmInfo.setDeviceId(deviceInfo.getId());
-            alarmInfo.setDeviceCode(deviceInfo.getDevicecode());
-            alarmInfo.setUpdateTime(Timestamp.valueOf(updateTime));
-            alarmInfo.setAlarmType(query.getAlarmType());
-            alarmInfo.setParentAlarmType(basicInfo.getParentId());
-            alarmInfo.setValue(query.getValue());
-            alarmInfo.setSystemInsertTime(new Timestamp(System.currentTimeMillis()));
-            alarmInfo.setAlarmVideoPath(query.getPath());
-            alarmInfo.setSpeed(query.getSpeed());
-            alarmInfo.setDistance(query.getDistance());
-            alarmInfo.setBrake(query.isBrake());
-            alarmInfo.setDepartmentId(deviceInfo.getDepartmentid());
-            alarmInfo.setState(basicInfo.isEnable()?1:0);
-            alarmInfo.setPath("");
-            if(gpsInfo!=null)
-                alarmInfo.setLocation(gpsInfo.getLongitude()+","+gpsInfo.getLatitude());
-            this.alarmMapper.SaveAlarmInfo(alarmInfo);
-            //返回主键Id
-            long alarmId = alarmInfo.getId();
-            //是否需要推送（推送到App,推送到页面）
-            if(basicInfo.isPush()){
-                String extrias = query.getSpeed()+"|"+query.getDistance()+"|"+(query.isBrake()?1:0);
-                PushAlarmModel pushAlarmModel = new PushAlarmModel(alarmId,deviceInfo.getDevicecode(),basicInfo.getId().intValue(),updateTime,basicInfo.getAlarmName(),"",query.getPath(),extrias,query.getValue(), StringHelper.isEmpty(basicInfo.getCustomId())?0:Integer.valueOf(basicInfo.getCustomId()));
-                PushModel pushModel = new PushModel(2,pushAlarmModel);
-                this.iPushService.SendToMsgByDeviceCode(deviceInfo.getDevicecode(),pushModel);
+            //判断报警类型是否打开
+            if (basicInfo.isTurn()) {
+                //获得该设备最后一条gps数据
+                TramGpsInfo gpsInfo = this.iGpsService.getLastGpsInfo(query.getDeviceCode(), query.getAlarmTime());
+                TramAlarmInfo alarmInfo = new TramAlarmInfo();
+                alarmInfo.setDeviceId(deviceInfo.getId());
+                alarmInfo.setDeviceCode(deviceInfo.getDevicecode());
+                alarmInfo.setUpdateTime(Timestamp.valueOf(updateTime));
+                alarmInfo.setAlarmType(query.getAlarmType());
+                alarmInfo.setParentAlarmType(basicInfo.getParentId());
+                alarmInfo.setValue(query.getValue());
+                alarmInfo.setSystemInsertTime(new Timestamp(System.currentTimeMillis()));
+                alarmInfo.setAlarmVideoPath(query.getPath());
+                alarmInfo.setSpeed(query.getSpeed());
+                alarmInfo.setDistance(query.getDistance());
+                alarmInfo.setBrake(query.isBrake());
+                alarmInfo.setDepartmentId(deviceInfo.getDepartmentid());
+                alarmInfo.setState(basicInfo.isEnable() ? 1 : 0);
+                alarmInfo.setPath("");
+                if (gpsInfo != null)
+                    alarmInfo.setLocation(gpsInfo.getLongitude() + "," + gpsInfo.getLatitude());
+                this.alarmMapper.SaveAlarmInfo(alarmInfo);
+                //返回主键Id
+                long alarmId = alarmInfo.getId();
+                //是否需要推送（推送到App,推送到页面）
+                if (basicInfo.isPush()) {
+                    String extrias = query.getSpeed() + "|" + query.getDistance() + "|" + (query.isBrake() ? 1 : 0);
+                    PushAlarmModel pushAlarmModel = new PushAlarmModel(alarmId, deviceInfo.getDevicecode(), basicInfo.getId().intValue(), updateTime, basicInfo.getAlarmName(), "", query.getPath(), extrias, query.getValue(), StringHelper.isEmpty(basicInfo.getCustomId()) ? 0 : Integer.valueOf(basicInfo.getCustomId()));
+                    PushModel pushModel = new PushModel(2, pushAlarmModel);
+                    this.iPushService.SendToMsgByDeviceCode(deviceInfo.getDevicecode(), pushModel);
+                }
             }
         }
     }
@@ -761,9 +764,9 @@ public class CanService implements ICanService {
         int day = 0;
         try {
             if(dayType<=4) {
-                day = DateUtil.daysBetween(dayTypes.getStartTime(), dayTypes.getEndTime());
+                day = DateUtil.daysBetween(dayTypes.getStartTime(), dayTypes.getEndTime(),DateStyle.YYYY_MM_DD);
             }else{
-                day = DateUtil.yearsBetween(dayTypes.getStartTime(),dayTypes.getEndTime());
+                day = DateUtil.monthsBetween(dayTypes.getStartTime(),dayTypes.getEndTime())+1;
             }
         } catch (ParseException e) {
             e.printStackTrace();
@@ -782,7 +785,7 @@ public class CanService implements ICanService {
                     start = DateUtil.addMonth(dayTypes.getStartTime(),i);
                     end = DateUtil.addMonth(start,1);
                     if(p==0) {
-                        xalis.add(start.split("-")[1] + "月");
+                        xalis.add(dayType==6?DateUtil.StringToString(start,DateStyle.YYYY)+"年 "+start.split("-")[1] + "月":start.split("-")[1] + "月");
                     }
                 }else{
                     if(p==0) {

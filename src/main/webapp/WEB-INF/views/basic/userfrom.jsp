@@ -17,6 +17,15 @@
     <table cellpadding="5" width="100%" class="kv-table">
         <tbody>
         <tr>
+            <td class="kv-label">上传头像
+            </td>
+            <td colspan="3" style="padding: 3px">
+                <img id="image" class="cover-radius" src="${(obj.photo==null||obj.photo=='')?'/images/upload_img.png':obj.photo}" width="40%" style="cursor: pointer;margin-left: 5px" />
+                <input id="pic_upload" name="file" type="file" onchange="UserFrom.Cover(this)" style="position: absolute;left: 0px;top: 0px;
+width: 100%;height:124px;opacity: 0;cursor: pointer"/>
+            </td>
+        </tr>
+        <tr>
             <td class="kv-label">用户名:</td>
             <td height="35" class="kv-content">
                 <input type="text" id="username" value="${obj.username}">
@@ -58,6 +67,7 @@
     </table>
     </div>
     <script type="text/javascript" src="/easyui/jquery.min.js"></script>
+    <script type="text/javascript" src="/dist/ajaxfileupload.js"></script>
     <script type="text/javascript" src="/easyui/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="/easyui/easyui-lang-zh_CN.js"></script>
     <script type="text/javascript" src="/web/basic/userfrom.js"></script>

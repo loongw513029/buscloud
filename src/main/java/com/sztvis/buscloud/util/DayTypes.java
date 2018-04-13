@@ -49,10 +49,10 @@ public class DayTypes {
                 break;
             case 5://今年
                 dayTypes.setEndTime(DateUtil.addDay(DateUtil.getCurrentTime(DateStyle.YYYY_MM_DD),1));
-                dayTypes.setStartTime(DateUtil.getCurrentTime(DateStyle.YYYY));
+                dayTypes.setStartTime(DateUtil.getCurrentTime(DateStyle.YYYY)+"-01-01");
                 break;
             case 6://去年
-                dayTypes.setEndTime(DateUtil.addYear(DateUtil.getCurrentTime(DateStyle.YYYY),-1));
+                dayTypes.setEndTime(DateUtil.addYear(DateUtil.getCurrentTime(DateStyle.YYYY)+"-01-01",0));
                 dayTypes.setStartTime(DateUtil.addYear(dayTypes.getEndTime(),-1));
                 break;
             default:

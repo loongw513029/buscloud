@@ -10,7 +10,7 @@ public enum DateStyle {
     YYYY("yyyy"),
     YYYY_MM("yyyy-MM-01"),
     YYYY_MM_DD("yyyy-MM-dd"),
-    YYYY_01_01("yyyy-01-01"),
+    //YYYY_01_01("yyyy-01-01"),
     YYYY_MM_DD_00_00_00("yyyy-MM-dd 00:00:00"),
     YYYY_MM_DD_23_59_59("yyyy-MM-dd 23:59:59"),
     MM_DD_HH_MM("MM-dd HH:mm"),

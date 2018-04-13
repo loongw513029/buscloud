@@ -24,7 +24,7 @@ var DriverFrom = function () {
             var id = $('#Id').val();
             var departmentid = $('#departmentid').combotree('getValue');
             var contactphone = $('#contactphone').val();
-            var driverheaderimg = $("#image").attr("src");
+            var driverheaderimg =$('#image').attr("src")=='/images/upload_img.png'?"":$('#image').attr("src");
             if(drivername == ''){
                 parenta.TramDalog.ErrorAlert('请输入线路名称',true);
                 return;
@@ -67,7 +67,7 @@ var DriverFrom = function () {
         upload:function (feid,callback) {
             $.ajaxFileUpload({
                 fileElementId:feid,
-                url:'/api/v1/upload/uploadfile',
+                url:'/api/v1/upload/uploadfile?type=1',
                 type:'post',
                 dataType:'json',
                 secureuri:false,

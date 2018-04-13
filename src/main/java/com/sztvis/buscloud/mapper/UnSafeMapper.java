@@ -12,9 +12,11 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectProvider;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface UnSafeMapper {
     @SelectProvider(type = UnSafeProvider.class,method = "GetUnsafeListSQL")
     List<UnSafeListViewModel> GetUnsafeList(@Param("query")UnSafeQuery query, @Param("deviceIds") List<Long> deviceIds, @Param("types") DayTypes types);

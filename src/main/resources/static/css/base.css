@@ -65,3 +65,9 @@ body.panel-noscroll{padding: 5px}
     padding: 0px 3px;
     margin: 0px;
 }
+.ds-item.active i{
+    color: #00ee00;
+}
+.ds-item i{
+    color: #dedede;
+}
