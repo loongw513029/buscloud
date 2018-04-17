@@ -243,4 +243,6 @@ public interface DeviceMapper {
     @Update("update TramDeviceInfo set LastOnlineTime=#{lastTime} where id=#{deviceId}")
     void updateDeviceLastTime(@Param("deviceId") long deviceId,@Param("lastTime") String lastTime);
 
+    @SelectProvider(type = DeviceSqlProvider.class,method = "getPayRecordsSql")
+    List<PayTerminalRecords> getPayRecords(@Param("cardno") String cardno,@Param("date1") String date1,@Param("date2") String date2,@Param("sitename") String sitename);
 }

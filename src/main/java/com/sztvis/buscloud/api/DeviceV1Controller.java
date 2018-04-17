@@ -2,6 +2,7 @@ package com.sztvis.buscloud.api;
 
 import com.github.pagehelper.PageHelper;
 import com.sztvis.buscloud.model.UnSafeQuery;
+import com.sztvis.buscloud.model.domain.PayTerminalRecords;
 import com.sztvis.buscloud.model.domain.TramCanInfo;
 import com.sztvis.buscloud.model.domain.TramChannelInfo;
 import com.sztvis.buscloud.model.domain.TramDeviceInfo;
@@ -41,10 +42,6 @@ public class DeviceV1Controller extends BaseApiController{
 
     /**
      * 获得设备巡检数据
-     * @param lineId 线路Id
-     * @param departmentId 用户结构Id
-     * @param page 页码
-     * @param limit 页数
      * @return
      */
     @RequestMapping("/inspectlist")
@@ -59,7 +56,6 @@ public class DeviceV1Controller extends BaseApiController{
 
     /**
      * 获得设备维修列表
-     * @param userId 用户Id
      * @param page
      * @param limit
      * @return
@@ -127,4 +123,9 @@ public class DeviceV1Controller extends BaseApiController{
         return ApiResult(true,"获得设备状态成功",StatusCodeEnum.Success,model);
     }
 
+    @RequestMapping("/getPayRecords")
+    public ApiResult getPayRecords(String cardno, String date1, String date2, String sitename){
+        List<PayTerminalRecords> list = this.iDeviceService.getPayRecords(cardno, date1, date2, sitename);
+        return ApiResult(true,"获得支付记录成功",StatusCodeEnum.Success,list);
+    }
 }

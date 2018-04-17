@@ -586,9 +586,9 @@ public class DeviceService implements IDeviceService {
             }
         }
     }
-//    public List<MaintenanceInfo> GetMaintenanceInfoList(long deviceId,long departmentId,String start,String end){
-//         if (StringHelper.isEmpty(String.valueOf(deviceId))){
-//
-//         }
-//    }
+
+    @Override
+    public List<PayTerminalRecords> getPayRecords(String cardno, String date1, String date2, String sitename){
+        return this.deviceMapper.getPayRecords(cardno,date1,date2,sitename);
+    }
 }

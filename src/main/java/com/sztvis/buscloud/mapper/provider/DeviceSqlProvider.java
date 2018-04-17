@@ -233,4 +233,23 @@ public class DeviceSqlProvider {
         }
         return sql.toString();
     }
+
+    public String getPayRecordsSql(Map<String,Object> map){
+        String cardno = (String)map.get("cardno");
+        String date1 = (String)map.get("date1");
+        String date2 = (String)map.get("date2");
+        String sitename = (String)map.get("sitename");
+        SQL sql = new SQL();
+        sql.SELECT("*").FROM("payterminalrecords").WHERE("1=1");
+        if (StringHelper.isNotEmpty(cardno))
+            sql.AND().WHERE("payCardNo like '%"+ cardno +"%'");
+        if (StringHelper.isNotEmpty(date1))
+            sql.AND().WHERE("payTime>='"+ date1 +"'");
+        if (StringHelper.isNotEmpty(date2))
+            sql.AND().WHERE("payTime>='"+ date2 +"'");
+        if (StringHelper.isNotEmpty(sitename))
+            sql.AND().WHERE("sitename like '%"+ sitename +"%'");
+        sql.ORDER_BY("updateTime desc");
+        return sql.toString();
+    }
 }

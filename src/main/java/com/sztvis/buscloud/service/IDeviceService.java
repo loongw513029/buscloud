@@ -250,4 +250,5 @@ public interface IDeviceService {
 
     List<String> GetDeviceCodeByDriverId(long driverId);
 
+    List<PayTerminalRecords> getPayRecords(String cardno, String date1, String date2, String sitename);
 }
