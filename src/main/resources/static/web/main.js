@@ -128,7 +128,7 @@ var mainPlatform = {
                             }, function (result) {
                                 var data = result.result;
                                 var doms = [];
-                                doms.push("<p class='ds-item " + (data.isOnline ? 'active' : '') + "'>状 态: <i class='layui-icon'>&#xe617;</i></p>");
+                                doms.push("<p class='ds-item " + (data.online ? 'active' : '') + "'>状 态: <i class='layui-icon'>&#xe617;</i></p>");
                                 doms.push("<p class='ds-item " + (data.canState ? 'active' : '') + "'>CAN: <i class='layui-icon'>&#xe617;</i></p>");
                                 doms.push("<p class='ds-item " + (data.gpsState ? 'active' : '') + "'>GPS: <i class='layui-icon'>&#xe617;</i></p>");
                                 doms.push("<p class='ds-item'>司 机: " + (data.driverName == undefined ? '无' : data.driverName) + "</p>");
@@ -212,6 +212,7 @@ var mainPlatform = {
             var node = nodes[i];
             if(node.attributes.level == 4&&node.text == obj.code) {
                 if(obj.online){
+                    node.attributes.state = true;
                     if(obj.hostSoftType == 0)
                         $('#easyui-tree').tree('update', {target: node.target,iconCls: 'device-nvr-online'});
                     if(obj.hostSoftType == 1)
@@ -219,6 +220,7 @@ var mainPlatform = {
                     $("#"+node.domId).find("span:eq(5)").show();
                     $("#"+node.domId).find("span:eq(3)").attr("class",node.state =="open"?"tree-hit tree-expanded":"tree-hit tree-collapsed");
                 }else {
+                    node.attributes.state = false;
                     $('#easyui-tree').tree('update', {target: node.target, iconCls: 'device-offline'});
                     $("#"+node.domId).find("span:eq(5)").hide();
                     $("#"+node.domId).find("span:eq(3)").attr("class","tree-indent tree-joinbottom");

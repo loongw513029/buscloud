@@ -62,3 +62,7 @@ logging:
       sztvis:
         buscloud:
           mapper: debug
+baiduai:
+  appid: 11105943
+  api_key: WOeQBwVlQlbGrcnDwbWLOAZy
+  secret_key: Xa8Z5jE66C8MGDhMRqEAurmLDuV1cZnG

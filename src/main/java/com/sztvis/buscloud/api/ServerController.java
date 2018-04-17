@@ -7,6 +7,8 @@ import com.sztvis.buscloud.core.DateUtil;
 import com.sztvis.buscloud.core.helper.ImageHelper;
 import com.sztvis.buscloud.core.helper.StringHelper;
 import com.sztvis.buscloud.model.CanCommon;
+import com.sztvis.buscloud.model.baiduAI.Resp.ComparisonRespModel;
+import com.sztvis.buscloud.model.baiduAI.Resp.ComparisonResult;
 import com.sztvis.buscloud.model.domain.*;
 import com.sztvis.buscloud.model.dto.HostApiModel;
 import com.sztvis.buscloud.model.dto.InspectView;
@@ -21,6 +23,7 @@ import com.sztvis.buscloud.service.*;
 import org.apache.ibatis.javassist.bytecode.ClassFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -65,6 +68,10 @@ public class ServerController extends BaseApiController{
     private IInspectService iInspectService;
     @Autowired
     private IPassengerFlowService iPassengerFlowService;
+    @Autowired
+    private IBaiduAIService iBaiduAIService;
+    @Autowired
+    private IBuildFaceService iBuildFaceService;
 
     /**
      * 处理客户端主机数据
@@ -72,7 +79,7 @@ public class ServerController extends BaseApiController{
      * @return
      */
     @RequestMapping("/accept")
-    public ApiResult Accept(@RequestBody HostApiModel apiModel,HttpServletRequest request) throws NoSuchFieldException, IllegalAccessException, ParseException {
+    public ApiResult Accept(@RequestBody HostApiModel apiModel,HttpServletRequest request) throws Exception {
         ApiResult result =new ApiResult();
         switch (apiModel.getType()){
             case HEALTH:
@@ -110,6 +117,12 @@ public class ServerController extends BaseApiController{
                 break;
             case PAY_TERMINAL:
                 result = PayRecordFunc(apiModel,request);
+                break;
+            case BUILDFACE:
+                result = BuildFaceFunc(apiModel,request);
+                break;
+            case SCHOOLBUS:
+
                 break;
             default:
                 break;
@@ -576,7 +589,42 @@ public class ServerController extends BaseApiController{
             return ApiResult(true,"客流上传成功",StatusCodeEnum.Success,null);
         }
         catch (Exception ex){
-            return ApiResult(false,"客流上传失败",StatusCodeEnum.Success,ex.getMessage());
+            return ApiResult(false,"客流上传失败",StatusCodeEnum.Error,ex.getMessage());
+        }
+    }
+
+    private ApiResult BuildFaceFunc(HostApiModel apiModel,HttpServletRequest request) throws Exception {
+        BuildFaceModel buildFaceModel = JSON.parseObject(apiModel.getMsgInfo().toString(),BuildFaceModel.class);
+        buildFaceModel.setUpdateTime(DateUtil.StringToString(DateUtil.getTimestampStr(buildFaceModel.getUpdateTime()),DateStyle.YYYY_MM_DD_HH_MM_SS));
+        TramDeviceInfo deviceInfo = this.iDeviceService.getDeviceInfoByCode(buildFaceModel.getCode());
+        if(deviceInfo == null)
+            return ApiResult(false,"不存在编号为"+buildFaceModel.getCode()+"的设备",StatusCodeEnum.DataNotFound,null);
+        ComparisonRespModel respModel = this.iBaiduAIService.Comparison(buildFaceModel.getImage(),"group_0");
+        String filename= UUID.randomUUID().toString();
+        try {
+            ImageHelper.generateImage(buildFaceModel.getImage(), "imgupload/buildface/" + DateUtil.StringToString(buildFaceModel.getUpdateTime(), DateStyle.YYYY_MM_DD) + "/", filename + ".jpg", request);
+            String imagePath = "/imgupload/buildface/" + DateUtil.StringToString(buildFaceModel.getUpdateTime(), DateStyle.YYYY_MM_DD) + "/" + filename + ".jpg";
+            TramBuildFaceComparsionRecord record = new TramBuildFaceComparsionRecord();
+            record.setDeviceCode(deviceInfo.getDevicecode());
+            record.setDeviceId(deviceInfo.getId());
+            record.setImagePath(imagePath);
+            if (respModel.getResult() == null || respModel.getResult().size() == 0) {
+                record.setSuccess(false);
+                record.setPersonName("");
+                record.setLogId(respModel.getLog_id());
+                record.setPersonId(0);
+            } else {
+                ComparisonResult comparisonResult = respModel.getResult().get(0);
+                record.setSuccess(true);
+                record.setPersonName(comparisonResult.getUser_info());
+                record.setLogId(respModel.getLog_id());
+                record.setPersonId(Long.valueOf(comparisonResult.getUid().replace("user_", "")));
+            }
+            this.iBuildFaceService.saveComparisonRecord(record);
+            return ApiResult(true, "识别成功,人员=>" + record.getPersonName(), StatusCodeEnum.Success, null);
+        }
+        catch (Exception ex){
+            return ApiResult(false,"识别失败",StatusCodeEnum.Error,ex.getMessage());
         }
     }
 

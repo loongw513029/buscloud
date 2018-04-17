@@ -9,8 +9,6 @@ import com.sztvis.buscloud.model.entity.HostDataType;
  */
 public class HostApiModel {
     private HostDataType Type;
-    private String Target;
-    private String Source;
     private Object MsgInfo;
 
     public HostDataType getType() {
@@ -19,22 +17,6 @@ public class HostApiModel {
 
     public void setType(HostDataType type) {
         Type = type;
-    }
-
-    public String getTarget() {
-        return Target;
-    }
-
-    public void setTarget(String target) {
-        Target = target;
-    }
-
-    public String getSource() {
-        return Source;
-    }
-
-    public void setSource(String source) {
-        Source = source;
     }
 
     public Object getMsgInfo() {

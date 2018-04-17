@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
@@ -46,7 +47,22 @@ public class ImageHelper {
         }
 
     }
-
+    public static String ImageToBase64(String imgFile,HttpServletRequest request) {
+        String filepath=request.getSession().getServletContext().getRealPath(imgFile);
+        InputStream inputStream = null;
+        byte[] data = null;
+        try {
+            inputStream = new FileInputStream(imgFile);
+            data = new byte[inputStream.available()];
+            inputStream.read(data);
+            inputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // 加密
+        BASE64Encoder encoder = new BASE64Encoder();
+        return encoder.encode(data);
+    }
     public static String saveImage(MultipartFile multipartFile,String path) throws IOException {
         File file = new File(path);
         if(!file.exists()){

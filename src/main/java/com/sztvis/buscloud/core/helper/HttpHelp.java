@@ -200,6 +200,19 @@ public class HttpHelp {
         return sendHttpPost(httpPost);
     }
 
+    public static String sendBaiduAiHttp(String url,String json){
+        HttpPost httpPost = new HttpPost(url);// 创建httpPost
+        try {
+           StringEntity stringEntity = new StringEntity(json, "UTF-8");
+           stringEntity.setContentType(CONTENT_TYPE_JSON_URL);
+           httpPost.setHeader("ContentType",CONTENT_TYPE_JSON_URL);
+           httpPost.setEntity(stringEntity);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return sendHttpPost(httpPost);
+    }
+
 
     public static String sendHttpGet(String httpUrl) {
          // 创建get请求

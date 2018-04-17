@@ -78,9 +78,15 @@ public class UploadController extends BaseApiController {
         }
         String root_fileName = multipartFile.getOriginalFilename();
         String filePath = "imgupload/driver/";
-        if(type==2)
-        {
-            filePath="imgupload/member/";
+        switch (type){
+            case 1:
+                break;
+            case 2:
+                filePath="imgupload/member/";
+                break;
+            case 3:
+                filePath="imgupload/person/";
+                break;
         }
         filePath+=DateUtil.getCurrentTime(DateStyle.YYYY_MM_DD)+"/";
         String file_path = request.getSession().getServletContext().getRealPath(filePath);
