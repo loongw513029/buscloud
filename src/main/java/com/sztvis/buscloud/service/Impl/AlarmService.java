@@ -248,7 +248,7 @@ public class AlarmService implements IAlarmService{
         }
         for (String i : title){
             list1 = new ArrayList<>();
-            for(int i4 = 1;i4 < days + 1; i4++){
+            for(int i4 = 0;i4 < days ; i4++){
                 int r = 0;
                 if (StringHelper.isEmpty(departmentId)){
                     if (StringHelper.isNotEmpty(type1) && type1 == 17)
@@ -264,12 +264,13 @@ public class AlarmService implements IAlarmService{
             }
             list.add(list1);
         }
-        for (int t = 1;t < days + 1;t++){
+        for (int t = days - 1;t >= 0 ;t--){
             time.add(DateUtil.getDay(DateUtil.addDay(date3,-t))+"日");
         }
         WelcomeTrendModel model = new WelcomeTrendModel();
         model.setUnsafes(list);
-        model.setUnsafeXalias(time);
+        model.setXalias(time);
+        model.setUnsafeXalias(title);
         return  model;
     }
 }

@@ -83,7 +83,10 @@ public class CanProvider {
             } else if (StringHelper.isNotEmpty(type) && !StringHelper.isEmpty(type2)) {
                 sql.AND().WHERE("alarmKey=" + type2);
             }
-            sql.AND().WHERE("deviceId in(select Id from TramDeviceInfo where DepartmentId="+DepartmentId+")");
+            if (StringHelper.isNotEmpty(code))
+                sql.AND().WHERE("devicecode like '%"+ code +"%'");
+            else
+                sql.AND().WHERE("deviceId in(select Id from TramDeviceInfo where DepartmentId="+DepartmentId+")");
             sql.AND().WHERE(" UpdateTime>='"+ start +"'");
             sql.AND().WHERE(" UpdateTime<='"+ end +"'");
         }

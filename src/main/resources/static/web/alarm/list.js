@@ -165,6 +165,20 @@ var Alarm = function () {
                 });
             });
             $('#type2').combotree({data:[{id:0,text:'请选择二级分类'}]});
+            $('#date1').datebox().datebox('calendar').calendar({
+                validator: function(date){
+                    var now = new Date();
+                    var d2 = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                    return date<=d2-1;
+                }
+            });
+            $('#date2').datebox().datebox('calendar').calendar({
+                validator: function(date){
+                    var now = new Date();
+                    var d2 = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                    return date<=d2;
+                }
+            });
         },
         datagridQuery:function () {
             return {

@@ -109,12 +109,12 @@ public class ShiroCasConfiguration {
         return hashedCredentialsMatcher;
     }
 
-
+//过滤器
     @Bean
     public FilterRegistrationBean filterRegistrationBean() {
         FilterRegistrationBean filterRegistration = new FilterRegistrationBean();
         filterRegistration.setFilter(new DelegatingFilterProxy("shiroFilter"));
-        filterRegistration.addInitParameter("targetFilterLifecycle", "true");
+        filterRegistration.addInitParameter("exclusions","*.js,*.gif,*.jpg,*.png,*.css,*.ico");
         filterRegistration.setEnabled(true);
         filterRegistration.addUrlPatterns("/*");
         return filterRegistration;

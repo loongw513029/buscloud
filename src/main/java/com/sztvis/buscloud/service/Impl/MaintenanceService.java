@@ -27,6 +27,9 @@ public class MaintenanceService implements IMaintenanceService{
     }
 
     @Override
+    public List<MaintenanceInfo> GetMaintenanceInfo(String Code,long DepartmentId,long lineId,String start,String end){ return this.maintenanceMapper.GetMaintenance(Code,DepartmentId,lineId,start,end);}
+
+    @Override
     public void AddMaintenanceInfo(MaintenanceInfo maintenanceInfo)
     {
         this.maintenanceMapper.AddMaintenanceInfo(maintenanceInfo);

@@ -242,4 +242,5 @@ public interface DeviceMapper {
 
     @Update("update TramDeviceInfo set LastOnlineTime=#{lastTime} where id=#{deviceId}")
     void updateDeviceLastTime(@Param("deviceId") long deviceId,@Param("lastTime") String lastTime);
+
 }

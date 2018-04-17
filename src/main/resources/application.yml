@@ -8,6 +8,9 @@ server:
     timeout: 7200
   tomcat:
     uri-encoding: UTF-8
+#  jsp-servlet:
+#    init-parameters:
+#     development: true
 spring:
   http:
     encoding:

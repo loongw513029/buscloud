@@ -555,30 +555,6 @@ public class DeviceService implements IDeviceService {
 
     @Override
     public void AutoInspectDeviceADAS(){
-//        long[] beahviorArr = { 99, 100, 101, 102, 103, 104, 105, 106, 107, 108 },
-//                adasArr = { 118, 119, 120, 121, 122, 123, 124 };
-//        String now = DateUtil.getCurrentTime(DateStyle.YYYY_MM_DD_HH_MM_SS);
-//        List<TramDeviceInfo> devices=this.deviceMapper.AutoInspectDeviceADAS("devicesql");
-//        for(TramDeviceInfo item : devices){
-//            int count = this.deviceMapper.AutoInspectDeviceADAS("adassql",beahviorArr,Long.valueOf(item.getDevicecode()),DateUtil.addDay(now,-3),now);
-//            TramDeviceStatusInfo statusInfo=this.deviceMapper.AutoInspectDeviceADAS("csql",Long.valueOf(item.getDevicecode()),DeviceStateFiled.AdasInspectState.getValue());
-//            if (statusInfo==null|| DateUtil.getIntervalDays(DateUtil.addDay(statusInfo.getCreatetime(),3),now)>=0){
-//                String statusFag = "False";
-//                if (count > 0)
-//                    statusFag = "True";
-//                this.AddDeviceInspectState(item.getId(),item.getDevicecode(),DeviceStateFiled.BehaviorInspectState.getValue(),statusFag,"BehaviorInspectState");
-//            }
-//            else
-//                this.AddDeviceInspectState(item.getId(),item.getDevicecode(), DeviceStateFiled.BehaviorInspectState.getValue(),"False","BehaviorInspectState");
-//            int radarCount = this.deviceMapper.AutoInspectDeviceADAS("radarSql",item.getId(),DateUtil.addDay(now,-1),now);
-//            this.AddDeviceInspectState(item.getId(),item.getDevicecode(),DeviceStateFiled.RadarInspectState.getValue(),String.valueOf(radarCount>0),"RadarInspectState");
-//            int adasCount = this.deviceMapper.AutoInspectDeviceADAS("adassql",adasArr,Long.valueOf(item.getDevicecode()),DateUtil.addDay(now,-1),now);
-//            this.AddDeviceInspectState(item.getId(),item.getDevicecode(),DeviceStateFiled.AdasInspectState.getValue(),String.valueOf(adasCount>0),"AdasInspectState");
-//            int canCount = this.deviceMapper.AutoInspectDeviceADAS("canSql",item.getId(),DateUtil.addDay(now,-1),now);
-//            this.AddDeviceInspectState(item.getId(),item.getDevicecode(),DeviceStateFiled.CanInspectState.getValue(),String.valueOf(canCount>0),"CanInspectState");
-//            int gpsCount = this.deviceMapper.AutoInspectDeviceADAS("gpsSql",item.getId(),DateUtil.addDay(now,-1),now);
-//            this.AddDeviceInspectState(item.getId(),item.getDevicecode(),DeviceStateFiled.GpsInspectState.getValue(),String.valueOf(gpsCount>0),"GpsInspectState");
-//
     }
 
     @Override
@@ -610,4 +586,9 @@ public class DeviceService implements IDeviceService {
             }
         }
     }
+//    public List<MaintenanceInfo> GetMaintenanceInfoList(long deviceId,long departmentId,String start,String end){
+//         if (StringHelper.isEmpty(String.valueOf(deviceId))){
+//
+//         }
+//    }
 }

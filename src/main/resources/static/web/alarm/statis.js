@@ -2,29 +2,11 @@ var AlarmStatics = function () {
     return {
         init:function () {
             AlarmStatics.initComboTree();
-            parent.Http.Ajax({
-                url:'/api/v1/alarm/getalarmcharts1?lineId='+AlarmStatics.datagridQuery().lineId+'&type1='+AlarmStatics.datagridQuery().type1+'&type2='+AlarmStatics.datagridQuery().type2+
-                '&date2='+AlarmStatics.datagridQuery().date1+'&date3='+AlarmStatics.datagridQuery().date2+'&code='+AlarmStatics.datagridQuery().code+'&departmentId='+AlarmStatics.datagridQuery().departmentId+
-                '&userid='+AlarmStatics.datagridQuery().userId,
-                type:'get'
-            },function (result) {
-                var obj = result.result;
-                var xalias = obj.xalias;
-                var title = "";
-                // if(xalias.length==1)
-                //     title = xalias[0];
-                // else
-                //     title = xalias[0]+"-"+xalias[xalias.length-1];
-                var data1=[];
-                for(var j=0;j<obj.unsafeXalias.length;j++){
-                    data1.push(new AlarmStatics.SeriesObj(obj.unsafeXalias[j],obj.unsafes[j]));
-                }
-                AlarmStatics.initHighCharts("#chart0","报警统计",title,xalias,"单位(次)",data1);
-            })
+            AlarmStatics.HighLoad(AlarmStatics.datagridQuery());
             $('#txtkey').searchbox({
                 prompt:'设备编码或车牌号码',
                 searcher:function (value,name) {
-                    AlarmStatics.Load(AlarmStatics.Search(value));
+                    AlarmStatics.HighLoad(AlarmStatics.Search(value));
                 }
             });
         },
@@ -65,6 +47,20 @@ var AlarmStatics = function () {
                 });
             });
             $('#type2').combotree({data:[{id:0,text:'请选择二级分类'}]});
+            $('#date1').datebox().datebox('calendar').calendar({
+                validator: function(date){
+                    var now = new Date();
+                    var d2 = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                    return date<=d2-1;
+                }
+            });
+            $('#date2').datebox().datebox('calendar').calendar({
+                validator: function(date){
+                    var now = new Date();
+                    var d2 = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                    return date<=d2;
+                }
+            });
         },
         // ShowAlarm:function (id) {
         //     parent.TramDalog.OpenIframeAndNoBtn(652,538,'/alarm/view?id='+id);
@@ -80,11 +76,29 @@ var AlarmStatics = function () {
             keywords:'',
             userId:parent.User.GetUserInfo().id,
         };
-},
-        Load:function(value){
-
         },
-        initHighCharts:function (container,title,subtitle,categories,ytitle,data,dataname) {
+        HighLoad:function(value){
+            parent.Http.Ajax({
+                url:'/api/v1/alarm/getalarmcharts1?lineId='+value.lineId+'&type1='+value.type1+'&type2='+value.type2+
+                '&date2='+value.date1+'&date3='+value.date2+'&code='+value.code+'&departmentId='+value.departmentId +
+                '&userid='+value.userId,
+                type:'get'
+            },function (result) {
+                var obj = result.result;
+                var xalias = obj.xalias;
+                var title = "";
+                if(xalias.length==1)
+                    title = xalias[0];
+                else
+                    title = xalias[0]+"-"+xalias[xalias.length-1];
+                var data1=[];
+                for(var i=0;i<obj.unsafeXalias.length;i++){
+                    data1.push(new AlarmStatics.SeriesObj(obj.unsafeXalias[i],obj.unsafes[i]));
+                }
+                AlarmStatics.initHighCharts("#chart0","报警统计",title,xalias,"单位(次)",data1);
+            });
+        },
+        initHighCharts:function (container,title,subtitle,categories,ytitle,data) {
                 $(container).highcharts({
                     chart: {
                         type: 'column'
@@ -122,9 +136,7 @@ var AlarmStatics = function () {
                             borderWidth: 0
                         }
                     },
-                    series: [{
-                        name:dataname
-                    },data]
+                    series: data
                 });
         },
         Load:function () {
@@ -135,11 +147,13 @@ var AlarmStatics = function () {
             this.data = data;
         },
         Search:function (value) {
+            var query = {};
             var lineId = $('#lineId').combotree('getValue');
             var type1 = $('#type1').combotree('getValue');
             var type2 = $('#type2').combotree('getValue');
             var date1 = $('#date1').datebox('getValue');
             var date2 = $('#date2').datebox('getValue');
+            var departmentId = $('#departmentId').combotree('getValue');
             query.departmentId = departmentId==''?0:departmentId;
             query.lineId = lineId==''?0:lineId;
             query.type1 = type1==''?0:type1;

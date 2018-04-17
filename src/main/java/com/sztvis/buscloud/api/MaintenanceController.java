@@ -54,4 +54,17 @@ public class MaintenanceController extends BaseApiController {
             return ApiResult(false,ex.getMessage(), StatusCodeEnum.Error,null);
         }
     }
+
+    @RequestMapping(value= "/Search" ,method= RequestMethod.POST )
+    public ApiResult SearchMaintenanceInfo(String Code,long DepartmentId,long lineId,String start,String end)
+    {
+        try {
+            List<MaintenanceInfo> infos = this.iMaintenanceService.GetMaintenanceInfo(Code,DepartmentId,lineId,start,end);
+            return ApiResult(true, "添加维保记录成功", StatusCodeEnum.Success, infos);
+        }
+        catch (Exception ex)
+        {
+            return ApiResult(false,ex.getMessage(), StatusCodeEnum.Error,null);
+        }
+    }
 }

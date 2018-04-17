@@ -24,4 +24,10 @@ public class DeviceController extends BaseController {
         ModelAndView modelAndView = new ModelAndView("/device/set");
         return modelAndView;
     }
+
+    @RequestMapping("/maintain")
+    public ModelAndView DeviceSet(){
+        ModelAndView modelAndView = new ModelAndView("/device/maintain");
+        return modelAndView;
+    }
 }
