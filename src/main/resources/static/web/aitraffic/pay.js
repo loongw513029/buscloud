@@ -2,7 +2,7 @@ var PayCords = function () {
     return {
         init:function () {
             $('#table').datagrid({
-                url: '/api/v1/alarm/getPayRecords',
+                url: '/api/v1/device/getPayRecords',
                 method: 'get',
                 idField: 'id',
                 fit: true,
@@ -19,36 +19,39 @@ var PayCords = function () {
                         checkbox: 'true',
                         width: 30
                     }, {
-                        field: 'devicecode',
+                        field: 'deviceCode',
                         title: '设备编号',
                         width: 100,
                         align: 'center'
                     }, {
                         field: 'payCardNo',
                         title: '支付卡号',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        field: 'paytime',
-                        title: '支付时间',
-                        width: 50,
+                        width: 250,
                         align: 'center'
                     }, {
                         field: 'location',
                         title: '站点名称',
-                        width: 120,
+                        width: 200,
                         align: 'center'
                     }, {
                         field: 'siteName',
                         title: '地址',
-                        width: 100,
+                        width: 200,
                         align: 'center'
-                    }
-                    , {
-                        field: 'passengerlmage',
+                    }, {
+                        field: 'passengerImage',
                         title: '乘客照片',
-                        width: 100,
+                        width: 300,
+                        align: 'center'
+                    }, {
+                        field: 'payTime',
+                        title: '支付时间',
+                        width: 200,
+                        align: 'center'
+                    }, {
+                        field: 'updateTime',
+                        title: '更新时间',
+                        width: 200,
                         align: 'center'
                     }
                 ]],
@@ -91,10 +94,10 @@ var PayCords = function () {
         },
         datagridQuery:function () {
             return {
-                CardNo:0,
+                CardNo:'',
                 date1:'',
                 date2:'',
-                keywords:'',
+                sitename:'',
             };
         },
         reLoad:function () {
@@ -102,13 +105,13 @@ var PayCords = function () {
         },
         Search:function (value) {
             var query = $('#table').datagrid('options').queryParams;
-            var departmentId = $('#CardNo').combotree('getValue');
+            var CardNo = $('#CardNo').textbox('getValue');
             var date1 = $('#date1').datebox('getValue');
             var date2 = $('#date2').datebox('getValue');
             query.CardNo = CardNo;
             query.date1 = date1;
             query.date2 = date2;
-            query.keywords = value;
+            query.sitename = value;
             PayCords.reLoad();
         }
     }

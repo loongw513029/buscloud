@@ -35,6 +35,12 @@
     </div>
 </div>
 <div class="chart-chart" id="chart0"></div>
+<div style="width: 24%;margin-left: auto;margin-right: auto;padding-left: auto;padding-right: auto;">
+    <a class="easyui-linkbutton" id="line">线性图</a>
+    <a class="easyui-linkbutton" id="area">面积图</a>
+    <a class="easyui-linkbutton" id="column">树状图</a>
+    <a class="easyui-linkbutton" id="bar">条形图</a>
+</div>
 <script type="text/javascript" src="/easyui/jquery.min.js"></script>
 <script type="text/javascript" src="/easyui/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="/dist/highcharts.js"></script>

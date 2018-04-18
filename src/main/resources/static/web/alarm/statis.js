@@ -2,11 +2,19 @@ var AlarmStatics = function () {
     return {
         init:function () {
             AlarmStatics.initComboTree();
-            AlarmStatics.HighLoad(AlarmStatics.datagridQuery());
+            var charttype = 'line';
+            AlarmStatics.HighLoad(AlarmStatics.datagridQuery(),charttype);
+            $('.easyui-linkbutton').each(function (i) {
+                $(this).click(function () {
+                    //$(this).addClass("l-btn-selected").siblings(".l-btn-selected").removeClass("l-btn-selected");
+                    charttype = $(this).attr("id");
+                    AlarmStatics.HighLoad(AlarmStatics.Search(),charttype);
+                });
+            });
             $('#txtkey').searchbox({
                 prompt:'设备编码或车牌号码',
                 searcher:function (value,name) {
-                    AlarmStatics.HighLoad(AlarmStatics.Search(value));
+                    AlarmStatics.HighLoad(AlarmStatics.Search(value),charttype);
                 }
             });
         },
@@ -61,10 +69,24 @@ var AlarmStatics = function () {
                     return date<=d2;
                 }
             });
+            $('#line').linkbutton({
+                toggle: true,
+                group: "charttype",
+                selected:true
+            });
+            $('#area').linkbutton({
+                toggle: true,
+                group: "charttype"
+            });
+            $('#column').linkbutton({
+                toggle: true,
+                group: "charttype"
+            });
+            $('#bar').linkbutton({
+                toggle: true,
+                group: "charttype"
+            });
         },
-        // ShowAlarm:function (id) {
-        //     parent.TramDalog.OpenIframeAndNoBtn(652,538,'/alarm/view?id='+id);
-        // },
         datagridQuery:function () {
         return {
             departmentId:0,
@@ -73,10 +95,10 @@ var AlarmStatics = function () {
             type2:0,
             date1:'',
             date2:'',
-            keywords:'',
+            keywords:''
         };
         },
-        HighLoad:function(value){
+        HighLoad:function(value,value1){
             parent.Http.Ajax({
                 url:'/api/v1/alarm/getalarmcharts1?lineId='+value.lineId+'&type1='+value.type1+'&type2='+value.type2+
                 '&date2='+value.date1+'&date3='+value.date2+'&code='+value.code+'&departmentId='+value.departmentId,
@@ -93,13 +115,13 @@ var AlarmStatics = function () {
                 for(var i=0;i<obj.unsafeXalias.length;i++){
                     data1.push(new AlarmStatics.SeriesObj(obj.unsafeXalias[i],obj.unsafes[i]));
                 }
-                AlarmStatics.initHighCharts("#chart0","报警统计",title,xalias,"单位(次)",data1);
+                AlarmStatics.initHighCharts("#chart0",value1,"报警统计",title,xalias,"单位(次)",data1);
             });
         },
-        initHighCharts:function (container,title,subtitle,categories,ytitle,data) {
+        initHighCharts:function (container,charts,title,subtitle,categories,ytitle,data) {
                 $(container).highcharts({
-                    chart: {
-                        type: 'column'
+                    chart:{
+                        type:charts
                     },
                     title: {
                         text: title

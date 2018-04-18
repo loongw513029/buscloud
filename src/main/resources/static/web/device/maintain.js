@@ -19,40 +19,40 @@ var Device = function () {
                         checkbox: 'true',
                         width: 30
                     }, {
-                        field: 'devicecode',
+                        field: 'DeviceCode',
                         title: '设备编码',
                         width: 100,
                         align: 'center'
                     }, {
-                        field: 'MtData',
+                        field: 'MtDate',
                         title: '维保时间',
-                        width: 100,
+                        width: 200,
                         align: 'center'
                     },
                     {
-                        field: 'project',
+                        field: 'Project',
                         title: '维保项目',
-                        width: 50,
+                        width: 250,
                         align: 'center'
                     }, {
-                        field: 'nextData',
+                        field: 'NextDate',
                         title: '下一次维保时间',
-                        width: 120,
+                        width: 200,
                         align: 'center'
                     }, {
-                        field: 'nextmileage',
+                        field: 'NextMileage',
                         title: '维保里程',
-                        width: 100,
+                        width: 250,
                         align: 'center'
                     }, {
-                        field: 'description',
+                        field: 'Description',
                         title: '描述',
-                        width: 100,
+                        width: 200,
                         align: 'center'
                     }, {
-                        field: 'createtime',
+                        field: 'CreateTime',
                         title: '创建时间',
-                        width: 100,
+                        width: 250,
                         align: 'center'
                     }
                 ]],
@@ -117,8 +117,7 @@ var Device = function () {
                 lineId:0,
                 date1:'',
                 date2:'',
-                keywords:'',
-                userId:parent.User.GetUserInfo().id,
+                keywords:''
             };
         },
         reLoad:function () {

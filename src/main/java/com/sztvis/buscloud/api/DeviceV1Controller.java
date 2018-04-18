@@ -123,9 +123,12 @@ public class DeviceV1Controller extends BaseApiController{
         return ApiResult(true,"获得设备状态成功",StatusCodeEnum.Success,model);
     }
 
-    @RequestMapping("/getPayRecords")
-    public ApiResult getPayRecords(String cardno, String date1, String date2, String sitename){
-        List<PayTerminalRecords> list = this.iDeviceService.getPayRecords(cardno, date1, date2, sitename);
-        return ApiResult(true,"获得支付记录成功",StatusCodeEnum.Success,list);
+    @RequestMapping(value = "/getPayRecords",method = RequestMethod.GET)
+    public ApiResult getPayRecords(String CardNo, String date1, String date2, String sitename ,int page ,int rows){
+        List<PayTerminalRecords> list = this.iDeviceService.getPayRecords(CardNo, date1, date2, sitename);
+        int count = list.size();
+        PageBean<PayTerminalRecords> pageBean = new PageBean<>(page, rows, count);
+        pageBean.setItems(list);
+        return ApiResult(true,"获得支付记录成功",StatusCodeEnum.Success,pageBean);
     }
 }

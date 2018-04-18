@@ -14,18 +14,18 @@ public class MaintenanceProvider {
         StringBuilder sql = new StringBuilder();
         sql.append("select a.Id,a.DeviceId,a.MtDate,a.MtMileage,a.Project,a.NextDate,a.NextMileage,a.Description,a.CreateTime,b.DeviceCode from MaintenanceInfo a left join TramDeviceInfo b on a.DeviceId=b.Id");
         if (StringHelper.isNotEmpty(Code)){
-            sql.append("where b.DeviceCode ="+Code);
+            sql.append(" where b.DeviceCode ="+Code);
         }
         else {
-            if (StringHelper.isNotEmpty(String.valueOf(DepartmentId)) && StringHelper.isNotEmpty(String.valueOf(lineId)))
-                sql.append("where b.DeviceCode in (select DeviceCode from where DepartmentId="+ DepartmentId +" and LineId="+ lineId +")");
-            else if (StringHelper.isNotEmpty(String.valueOf(DepartmentId)) && StringHelper.isEmpty(String.valueOf(lineId)))
-                sql.append("where b.DeviceCode in (select DeviceCode from where DepartmentId="+ DepartmentId +")");
+            if (DepartmentId!=0 && lineId!=0)
+                sql.append(" where b.DeviceCode in (select DeviceCode from TramDeviceInfo where DepartmentId="+ DepartmentId +" and LineId="+ lineId +")");
+            else if (DepartmentId!=0 && lineId==0)
+                sql.append(" where b.DeviceCode in (select DeviceCode from TramDeviceInfo where DepartmentId="+ DepartmentId +")");
         }
         if (StringHelper.isNotEmpty(statr))
-            sql.append("and a.CreateTime>='"+ statr +"'");
+            sql.append(" and a.CreateTime>='"+ statr +"'");
         if (StringHelper.isNotEmpty(end))
-            sql.append("and a.CreateTime=<'"+ end +"'");
+            sql.append(" and a.CreateTime=<'"+ end +"'");
         return sql.toString();
     }
 }

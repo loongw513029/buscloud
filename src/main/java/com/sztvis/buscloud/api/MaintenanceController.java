@@ -55,12 +55,15 @@ public class MaintenanceController extends BaseApiController {
         }
     }
 
-    @RequestMapping(value= "/Search" ,method= RequestMethod.POST )
-    public ApiResult SearchMaintenanceInfo(String Code,long DepartmentId,long lineId,String start,String end)
+    @RequestMapping(value= "/Search" ,method= RequestMethod.GET )
+    public ApiResult SearchMaintenanceInfo(long departmentId,int lineId,String date1,String date2,String Code,int page,int rows)
     {
         try {
-            List<MaintenanceInfo> infos = this.iMaintenanceService.GetMaintenanceInfo(Code,DepartmentId,lineId,start,end);
-            return ApiResult(true, "添加维保记录成功", StatusCodeEnum.Success, infos);
+            List<MaintenanceInfo> infos = this.iMaintenanceService.GetMaintenanceInfo(Code,departmentId,lineId,date1,date2);
+            int count = infos.size();
+            PageBean<MaintenanceInfo> pageBean = new PageBean<>(page, rows, count);
+            pageBean.setItems(infos);
+            return ApiResult(true, "添加维保记录成功", StatusCodeEnum.Success, pageBean);
         }
         catch (Exception ex)
         {
