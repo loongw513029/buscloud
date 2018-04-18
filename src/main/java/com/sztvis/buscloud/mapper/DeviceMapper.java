@@ -190,6 +190,9 @@ public interface DeviceMapper {
     @SelectProvider(type = DeviceSqlProvider.class,method = "getDeviceIdByDepartmentIds")
     List<Long> getDeviceIdByDepartmens(@Param("departments") List<Long> departments);
 
+    @Select("select id from TramDeviceInfo")
+    List<Long> getAllDeviceIds();
+
     @SelectProvider(type = DeviceSqlProvider.class,method = "getDevices")
     List<TramDeviceInfo> getDevices(@Param("deviceIds") List<Long> deviceIds,@Param("lineId") Long lineId);
 

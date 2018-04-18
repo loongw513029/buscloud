@@ -60,6 +60,8 @@ public class DeviceService implements IDeviceService {
     private BasicMapper basicMapper;
     @Autowired
     private UnSafeMapper unSafeMapper;
+    @Autowired
+    private IMemberService iMemberService;
 
     @Override
     public TramDeviceInfo getDeviceInfoByCode(String deviceCode) {
@@ -404,8 +406,12 @@ public class DeviceService implements IDeviceService {
 
     @Override
     public List<Long> getDeviceIdsByUserId(long userId) {
-        List<Long> departmenIds = this.iDepartmentService.GetDepartmentIdsByUserId(userId);
-        return this.deviceMapper.getDeviceIdByDepartmens(departmenIds);
+        long roleId = this.iMemberService.getMemberInfo(userId).getRoleid();
+        if(roleId!=1) {
+            List<Long> departmenIds = this.iDepartmentService.GetDepartmentIdsByUserId(userId);
+            return this.deviceMapper.getDeviceIdByDepartmens(departmenIds);
+        }else
+            return this.deviceMapper.getAllDeviceIds();
     }
 
     @Override

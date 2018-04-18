@@ -62,6 +62,8 @@ public interface DepartmentMapper {
     @Select("select Id from TramDepartmentInfo where Id=#{departmentId} or parentId=#{departmentId}")
     List<Long> GetPartmentIdsByDepartmentId(long departmentId);
 
+    @Select("select Id from TramDepartmentInfo")
+    List<Long> getAllDepartmentIds();
     /**
      *
      * @param text

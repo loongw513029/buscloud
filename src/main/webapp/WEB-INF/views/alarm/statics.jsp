@@ -28,14 +28,14 @@
             <input class="easyui-text" style="width:10%" id="lineId">
             <input class="easyui-text" style="width:13%" id="type1" />
             <input class="easyui-text" style="width:13%" id="type2" />
-            <input class="easyui-datebox" style="width:10%" id="date1" placeholder="开始时间"/>
-            <input class="easyui-datebox" style="width:10%" id="date2" placeholder="截止时间"/>
+            <input class="easyui-datebox" style="width:13%" id="date1" placeholder="开始时间"/>
+            <input class="easyui-datebox" style="width:13%" id="date2" placeholder="截止时间"/>
             <input id="txtkey"/>
         </div>
     </div>
 </div>
 <div class="chart-chart" id="chart0"></div>
-<div style="width: 24%;margin-left: auto;margin-right: auto;padding-left: auto;padding-right: auto;">
+<div style="width: 26%;margin-left: auto;margin-right: auto;padding-left: auto;padding-right: auto;">
     <a class="easyui-linkbutton" id="line">线性图</a>
     <a class="easyui-linkbutton" id="area">面积图</a>
     <a class="easyui-linkbutton" id="column">树状图</a>

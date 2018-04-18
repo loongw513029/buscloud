@@ -35,23 +35,23 @@ var FaceSimilar = function () {
                         width: 60,
                         align: 'center',
                         formatter:function (value,row,index) {
-                            return value?"/images/zw1.png":"/images/zw.png";
+                            return value?"<img src='/images/zw1.png' width='18px' style='vertical-align: middle'/>":"<img src='/images/zw.png' width='18px'  style='vertical-align: middle'/>";
                         }
                     }, {
                         field: 'drunkDrive',
-                        title: '站点名称',
+                        title: '酒驾认证',
                         width: 60,
                         align: 'center',
                         formatter:function (value,row,index) {
-                            return value?"/images/jg1.png":"/images/jg.png";
+                            return value?"<img src='/images/jg1.png' width='18px' style='vertical-align: middle' />":"<img src='/images/jg.png' width='18px'  style='vertical-align: middle'/>";
                         }
                     }, {
                         field: 'faceCompairison',
-                        title: '地址',
+                        title: '人脸识别',
                         width: 60,
                         align: 'center',
                         formatter:function (value,row,index) {
-                            return value?"/images/fc1.png":"/images/fc.png";
+                            return value?"<img src='/images/fc1.png' width='18px'  style='vertical-align: middle'/>":"<img src='/images/fc.png' width='18px'  style='vertical-align: middle'/>";
                         }
                     }
                     , {
@@ -73,7 +73,7 @@ var FaceSimilar = function () {
                             var arr = value.split(',');
                             var d =[];
                             for(var i=0;i<arr.length;i++){
-                                d.push('<img src="/images/pic.png" onclick="parent.TramDalog.OpenImage(\"'+arr[i]+'\")" />&nbsp;&nbsp;');
+                                d.push('<img src="/images/pic.png" width="18px" onclick="parent.TramDalog.OpenImage(\"'+arr[i]+'\")"  style=\'vertical-align: middle\'/>&nbsp;&nbsp;');
                             }
                             return d.join("");
                         }

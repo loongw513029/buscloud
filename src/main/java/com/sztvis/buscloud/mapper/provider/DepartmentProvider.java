@@ -16,7 +16,7 @@ public class DepartmentProvider {
     public String GetDepartmentListSQL(Map<String,Object> map){
         List<Long> departments = (List<Long>)map.get("departments");
         String text = (String)map.get("text");
-        String sql ="select id,code,departmentname,parentid as _parentId,contactname,contactphone,islookcan,ishavevedio from TramDepartmentInfo where 1=1";
+        String sql ="select id,code,departmentname,parentid,contactname,contactphone,islookcan,ishavevedio from TramDepartmentInfo where 1=1";
         String arrs= StringHelper.listToString(departments,',');
         sql +=" and parentId in ("+arrs+") or Id in ("+arrs+")";
         if(!StringHelper.isEmpty(text)){

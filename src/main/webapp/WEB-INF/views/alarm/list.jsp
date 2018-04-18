@@ -22,8 +22,8 @@
             <input class="easyui-text" style="width:10%" id="lineId">
             <input class="easyui-text" style="width:13%" id="type1" />
             <input class="easyui-text" style="width:13%" id="type2" />
-            <input class="easyui-datebox" style="width:10%" id="date1" placeholder="开始时间"/>
-            <input class="easyui-datebox" style="width:10%" id="date2" placeholder="截止时间"/>
+            <input class="easyui-datebox" style="width:13%" id="date1" placeholder="开始时间"/>
+            <input class="easyui-datebox" style="width:13%" id="date2" placeholder="截止时间"/>
             <input id="txtkey"/>
         </div>
     </div>

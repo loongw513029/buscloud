@@ -26,7 +26,7 @@ public class AlarmProvider {
         int offset = (Integer)map.get("offset");
         int limit = (Integer)map.get("limit");
         StringBuilder sb = new StringBuilder();
-        sb.append("select a.id,a.deviceid,a.path,a.devicecode,b.busnumber,c.linename,d.departmentname,e.alarmname,a.updatetime,a.location,a.speed,a.distance,a.isbrake,a.value");
+        sb.append("select a.id,a.deviceid,a.AlarmVideoPath as path,a.devicecode,b.busnumber,c.linename,d.departmentname,e.alarmname,a.updatetime,a.location,a.speed,a.distance,a.isbrake,a.value");
         sb.append(" from TramAlarmInfo a left join TramDeviceInfo g on a.deviceid = g.id left join TramBusInfo b on g.busid = b.id");
         sb.append(" left join TramLineInfo c on g.lineid = c.id left join TramDepartmentInfo d on g.departmentid = d.id left join TramBasicInfo e on a.alarmType=e.customId");
         sb.append(" where a.departmentId in ("+departments+")");

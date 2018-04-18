@@ -1,4 +1,7 @@
 var dialog_index;
+String.prototype.replaceAll  = function(s1,s2){
+    return this.replace(new RegExp(s1,"gm"),s2);
+}
 var Department = function () {
     return{
         init:function () {
@@ -105,9 +108,16 @@ var Department = function () {
                 ]],
                 loadFilter:function (data) {
                     if(data.success){
+                        var liststr = JSON.stringify(data.result.items);
+                        liststr=liststr.replaceAll("parentid","_parentId");
+                        var result = JSON.parse(liststr);
+                        for(var i =0;i<result.length;i++){
+                            if(result[i]._parentId==0)
+                                result[i]._parentId=null;
+                        }
                         return {
                             total:data.result.totalNum,
-                            rows:data.result.items
+                            rows:result
                         };
                     }
                 }
