@@ -208,7 +208,7 @@ public class AlarmService implements IAlarmService{
     }
 
     @Override
-    public WelcomeTrendModel getAlarmChartList(long lineId, int type1,long userid, String type2,String date2,String date3,String code,long departmentId){
+    public WelcomeTrendModel getAlarmChartList(long lineId,int type,String type1,String date2,String date3,String code,long departmentId){
         int days = 7;
         if (StringHelper.isNotEmpty(date2)&&StringHelper.isNotEmpty(date3)){
             days = DateUtil.getIntervalDays(date3,date2);
@@ -221,26 +221,12 @@ public class AlarmService implements IAlarmService{
         List<List<Integer>> list = new ArrayList<>();
         List<Integer> list1 = null;
         List<String> title = new ArrayList<>();
-        List<Long> deviceIds = this.iBasicService.getDeviceIdsByRoleLv(userid);
-        if (StringHelper.isEmpty(type1) && StringHelper.isEmpty(type2)){
-            for (String rs : canMapper.GetAlarmChartList1(String.valueOf(type1),null))
-            {
-                title.add(rs);
+        if (type!=0){
+            if (type1.equals("0")) {
+                title.add(canMapper.GetAlarmChartList2(type));
             }
-        }
-        else if (StringHelper.isEmpty(type1) && !StringHelper.isEmpty(type2)){
-            if (type1 == 17){
-                for (String rs : canMapper.GetAlarmChartList1(null,type2))
-                {
-                    title.add(rs);
-                }
-            }
-            else{
-                for (String rs : canMapper.GetAlarmChartList1(null,type2))
-                {
-                    title.add(rs);
-                }
-            }
+            else
+                title.add(canMapper.GetAlarmChartList2(Integer.valueOf(type1)));
         }
         else
         {
@@ -248,19 +234,9 @@ public class AlarmService implements IAlarmService{
         }
         for (String i : title){
             list1 = new ArrayList<>();
-            for(int i4 = 0;i4 < days ; i4++){
-                int r = 0;
-                if (StringHelper.isEmpty(departmentId)){
-                    if (StringHelper.isNotEmpty(type1) && type1 == 17)
-                        r = canMapper.GetAlarmChartList("indexsql",code,lineId,deviceIds,type1,type2,date2,date3,departmentId);
-                    else {
-                        r = canMapper.GetAlarmChartList("sql",code,lineId,deviceIds,type1,type2,date2,date3,departmentId);
-                    }
-                }
-                else
-                    r = canMapper.GetAlarmChartList("sql",code,lineId,deviceIds,type1,type2,date2,date3,departmentId);
-                int num = StringHelper.isEmpty(r) ? 0 : r;
-                list1.add(num);
+            for(int i4 = days - 1;i4 >= 0  ; i4--){
+                int r = canMapper.GetAlarmChartList(code,lineId,type,type1,DateUtil.StringToString(DateUtil.addDay(date3,-i4),DateStyle.YYYY_MM_DD_00_00_00),DateUtil.StringToString(DateUtil.addDay(date3,-i4),DateStyle.YYYY_MM_DD_23_59_59),departmentId);
+                list1.add(r);
             }
             list.add(list1);
         }

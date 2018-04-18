@@ -66,50 +66,34 @@ public class CanProvider {
     }
 
     public String GetAlarmChartList(Map<String,Object> map){
-        String sql1 = (String)map.get("sqlname");
-        List<Long> deviceIds = (List<Long>)map.get("deviceIds") ;
         String code = (String)map.get("code");
         long lineId = (long)map.get("lineId");
         int type = (int)map.get("type");
-        String type2 = (String)map.get("type2");
+        String type2 = (String) map.get("type1");
         String start = (String) map.get("start");
         String end = (String)map.get("end");
         long DepartmentId = (long)map.get("departmentId");
         SQL sql = new SQL();
-        if (sql1.equals("sql")) {
-            sql.SELECT("count(Id)").FROM("TramCanAlarmInfo").WHERE("deviceId in"+deviceIds.toString().replace("[","(").replace("]",")"));
-            if (StringHelper.isNotEmpty(type) && StringHelper.isEmpty(type2)) {
-                sql.AND().WHERE("alarmKey in (select Id from tramBasicInfo where AlarmType=" + type + ")");
-            } else if (StringHelper.isNotEmpty(type) && !StringHelper.isEmpty(type2)) {
-                sql.AND().WHERE("alarmKey=" + type2);
-            }
-            if (StringHelper.isNotEmpty(code))
-                sql.AND().WHERE("devicecode like '%"+ code +"%'");
+        sql.SELECT("count(Id)").FROM("TramAlarmInfo");
+        if (type!=0) {
+            if (!type2.equals("0"))
+                sql.AND().WHERE("AlarmType in (select customId from tramBasicInfo where Id=" + type2 + ") and ParentAlarmType="+type);
             else
-                sql.AND().WHERE("deviceId in(select Id from TramDeviceInfo where DepartmentId="+DepartmentId+")");
-            sql.AND().WHERE(" UpdateTime>='"+ start +"'");
-            sql.AND().WHERE(" UpdateTime<='"+ end +"'");
+                sql.AND().WHERE("AlarmType in (select customId from tramBasicInfo where parentId=" + type + ")");
         }
-        else {
-            sql.SELECT("sum(Result)").FROM("TramUnSafeIndexInfo").WHERE("DriverId in"+type2)
-                    .AND().WHERE("UpdateTime>="+start).AND().WHERE("UpdateTime<="+end);
+        if (!StringHelper.isEmpty(code)&&!code.equals("undefined"))
+            sql.AND().WHERE("devicecode like '%"+ code +"%'");
+        else{
+            if (DepartmentId!=0){
+                if (lineId!=0)
+                    sql.AND().WHERE("devicecode in(select devicecode from TramDeviceInfo where LineId=" + lineId + " and DepartmentId=" + DepartmentId + ")");
+                else
+                    sql.AND().WHERE("DepartmentId=" + DepartmentId);
+            }
         }
+        sql.AND().WHERE(" UpdateTime>='"+ start +"'");
+        sql.AND().WHERE(" UpdateTime<='"+ end +"'");
         return sql.toString();
     }
 
-    public String GetAlarmChartList1(Map<String,Object> map){
-        String type1 = (String)map.get("value1");
-        String type2 = (String)map.get("value2");
-        String sql = null;
-        if (StringHelper.isNotEmpty(type1) && StringHelper.isEmpty(type2))
-            sql = "select typename from TramAlarmTypeInfo where id="+ type1 +" limit 1";
-        else if (StringHelper.isNotEmpty(type1) && !StringHelper.isEmpty(type2)){
-            if (Integer.valueOf(type1) == 17){
-                sql = "select DriverName from TramDriverInfo where id in("+ type2 +")";
-            }
-            else
-                sql = "select alarmName from tramBasicInfo where id in("+ type2 +")";
-        }
-        return sql;
-    }
 }

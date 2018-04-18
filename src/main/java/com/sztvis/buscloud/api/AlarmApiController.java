@@ -155,10 +155,10 @@ public class AlarmApiController extends BaseApiController{
     }
 
     @RequestMapping(value = "/getalarmcharts1",method = RequestMethod.GET)
-    public ApiResult GetAlarmCharts1(long userid,long lineId,int type1,String type2,String date2,String date3,String code,long departmentId)
+    public ApiResult GetAlarmCharts1(long lineId,int type1,String type2,String date2,String date3,String code,long departmentId)
     {
         try {
-            WelcomeTrendModel model = this.iAlarmService.getAlarmChartList(lineId,type1,userid,type2,date2,date3,code,departmentId);
+            WelcomeTrendModel model = this.iAlarmService.getAlarmChartList(lineId,type1,type2,date2,date3,code,departmentId);
             return ApiResult(true, "获取数据成功", StatusCodeEnum.Success, model);
         }
         catch (Exception ex) {

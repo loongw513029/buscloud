@@ -33,5 +33,5 @@ public interface IAlarmService {
 
     HomealramViewModel.ViewModel GetTop10Alarms(long userId);
 
-    WelcomeTrendModel getAlarmChartList(long lineId, int type1,long userid, String type2,String date2,String date3, String code,long departmentId);
+    WelcomeTrendModel getAlarmChartList(long lineId,int type ,String type1,String date2,String date3, String code,long departmentId);
 }

@@ -74,14 +74,12 @@ var AlarmStatics = function () {
             date1:'',
             date2:'',
             keywords:'',
-            userId:parent.User.GetUserInfo().id,
         };
         },
         HighLoad:function(value){
             parent.Http.Ajax({
                 url:'/api/v1/alarm/getalarmcharts1?lineId='+value.lineId+'&type1='+value.type1+'&type2='+value.type2+
-                '&date2='+value.date1+'&date3='+value.date2+'&code='+value.code+'&departmentId='+value.departmentId +
-                '&userid='+value.userId,
+                '&date2='+value.date1+'&date3='+value.date2+'&code='+value.code+'&departmentId='+value.departmentId,
                 type:'get'
             },function (result) {
                 var obj = result.result;
@@ -160,7 +158,6 @@ var AlarmStatics = function () {
             query.type2 = type2==''?0:type2;
             query.date1 = date1;
             query.date2 = date2;
-            query.userId = parent.User.GetUserInfo().id;
             query.code = value;
             return query;
         }
