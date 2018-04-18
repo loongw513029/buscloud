@@ -3,7 +3,7 @@ package com.sztvis.buscloud.model.domain;
 public class Deviceonlinerecords {
   private Long id;
   private String devicecode;
-  private java.sql.Timestamp updatetime;
+  private String updatetime;
 
   public Long getId() {
     return id;
@@ -21,11 +21,11 @@ public class Deviceonlinerecords {
     this.devicecode = devicecode;
   }
 
-  public java.sql.Timestamp getUpdatetime() {
+  public String getUpdatetime() {
     return updatetime;
   }
 
-  public void setUpdatetime(java.sql.Timestamp updatetime) {
+  public void setUpdatetime(String updatetime) {
     this.updatetime = updatetime;
   }
 }

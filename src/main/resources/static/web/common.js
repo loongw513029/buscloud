@@ -139,6 +139,17 @@ var TramDalog=function(){
                 ,shade: 0.5
             });
         },
+        OpenImage:function (pic) {
+            layerIndex=layer.open({
+                type: 1,
+                title: false,
+                closeBtn: 0,
+                area: '516px',
+                skin: 'layui-layer-nobg', //没有背景色
+                shadeClose: true,
+                content: '<img src="'+pic+'" width="100%"/>'
+            });
+        },
         CloseLoading:function () {
             layer.close(layerIndex);
         },

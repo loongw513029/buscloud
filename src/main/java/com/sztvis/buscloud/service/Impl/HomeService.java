@@ -10,6 +10,7 @@ import com.sztvis.buscloud.model.domain.TramBasicInfo;
 import com.sztvis.buscloud.model.dto.WelcomeModel;
 import com.sztvis.buscloud.model.dto.WelcomeTrendModel;
 import com.sztvis.buscloud.service.IAlarmService;
+import com.sztvis.buscloud.service.IDeviceService;
 import com.sztvis.buscloud.service.IHomeService;
 import com.sztvis.buscloud.util.DayTypes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,12 +40,15 @@ public class HomeService implements IHomeService {
     private CanMapper canMapper;
     @Autowired
     private IAlarmService iAlarmService;
+    @Autowired
+    private IDeviceService iDeviceService;
     @Override
     public WelcomeModel GetWelcomeData(long userId) {
         WelcomeModel model =new WelcomeModel();
         List<Long> departmentIds = departmentService.GetDepartmentIdsByUserId(userId);
-        Integer deviceNum = deviceMapper.getDeviceCount(1,departmentIds);
-        Integer onlineNum = deviceMapper.getDeviceCount(-1,departmentIds);
+        List<Long> devices = this.iDeviceService.getDeviceIdsByUserId(userId);
+        Integer deviceNum = deviceMapper.getDeviceCount(0,departmentIds);
+        Integer onlineNum = deviceMapper.getRealTimeOnlineCount(devices);
         model.setTotelNum(deviceNum);
         model.setOnlineNum(onlineNum);
         model.setLineNum(lineMapper.GetLineIdsByDepartmentIds(departmentIds));
@@ -83,7 +87,7 @@ public class HomeService implements IHomeService {
                 if(p==0) {
                     xalis.add(start.split("-")[2] + "日");
                 }
-                int count = this.iAlarmService.getAlarmTrendsCounts(userId,start,end,b.getId().intValue());
+                int count = this.iAlarmService.getAlarmTrendsCounts(userId,start,end,Integer.valueOf(b.getCustomId()));
                 list1s.add(count);
             }
             p++;
@@ -100,7 +104,7 @@ public class HomeService implements IHomeService {
             for(int i=0;i<day;i++){
                 String start = DateUtil.addDay(dayTypes.getStartTime(),i),
                         end = DateUtil.addDay(start,1);
-                int count = this.iAlarmService.getAlarmTrendsCounts(userId,start,end,b.getId().intValue());
+                int count = this.iAlarmService.getAlarmTrendsCounts(userId,start,end,Integer.valueOf(b.getCustomId()));
                 list2s.add(count);
             }
             list2.add(list2s);

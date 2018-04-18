@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.FileNotFoundException;
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -72,6 +73,8 @@ public class ServerController extends BaseApiController{
     private IBaiduAIService iBaiduAIService;
     @Autowired
     private IBuildFaceService iBuildFaceService;
+    @Autowired
+    private ISchoolFaceService iSchoolFaceService;
 
     /**
      * 处理客户端主机数据
@@ -122,7 +125,7 @@ public class ServerController extends BaseApiController{
                 result = BuildFaceFunc(apiModel,request);
                 break;
             case SCHOOLBUS:
-
+                result = SchoolFaceFunc(apiModel,request);
                 break;
             default:
                 break;
@@ -625,6 +628,34 @@ public class ServerController extends BaseApiController{
         }
         catch (Exception ex){
             return ApiResult(false,"识别失败",StatusCodeEnum.Error,ex.getMessage());
+        }
+    }
+
+    private ApiResult SchoolFaceFunc(HostApiModel apiModel,HttpServletRequest request) throws ParseException, FileNotFoundException {
+        SchoolFaceFrom schoolFaceFrom = JSON.parseObject(apiModel.getMsgInfo().toString(),SchoolFaceFrom.class);
+        schoolFaceFrom.setUpdateTime(DateUtil.StringToString(DateUtil.getTimestampStr(schoolFaceFrom.getUpdateTime()),DateStyle.YYYY_MM_DD_HH_MM_SS));
+        TramDeviceInfo deviceInfo = this.iDeviceService.getDeviceInfoByCode(schoolFaceFrom.getCode());
+        if(deviceInfo == null)
+            return ApiResult(false,"不存在编号为"+schoolFaceFrom.getCode()+"的设备",StatusCodeEnum.DataNotFound,null);
+        List<String> pics = new ArrayList<>();
+        if(schoolFaceFrom.getImages()!=null) {
+            List<String> images = schoolFaceFrom.getImages();
+            for(String base64:images){
+                String filename= UUID.randomUUID().toString();
+                ImageHelper.generateImage(base64, "imgupload/schoolface/" + DateUtil.StringToString(schoolFaceFrom.getUpdateTime(), DateStyle.YYYY_MM_DD) + "/", filename + ".jpg", request);
+                String imagePath = "/imgupload/schoolface/" + DateUtil.StringToString(schoolFaceFrom.getUpdateTime(), DateStyle.YYYY_MM_DD) + "/" + filename + ".jpg";
+                pics.add(imagePath);
+            }
+        }
+        try {
+            TramDriverSimilarRecord record = new TramDriverSimilarRecord(deviceInfo.getId(), deviceInfo.getDevicecode(),
+                    schoolFaceFrom.isFingerPrint(), schoolFaceFrom.isDrunkDrive(), schoolFaceFrom.isFaceCompair(), schoolFaceFrom.getSimilar(),
+                    StringHelper.listToString(pics, ','), schoolFaceFrom.getUpdateTime());
+            this.iSchoolFaceService.insertDriverSimilarRecord(record);
+            return ApiResult(true, "数据添加成功", StatusCodeEnum.Success, null);
+        }
+        catch (Exception ex){
+            return ApiResult(true, "数据添加失败", StatusCodeEnum.Success, ex.getMessage());
         }
     }
 

@@ -61,7 +61,7 @@ var Alarm = function () {
                         width: 50,
                         align: 'center',
                         formatter: function (value) {
-                            return value + "M";
+                            return value==0?"--":value+ "M";
                         }
                     }, {
                         field: 'isbrake',

@@ -14,4 +14,10 @@ public class AitrafficController extends BaseController{
         ModelAndView modelAndView = new ModelAndView("/aitraffic/pay");
         return modelAndView;
     }
+
+    @RequestMapping("/face")
+    public ModelAndView face(){
+        ModelAndView modelAndView = new ModelAndView("/aitraffic/face");
+        return modelAndView;
+    }
 }

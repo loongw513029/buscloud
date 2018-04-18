@@ -52,6 +52,9 @@ public interface DeviceMapper {
     @SelectProvider(type = DeviceSqlProvider.class,method = "getDeviceCountSQL")
     Integer getDeviceCount(@Param("state") int state,@Param("departments") List<Long> departments);
 
+    @SelectProvider(type = DeviceSqlProvider.class,method = "getOnlineCountSQL")
+    int getRealTimeOnlineCount(@Param("departments") List<Long> departments);
+
     @SelectProvider(type = DeviceSqlProvider.class,method = "getOnlinePrecentSQL")
     Integer getOnlinePrecent(@Param("departments") List<Long> departments,@Param("startTime") String startTime);
 
@@ -245,4 +248,10 @@ public interface DeviceMapper {
 
     @SelectProvider(type = DeviceSqlProvider.class,method = "getPayRecordsSql")
     List<PayTerminalRecords> getPayRecords(@Param("cardno") String cardno,@Param("date1") String date1,@Param("date2") String date2,@Param("sitename") String sitename);
+
+    @Insert("insert into Deviceonlinerecords(devicecode,updatetime)values(#{devicecode},#{updatetime})")
+    void insertDeviceOnlineRecord(Deviceonlinerecords record);
+
+    @Select("select count(Id) from Deviceonlinerecords where devicecode=#{devicecode} and updatetime=#{updatetime}")
+    long getDeviceOnlineRecordCount(@Param("devicecode") String devicecode,@Param("updatetime") String updatetime);
 }

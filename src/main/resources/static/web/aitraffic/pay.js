@@ -62,10 +62,6 @@ var PayCords = function () {
                             rows: data.result.items
                         };
                     }
-                },
-                onDblClickRow:function (index,row) {
-                    var id = row.id;
-                    parent.TramDalog.OpenIframeAndNoBtn(row.alarmname+"-"+row.devicecode,652,538,"/alarm/view?id="+id);
                 }
             });
             PayCords.initComboTree();

@@ -1,6 +1,7 @@
 package com.sztvis.buscloud.mapper.provider;
 
 
+import com.sztvis.buscloud.core.DateUtil;
 import com.sztvis.buscloud.core.helper.StringHelper;
 import com.sztvis.buscloud.model.dto.CurrentUserInfo;
 import org.apache.ibatis.jdbc.SQL;
@@ -126,19 +127,29 @@ public class DeviceSqlProvider {
         SQL sql = new SQL();
         sql.SELECT("count(Id)");
         sql.FROM("TramDeviceInfo");
-        sql.WHERE("departmentId in ("+StringHelper.listToString(departmens,',')+") and deviceStatus="+state);
+        if(state==0)
+            sql.WHERE("departmentId in ("+StringHelper.listToString(departmens,',')+")");
+        else
+            sql.WHERE("departmentId in ("+StringHelper.listToString(departmens,',')+") and deviceStatus="+state);
         return sql.toString();
         //select count(Id) from TramDeviceInfo where deviceStatus=#{state} and departmentId in #{departments}
     }
 
+    public String getOnlineCountSQL(Map<String,Object> map){
+        List<Long> departmens = (List<Long>)map.get("departments");
+        SQL sql = new SQL();
+        sql.SELECT("count(Id)");
+        sql.FROM("tramdevicestateinspectrealtimeinfo");
+        sql.WHERE("deviceId in ("+StringHelper.listToString(departmens,',')+") and onlineState=1");
+        return sql.toString();
+    }
     public String getOnlinePrecentSQL(Map<String,Object> map){
         List<Long> departments = (List<Long>)map.get("departments");
         String startTime = (String)map.get("startTime");
-        //select count(Id) from TramDeviceInfo where departmentId in #{departments} and LastOnlineTime>=#{startTime}
         SQL sql = new SQL();
-        sql.SELECT("count(Id)");
-        sql.FROM("TramDeviceInfo");
-        sql.WHERE("departmentId in ("+StringHelper.listToString(departments,',')+") and LastOnlineTime>='"+startTime+"'");
+        sql.SELECT("COUNT(distinct(a.deviceCode))");
+        sql.FROM("DeviceOnlineRecords as a left join TramDeviceInfo as b on a.DeviceCOde = b.DeviceCode left join TramDepartmentInfo c on b.DepartmentId = c.Id");
+        sql.WHERE("c.Id in ("+StringHelper.listToString(departments,',')+") and updateTime>='"+startTime+"' and updateTime<='"+ DateUtil.getCurrentTime()+"'");
         return sql.toString();
     }
 

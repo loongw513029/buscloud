@@ -251,4 +251,9 @@ public interface IDeviceService {
     List<String> GetDeviceCodeByDriverId(long driverId);
 
     List<PayTerminalRecords> getPayRecords(String cardno, String date1, String date2, String sitename);
+
+    /**
+     * 统计车辆昨天是否在线过
+     */
+    void autoClacOnlineResult();
 }

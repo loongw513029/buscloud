@@ -591,4 +591,25 @@ public class DeviceService implements IDeviceService {
     public List<PayTerminalRecords> getPayRecords(String cardno, String date1, String date2, String sitename){
         return this.deviceMapper.getPayRecords(cardno,date1,date2,sitename);
     }
+
+    @Override
+    public void autoClacOnlineResult() {
+        List<TramDeviceInfo> codes = this.deviceMapper.getAllDevices();
+        for(TramDeviceInfo deviceInfo:codes){
+            String endTime = DateUtil.StringToString(DateUtil.getCurrentTime(),DateStyle.YYYY_MM_DD);
+            String startTime = DateUtil.addDay(endTime,-1);
+            Query query = new Query();
+            query.addCriteria(new Criteria("devicecode").is(deviceInfo.getDevicecode()));
+            query.addCriteria(new Criteria().andOperator(Criteria.where("updatetime").gte(startTime),Criteria.where("updatetime").lte(endTime)));
+            long count = this.mongoTemplate.count(query,TramDeviceHealthInfo.class);
+            if(count>0){
+                Deviceonlinerecords records = new Deviceonlinerecords();
+                records.setDevicecode(deviceInfo.getDevicecode());
+                records.setUpdatetime(startTime);
+                if(this.deviceMapper.getDeviceOnlineRecordCount(deviceInfo.getDevicecode(),startTime)==0) {
+                    this.deviceMapper.insertDeviceOnlineRecord(records);
+                }
+            }
+        }
+    }
 }

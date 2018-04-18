@@ -49,7 +49,9 @@ public class ScheduledTask {
      */
     @Scheduled(cron = "0 10 0 * * ?")
     public void EveryDayCanHandle(){
+
         this.iDeviceService.autoCanSignleStatis();
+        this.iDeviceService.autoClacOnlineResult();
     }
 
     /**

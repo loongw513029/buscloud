@@ -10,4 +10,6 @@ public interface IMaintenanceService {
     void AddMaintenanceInfo(MaintenanceInfo maintenanceInfo);
 
     List<MaintenanceInfo> GetMaintenanceInfo(String Code,long DepartmentId,long lineId,String start,String end);
+
+    List<MaintenanceInfo> getTop8Maintenaces();
 }

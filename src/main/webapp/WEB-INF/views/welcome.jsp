@@ -41,41 +41,13 @@
                         <a href="javascript:;">更多<span>&gt;</span></a>
                     </div>
                     <ul>
-                        <li>
-                            <span></span>
-                            <a href="javascript:;" class="ellipsis">界面设计后台界面UI作品</a>
-                            <label>04-13</label>
-                        </li>
-                        <li>
-                            <span></span>
-                            <a href="javascript:;" class="ellipsis">换肤设置-材料在线下单选购</a>
-                            <label>04-12</label>
-                        </li>
-                        <li>
-                            <span></span>
-                            <a href="javascript:;" class="ellipsis">2016最新软件界面设计欣赏</a>
-                            <label>04-11</label>
-                        </li>
-                        <li>
-                            <span></span>
-                            <a href="javascript:;" class="ellipsis">作者咨询QQ：32534386</a>
-                            <label>04-10</label>
-                        </li>
-                        <li>
-                            <span></span>
-                            <a href="javascript:;" class="ellipsis">数据库备份/还原设置修复</a>
-                            <label>04-09</label>
-                        </li>
-                        <li>
-                            <span></span>
-                            <a href="javascript:;" class="ellipsis">自定义文档属性基本参数设置</a>
-                            <label>04-08</label>
-                        </li>
-                        <li>
-                            <span></span>
-                            <a href="javascript:;" class="ellipsis">配货方式选择会员产品分类</a>
-                            <label>04-07</label>
-                        </li>
+                        <c:forEach items="${mncs}" var="item">
+                            <li>
+                                <span></span>
+                                <a href="javascript:;" class="ellipsis">车辆：${item.deviceCode}&nbsp;&nbsp;里程：${item.mtMileage}</a>
+                                <label>${item.mtDate}</label>
+                            </li>
+                        </c:forEach>
                     </ul>
                 </div>
                 <%--<div class="attached item-box">--%>
@@ -216,7 +188,7 @@
                     <div class="chart0-item">
                         <div class="item-inner">
                             <div class="item-content">
-                                <div class="content-hd">不安全行为趋势图</div>
+                                <div class="content-hd">ADAS报警趋势</div>
                                 <div class="chart-chart" id="chart1"></div>
                             </div>
                         </div>
@@ -344,7 +316,7 @@
     })
     $(window).resize(function(){
         var obj = parent.Main.getContentHeight();
-        $('.center-part').width(obj.width-325);
+        $('.center-part').width(obj.width-326);
     }).resize();
 </script>
 </body>
