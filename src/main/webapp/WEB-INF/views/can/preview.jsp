@@ -31,7 +31,7 @@
     <button id="start">下发</button>
 </div>
 <div class="uptime">
-    2018-01-15 12:00:00
+
 </div>
 <div class="meter-wrap">
     <div class="monitor-wrap ui-draggable ui-draggable-handle ui-resizable" id="map" style="z-index: 99;top:60px;line-height:0px">

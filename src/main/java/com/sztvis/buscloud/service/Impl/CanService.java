@@ -327,10 +327,10 @@ public class CanService implements ICanService {
         canModel.setShortmileage(canInfo.getShortmileage());
         canModel.setSoc(canInfo.getBaterysoc());
         canModel.setRatespeed(canInfo.getRotationalspeed());
-        canModel.setRatespped2(canInfo.getElectricCanInfo().getRightElecRote());
+        canModel.setRatespped2(canInfo.getElectricCanInfo()==null?"0":canInfo.getElectricCanInfo().getRightElecRote());
         canModel.setRoate(gpsInfo==null?"0":gpsInfo.getDirection().toString());
         canModel.setLocation(gpsInfo==null?"":gpsInfo.getLongitude()+","+gpsInfo.getLatitude());
-        canModel.setOilopenings(canInfo.getElectricCanInfo().getAcceleratorPedal());
+        canModel.setOilopenings(canInfo.getElectricCanInfo()==null?"0":canInfo.getElectricCanInfo().getAcceleratorPedal());
         CanStatModel s = new CanStatModel();
         s.setAbsturn(this.getCanStat(canInfo.getActs(),250));
         s.setAccturn(this.getCanStat(canInfo.getActs(),59));
@@ -837,10 +837,12 @@ public class CanService implements ICanService {
 
     private int getCanStat(List<TramCanActinfo> acts,int key){
         int r = 1;
-        for(TramCanActinfo a:acts){
-            if(a.getCustomId()==key){
-                double d = Double.parseDouble(a.getValue());
-                r = (int)d;
+        if(acts!=null) {
+            for (TramCanActinfo a : acts) {
+                if (a.getCustomId() == key) {
+                    double d = Double.parseDouble(a.getValue());
+                    r = (int) d;
+                }
             }
         }
         return r;
@@ -862,10 +864,12 @@ public class CanService implements ICanService {
     public boolean IsPark(String deviceCode) {
         TramCanInfo canInfo = this.getLastCanInfo(deviceCode);
         boolean fag = false;
-        for(TramCanActinfo c:canInfo.getActs()){
-            if(c.getCustomId() == 43){
-                fag = c.getValue() == "2";
-                break;
+        if(canInfo.getActs()!=null) {
+            for (TramCanActinfo c : canInfo.getActs()) {
+                if (c.getCustomId() == 43) {
+                    fag = c.getValue() == "2";
+                    break;
+                }
             }
         }
         return fag;

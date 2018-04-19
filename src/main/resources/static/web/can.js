@@ -992,10 +992,12 @@ var Can=function () {
                 url:'/api/v1/can/realtimebyid?deviceId='+deviceId
             },function (result) {
                 parent.TramDalog.CloseLoading();
+                var data = result.result;
+                $('.uptime').text(data.time);
                 if(busType == 5)
-                    Can.loadBMSDataView(result.result);
+                    Can.loadBMSDataView(data);
                 else
-                    Can.loadNormalView(result.result);
+                    Can.loadNormalView(data);
                 Can.SetMap(result.result);
             })
         },
