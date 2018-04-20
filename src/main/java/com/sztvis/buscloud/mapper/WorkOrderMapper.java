@@ -9,5 +9,5 @@ import java.util.List;
 
 public interface WorkOrderMapper {
     @SelectProvider(type = WorkOrderProvider.class,method = "GetWorkOrdersSQL")
-    List<WorkOrderViewModel> GetWorkOrders(@Param("dids") String dids,@Param("userId") Long userId,@Param("type") int type,@Param("userName") String userName);
+    List<WorkOrderViewModel> GetWorkOrders(@Param("code") String code,@Param("start") String start,@Param("end") String end);
 }

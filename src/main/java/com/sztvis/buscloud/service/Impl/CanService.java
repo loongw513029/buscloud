@@ -25,6 +25,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -57,6 +58,8 @@ public class CanService implements ICanService {
     private IPushService iPushService;
     @Autowired
     private IConfigService iConfigService;
+    @Autowired
+    private ISiteSettingService iSiteSettingService;
 
     @Override
     public TramCanInfo GetCanInfo(String deviceCode, String updateTime) {
@@ -220,10 +223,24 @@ public class CanService implements ICanService {
                 long alarmId = alarmInfo.getId();
                 //是否需要推送（推送到App,推送到页面）
                 if (basicInfo.isPush()) {
-                    String extrias = query.getSpeed() + "|" + query.getDistance() + "|" + (query.isBrake() ? 1 : 0);
-                    PushAlarmModel pushAlarmModel = new PushAlarmModel(alarmId, deviceInfo.getDevicecode(), basicInfo.getId().intValue(), updateTime, basicInfo.getAlarmName(), "", query.getPath(), extrias, query.getValue(), StringHelper.isEmpty(basicInfo.getCustomId()) ? 0 : Integer.valueOf(basicInfo.getCustomId()));
-                    PushModel pushModel = new PushModel(2, pushAlarmModel);
-                    this.iPushService.SendToMsgByDeviceCode(deviceInfo.getDevicecode(), pushModel);
+                    List<String> key = new ArrayList<>();
+                    key.add("IndexUnit");
+                    try {
+                        if (this.iSiteSettingService.GetSiteSettings(key).getAlarmTurn()==1){
+                            String extrias = query.getSpeed() + "|" + query.getDistance() + "|" + (query.isBrake() ? 1 : 0);
+                            PushAlarmModel pushAlarmModel = new PushAlarmModel(alarmId, deviceInfo.getDevicecode(), basicInfo.getId().intValue(), updateTime, basicInfo.getAlarmName(), "", query.getPath(), extrias, query.getValue(), StringHelper.isEmpty(basicInfo.getCustomId()) ? 0 : Integer.valueOf(basicInfo.getCustomId()));
+                            PushModel pushModel = new PushModel(2, pushAlarmModel);
+                            this.iPushService.SendToMsgByDeviceCode(deviceInfo.getDevicecode(), pushModel);
+                        }
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    } catch (NoSuchFieldException e) {
+                        e.printStackTrace();
+                    } catch (NoSuchMethodException e) {
+                        e.printStackTrace();
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }

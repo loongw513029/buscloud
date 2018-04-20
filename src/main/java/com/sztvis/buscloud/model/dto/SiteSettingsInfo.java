@@ -12,8 +12,18 @@ public class SiteSettingsInfo {
     public String FaultAlarms;
     public String ServerIp;
     public String Port;
+    public double FlceRecognition;
     public int MapSpeedUse;
     public String ApkUrl;
+
+    public double getFlceRecognition() {
+        return FlceRecognition;
+    }
+
+    public void setFlceRecognition(double flceRecognition) {
+        FlceRecognition = flceRecognition;
+    }
+
     /// <summary>
     /// App版本说明
     /// </summary>

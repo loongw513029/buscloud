@@ -61,7 +61,9 @@ public class UnSafeService implements IUnSafeService {
 
     @Override
     public void CalcUnsafeIndex() throws InvocationTargetException, NoSuchMethodException, NoSuchFieldException, IllegalAccessException {
-        int IndexUnit = this.iSiteSettingService.GetSiteSettings(1).getIndexUnit();
+        List<String> key = new ArrayList<>();
+        key.add("IndexUnit");
+        int IndexUnit = this.iSiteSettingService.GetSiteSettings(key).getIndexUnit();
         String now = DateUtil.getCurrentTime();
         if (IndexUnit > 0){
             List<TramDriverInfo> drivers=this.driverMapper.getDrivers();

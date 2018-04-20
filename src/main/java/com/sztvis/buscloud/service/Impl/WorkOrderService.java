@@ -26,11 +26,8 @@ public class WorkOrderService implements IWorkOrderService {
     private DeviceMapper deviceMapper;
 
     @Override
-    public List<WorkOrderViewModel> GetWorkOrders(long userId, int type)
+    public List<WorkOrderViewModel> GetWorkOrders(String code,String start,String end)
     {
-        TramMemberInfo info=this.iMemberMapper.getMemberById(userId);
-        TramRoleInfo info1=this.iMemberMapper.GetRoleInfo(info.getRoleid());
-        List<Long> list=this.deviceMapper.getDeviceIdByDepartmentId(info1.getDepartmentid());
-        return this.iWorkOrderMapper.GetWorkOrders(StringHelper.getLists(list.toString()),userId,type,info1.getRolename());
+        return this.iWorkOrderMapper.GetWorkOrders(code,start,end);
     }
 }

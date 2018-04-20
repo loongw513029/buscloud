@@ -6,5 +6,5 @@ import com.sztvis.buscloud.model.entity.PageBean;
 import java.util.List;
 
 public interface IWorkOrderService {
-    List<WorkOrderViewModel> GetWorkOrders(long userId, int type);
+    List<WorkOrderViewModel> GetWorkOrders(String code,String start,String end);
 }

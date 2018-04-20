@@ -255,7 +255,7 @@ var Main =function () {
             return address;
         },
         getServerIP:function () {
-            return "112.74.192.192";
+            return FormatIP;
         },
         getContentHeight:function () {
             return {width: $('.tabs-panels').width(),height:$('.tabs-panels').height()};

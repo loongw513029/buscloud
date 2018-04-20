@@ -56,8 +56,8 @@ var VideoPreview = function () {
                             cache: false
                             }, function (result) {
                                 var data= result.result;
-                                var type = data.hosttype, clientip = data.clientip, code = data.devicecode, cl = channel;
-                                VideoPreview.StartPreview(parent.Main.getServerIP(),type,code,clientip,cl,i,node.text);
+                                var type = data.hosttype, clientip = data.clientip, code = data.devicecode, time = data.videoplayyime, cl = channel;
+                                VideoPreview.StartPreview(parent.Main.getServerIP(),type,code,clientip,cl,i,node.text,time);
                                 $(items[i]).attr("did", id).attr("channel", channel);
                             var hd = $('.video-item .header:eq('+i+')');
                             hd.find("a:eq(0)").show();
@@ -80,11 +80,11 @@ var VideoPreview = function () {
                 parent.TramDalog.ErrorAlert('无播放位置使用',true);
             }
         },
-        StartPreview:function (serverIp,type,code,clientip,channel,index,cname) {
+        StartPreview:function (serverIp,type,code,clientip,channel,index,cname,time) {
             try{
                 var ocx = document.getElementById('ocx'+index);
                 ocx.StartPreview(serverIp,type,code,clientip,channel,1);
-                VideoPreview.CalcTime(index,300,code,cname);
+                VideoPreview.CalcTime(index,time*60,code,cname);
             }catch(err) {}
         },
         StopPreview:function (index,code,cname) {

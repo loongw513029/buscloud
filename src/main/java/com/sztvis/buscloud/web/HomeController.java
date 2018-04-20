@@ -4,10 +4,12 @@ import com.sztvis.buscloud.core.DateStyle;
 import com.sztvis.buscloud.core.DateUtil;
 import com.sztvis.buscloud.model.dto.HomeAlarmViewModel;
 import com.sztvis.buscloud.model.dto.MaintenanceInfo;
+import com.sztvis.buscloud.model.dto.SiteSettingsInfo;
 import com.sztvis.buscloud.model.dto.WelcomeModel;
 import com.sztvis.buscloud.service.IHomeService;
 import com.sztvis.buscloud.service.IMaintenanceService;
 import com.sztvis.buscloud.service.IMenuService;
+import com.sztvis.buscloud.service.ISiteSettingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,12 +27,16 @@ public class HomeController extends BaseController{
     private IHomeService iHomeService;
     @Autowired
     private IMaintenanceService iMaintenanceService;
+    @Autowired
+    private ISiteSettingService iSiteSettingService;
 
     @RequestMapping("/index")
     public ModelAndView index(){
         ModelAndView modelAndView = new ModelAndView("index");
+        SiteSettingsInfo info = this.iSiteSettingService.GetSave();
         modelAndView.getModel().put("navs",iMenuService.GetExtNavDataMenu(0L,getUserInfo().getRoleId()));
         modelAndView.getModel().put("user",getUserInfo());
+        modelAndView.getModel().put("config",info);
         return modelAndView;
     }
 
@@ -57,3 +63,4 @@ public class HomeController extends BaseController{
     }
 
 }
+

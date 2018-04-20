@@ -57,16 +57,16 @@ public class DeviceV1Controller extends BaseApiController{
     /**
      * 获得设备维修列表
      * @param page
-     * @param limit
+     * @param rows
      * @return
      */
 
     @RequestMapping(value = "/repairlist",method = RequestMethod.GET)
-    public ApiResult GetDeviceRepairList(long userid,int page,int limit){
-        PageHelper.startPage(page,limit);
-        List<WorkOrderViewModel> list=this.iWorkOrderService.GetWorkOrders(userid,1);
+    public ApiResult GetDeviceRepairList(String starttime,String endtime,String code,int page,int rows){
+        PageHelper.startPage(page,rows);
+        List<WorkOrderViewModel> list=this.iWorkOrderService.GetWorkOrders(code,starttime,endtime);
         int count=list.size();
-        PageBean<WorkOrderViewModel> pageData=new PageBean<>(page,limit,count);
+        PageBean<WorkOrderViewModel> pageData=new PageBean<>(page,rows,count);
         pageData.setItems(list);
         return ApiResult(true, "巡检列表获取成功", StatusCodeEnum.Success, pageData);
     }

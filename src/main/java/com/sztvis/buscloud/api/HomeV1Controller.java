@@ -214,7 +214,9 @@ public class HomeV1Controller extends BaseApiController {
     @RequestMapping(value = "/getdeviceconfig",method = RequestMethod.GET)
     public ApiResult GetVideoConfig(long deviceId) throws IllegalAccessException, NoSuchFieldException, NoSuchMethodException, InvocationTargetException, JSONException {
         TramDeviceInfo model=this.iDeviceService.GetDriverInfo(deviceId,"");
-        SiteSettingsInfo info=this.iSiteSettingService.GetSiteSettings(1);
+        List<String> key = new ArrayList<>();
+        key.add("ServerIp");key.add("VideoPlayTime");key.add("AutoPlay");
+        SiteSettingsInfo info=this.iSiteSettingService.GetSiteSettings(key);
         String result= HttpHelp.sendHttpGet("http://"+info.getServerIp()+":9200/Transmit/Server?Type=AlarmRecordSavePath").toString();
         JSONObject object=new JSONObject(result);
         Map<String,Object> map=new HashMap<>();
@@ -225,6 +227,8 @@ public class HomeV1Controller extends BaseApiController {
         map.put("fchannel",model.getCarriagechannel());
         map.put("channellist",iDeviceService.GetChannelsByDeviceId(deviceId));
         map.put("serverip",info.getServerIp());
+        map.put("videoplayyime",info.getVideoPlayTime());
+        map.put("autoplay",info.getAutoPlay());
         map.put("clientip",model.getClientip());
         map.put("hosttype",model.getHostsofttype()==0?"NVR":"TongLi");
         map.put("path",object.get("Msg"));
@@ -270,7 +274,9 @@ public class HomeV1Controller extends BaseApiController {
     @RequestMapping(value = "/getappconfig",method = RequestMethod.GET)
     public ApiResult GetNetWorkAppVersion(long userId) throws IllegalAccessException, NoSuchFieldException, NoSuchMethodException, InvocationTargetException {
         HomealramViewModel.ViewModel viewModel=iAlarmService.GetTop10Alarms(userId);
-        SiteSettingsInfo info=this.iSiteSettingService.GetSiteSettings(1);
+        List<String> key = new ArrayList<>();
+        key.add("AppVer");key.add("ApkUrl");key.add("VerNotice");
+        SiteSettingsInfo info=this.iSiteSettingService.GetSiteSettings(key);
         List<HomealramViewModel> list=viewModel.getView();
         Map<String,Object> map=new HashMap<>();
         map.put("ver",info.getAppVer());

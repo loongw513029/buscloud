@@ -1,5 +1,6 @@
 package com.sztvis.buscloud.service.Impl;
 
+import com.sztvis.buscloud.core.helper.StringHelper;
 import com.sztvis.buscloud.mapper.SiteSettingMapper;
 import com.sztvis.buscloud.model.dto.SelectViewModel;
 import com.sztvis.buscloud.model.dto.SiteSettingsInfo;
@@ -90,9 +91,9 @@ public class SiteSettingService implements ISiteSettingService {
     }
 
     @Override
-    public SiteSettingsInfo GetSiteSettings(int type) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public SiteSettingsInfo GetSiteSettings(List<String> key) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         SiteSettingsInfo model=new SiteSettingsInfo();
-        List<SiteSettingsInfo> info = this.SiteSettingMapper.GetSiteSettings(1);
+        List<SiteSettingsInfo> info = this.SiteSettingMapper.GetSiteSettings(StringHelper.listToString(key,','));
         Field[] field = model.getClass().getFields();
         for (int i = 0; i < field.length; i++) {
             Field f = field[i];
@@ -110,6 +111,14 @@ public class SiteSettingService implements ISiteSettingService {
                         Method m = model.getClass().getMethod("set" + name, String.class);
                         m.invoke(model,info1.get(0).getValue());
                     }
+                    if (ftype.equals("Int")) {
+                        Method m = model.getClass().getMethod("set" + name, Integer.class);
+                        m.invoke(model,Integer.valueOf(info1.get(i).getValue()));
+                    }
+                    if (ftype.equals("double")) {
+                        Method m = model.getClass().getMethod("set" + name, double.class);
+                        m.invoke(model,info1.get(0).getValue());
+                    }
                 }
             }
         }
@@ -117,16 +126,77 @@ public class SiteSettingService implements ISiteSettingService {
     }
 
     @Override
-    public void SaveSetting(String key, Object value,int type){
-        SiteSettingsInfo model=new SiteSettingsInfo();
-        Field[] item = model.getClass().getFields();
-        if(Arrays.stream(item).allMatch(x->x.getName()==key)){
-
+    public void SaveSetting(String key, Object value){
+        if (value == null){
+            throw new NullPointerException("值不能为null");
         }
-        model = this.SiteSettingMapper.GetGetSiteSettingsKey(key,type);
-        if (model == null)
-            this.SiteSettingMapper.InsertSaveSetting(key,value,type);
+//        Field[] item = model.getClass().getFields();
+//        if(Arrays.stream(item).allMatch(x->x.getName()==key)){
+//            throw new NoSuchFieldError("未找到"+ key +"对应的配置项");
+//        }
+        Map<String,Object> set = this.SiteSettingMapper.GetGetSiteSettingsKey(key);
+        if (set == null)
+            this.SiteSettingMapper.InsertSaveSetting(key,value);
         else
-            this.SiteSettingMapper.updateSaveSetting(key,value,type);
+            this.SiteSettingMapper.updateSaveSetting(key,value);
+    }
+
+    @Override
+    public SiteSettingsInfo GetSave() {
+        List<String> name = this.SiteSettingMapper.GetSavekey();
+        List<Object> values = this.SiteSettingMapper.GetSavevalue();
+        SiteSettingsInfo model = new SiteSettingsInfo();
+        Field[] fields = model.getClass().getDeclaredFields();
+        List<String> modelName = new ArrayList<>();
+        List<String> modelType = new ArrayList<>();
+        for (int i = 0; i < fields.length; i++) {
+            // 获取属性的名字
+            modelName.add(fields[i].getName());
+            // 获取属性类型
+            modelType.add(fields[i].getGenericType().toString());
+        }
+        for (String key : name){
+            String type = modelType.get(modelName.indexOf(key));
+            if (type.equals("class java.lang.String")) {
+                try {
+                    Method m = model.getClass().getMethod("set"+key,String.class);
+                    String value = values.get(name.indexOf(key)).toString();
+                    m.invoke(model,value);
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (type.equals("int")){
+                try {
+                    Method m = model.getClass().getMethod("set"+key,int.class);
+                    int value = Integer.parseInt(values.get(name.indexOf(key)).toString());
+                    m.invoke(model,value);
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (type.equals("double")){
+                try {
+                    Method m = model.getClass().getMethod("set"+key,double.class);
+                    double value = Double.valueOf(values.get(name.indexOf(key)).toString());
+                    m.invoke(model,value);
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return model;
     }
 }
