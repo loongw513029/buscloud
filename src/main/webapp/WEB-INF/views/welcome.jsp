@@ -23,7 +23,7 @@
                 <div class="inform item-box">
                     <div class="inform-hd">
                         <label>报警通知</label>
-                        <a href="javascript:;">更多<span>&gt;</span></a>
+                        <a href="javascript:;" onclick="parent.mainPlatform.addTab('报警列表','/alarm/list')">更多<span>&gt;</span></a>
                     </div>
                     <ul>
                         <c:forEach items="${obj.alarmList}" var="item">
@@ -38,7 +38,7 @@
                 <div class="price item-box">
                     <div class="inform-hd">
                         <label>维保信息</label>
-                        <a href="javascript:;">更多<span>&gt;</span></a>
+                        <a href="javascript:;" onclick="parent.mainPlatform.addTab('车辆维保','/device/maintain')">更多<span>&gt;</span></a>
                     </div>
                     <ul>
                         <c:forEach items="${mncs}" var="item">

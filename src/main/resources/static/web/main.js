@@ -92,9 +92,8 @@ var mainPlatform = {
                         var index = mainPlatform.getCurrentIframeIndex();
                         var src = $('.page-iframe:eq('+index+')').attr("src");
                         if(checked){
-                            if($.inArray(src,mainPlatform.signleArray())>=0) {
+                            if(src.indexOf("/can/preview")>=0)
                                 window.frames[index].Can.TransferData(node.id);
-                            }
                         }
                         if($.inArray(src,mainPlatform.multiArray())>=0){
                             var nodes = $('#easyui-tree').tree('getChecked');
@@ -106,16 +105,20 @@ var mainPlatform = {
                         if(src.indexOf('/video/preview')>=0){
                             window.frames[index].VideoPreview.Preview(node.id,checked,node.attributes.channel,node);
                         }
+                        if(src.indexOf("/video/history")>=0){
+                            window.frames[index].VideoHistory.accept(node,checked);
+                        }
                     },
                     onBeforeCheck:function (node,checked) {
-                        //if(!node.attributes.isdevice)
-                            //return false;
                         if(checked) {
                             var index = mainPlatform.getCurrentIframeIndex();
                             var src = $('.page-iframe:eq(' + index + ')').attr("src");
                             if ($.inArray(src, mainPlatform.signleArray()) >= 0) {
-                                var tree = $('#easyui-tree').tree('getRoot');
-                                $('#easyui-tree').tree('uncheck', tree.target);
+                                var nodes = $('#easyui-tree').tree('getChecked');
+                                for(var i=0;i<nodes.length;i++) {
+                                    if(nodes[i].checked)
+                                        $('#easyui-tree').tree('uncheck', nodes[i].target);
+                                }
                             }
                         }
                         return node.edit;

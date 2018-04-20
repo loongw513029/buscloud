@@ -43,8 +43,14 @@ public class DepartmentService implements IDepartmentService {
 
     @Override
     public List<Long> GetDepartmentIdsByUserId(long userId) {
-        long departmentId = departmentMapper.GetDepartmentIdsByUserId(userId).getId();
-        return departmentMapper.GetPartmentIdsByDepartmentId(departmentId);
+        long roleId = this.iMemberService.getMemberInfo(userId).getRoleid();
+        if(roleId!=1) {
+            long departmentId = departmentMapper.GetDepartmentIdsByUserId(userId).getId();
+            return departmentMapper.GetPartmentIdsByDepartmentId(departmentId);
+        }else
+        {
+            return this.departmentMapper.getAllDepartmentIds();
+        }
     }
 
     @Override

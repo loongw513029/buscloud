@@ -2,6 +2,13 @@ var tdeviceId =0;
 var devicecode ='';
 var VideoHistory = function () {
     return {
+        accept:function (node,checked) {
+            if(checked) {
+                tdeviceId = node.id;
+                devicecode = node.text;
+                $('.alearySelectDevice').text('已选择设备：' + devicecode);
+            }
+        },
         init:function () {
             var node = parent.mainPlatform.getCheckedNodes();
             tdeviceId = node[0].id;

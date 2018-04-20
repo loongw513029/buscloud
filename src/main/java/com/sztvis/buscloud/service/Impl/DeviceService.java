@@ -60,6 +60,8 @@ public class DeviceService implements IDeviceService {
     private BasicMapper basicMapper;
     @Autowired
     private UnSafeMapper unSafeMapper;
+    @Autowired
+    private IMemberService iMemberService;
 
     @Override
     public TramDeviceInfo getDeviceInfoByCode(String deviceCode) {
@@ -375,14 +377,14 @@ public class DeviceService implements IDeviceService {
     public void autoDeviceStatus(){
         List<TramDeviceInfo> devices = this.deviceMapper.getAllDevices();
         for(TramDeviceInfo device:devices){
-//            String nowTime = DateUtil.getCurrentTime();
-//            String stTime = DateUtil.addMinute(nowTime,-5);
-//            long deviceHealthCount = this.getDeviceHealthInfo(device.getDevicecode(),stTime,nowTime);
-//            if(deviceHealthCount == 0){
-//                this.UpdateRealTimeInspect(device.getDevicecode(),DeviceStateFiled.OnlineState,false,3);
-//            }else{
-//                this.UpdateRealTimeInspect(device.getDevicecode(),DeviceStateFiled.OnlineState,true,3);
-//            }
+            String nowTime = DateUtil.getCurrentTime();
+            String stTime = DateUtil.addMinute(nowTime,-5);
+            long deviceHealthCount = this.getDeviceHealthInfo(device.getDevicecode(),stTime,nowTime);
+            if(deviceHealthCount == 0){
+                this.UpdateRealTimeInspect(device.getDevicecode(),DeviceStateFiled.OnlineState,false,3);
+            }else{
+                this.UpdateRealTimeInspect(device.getDevicecode(),DeviceStateFiled.OnlineState,true,3);
+            }
             //推送
             PushModel pushModel = new PushModel(1,this.getCurrentDeviceStatus(device.getId()));
             this.iPushService.sendMsg(pushModel);
@@ -404,8 +406,12 @@ public class DeviceService implements IDeviceService {
 
     @Override
     public List<Long> getDeviceIdsByUserId(long userId) {
-        List<Long> departmenIds = this.iDepartmentService.GetDepartmentIdsByUserId(userId);
-        return this.deviceMapper.getDeviceIdByDepartmens(departmenIds);
+        long roleId = this.iMemberService.getMemberInfo(userId).getRoleid();
+        if(roleId!=1) {
+            List<Long> departmenIds = this.iDepartmentService.GetDepartmentIdsByUserId(userId);
+            return this.deviceMapper.getDeviceIdByDepartmens(departmenIds);
+        }else
+            return this.deviceMapper.getAllDeviceIds();
     }
 
     @Override

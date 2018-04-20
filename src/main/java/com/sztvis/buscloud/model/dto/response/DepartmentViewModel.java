@@ -12,6 +12,7 @@ public class DepartmentViewModel {
     private String code;
     private String departmentname;
     private String contactname;
+    private long parentid;
     private List<DepartmentViewModel> children;
     private String contactphone;
     private int islookcan;
@@ -80,5 +81,13 @@ public class DepartmentViewModel {
 
     public void setChildren(List<DepartmentViewModel> children) {
         this.children = children;
+    }
+
+    public long getParentid() {
+        return parentid;
+    }
+
+    public void setParentid(long parentid) {
+        this.parentid = parentid;
     }
 }

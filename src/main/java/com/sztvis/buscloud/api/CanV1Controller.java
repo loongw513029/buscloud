@@ -40,8 +40,12 @@ public class CanV1Controller extends BaseApiController {
     @RequestMapping("/realtimebyid")
     public ApiResult getCanRealTime(long deviceId){
         TramDeviceInfo deviceInfo = this.iDeviceService.getDeviceInfoById(deviceId);
-        CanViewModel canViewModel = this.iCanService.getLastCanViewModel(deviceInfo.getDevicecode());
-        return ApiResult(true,"CAN数据获取成功", StatusCodeEnum.Success,canViewModel);
+        try {
+            CanViewModel canViewModel = this.iCanService.getLastCanViewModel(deviceInfo.getDevicecode());
+            return ApiResult(true, "CAN数据获取成功", StatusCodeEnum.Success, canViewModel);
+        }catch (Exception ex){
+            return ApiResult(false, "CAN数据获取失败", StatusCodeEnum.Success, ex);
+        }
     }
 
     @RequestMapping("/getcanhistory")

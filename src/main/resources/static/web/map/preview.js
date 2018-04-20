@@ -8,31 +8,50 @@ var markerArr = [];//标注集合
 var startTime="";//地图下发时间
 var devices="";//当前设备id集合
 var tableSource;
+var runing =false;
 var infoWindow = new AMap.InfoWindow({offset: new AMap.Pixel(0, -6) });
-Date.prototype.format = function (fromat) {
-    var date = {
-        "M+": this.getMonth() + 1,
-        "d+": this.getDate(),
-        "h+": this.getHours(),
-        "m+": this.getMinutes(),
-        "s+": this.getSeconds(),
-        "q+": Math.floor((this.getMonth() + 3) / 3),
-        "S+": this.getMilliseconds()
+Date.prototype.pattern = function (fmt) {
+    var o = {
+        "M+" : this.getMonth()+1, //月份
+        "d+" : this.getDate(), //日
+        "h+" : this.getHours()%12 == 0 ? 12 : this.getHours()%12, //小时
+        "H+" : this.getHours(), //小时
+        "m+" : this.getMinutes(), //分
+        "s+" : this.getSeconds(), //秒
+        "q+" : Math.floor((this.getMonth()+3)/3), //季度
+        "S" : this.getMilliseconds() //毫秒
     };
-    if (/(y+)/i.test(format)) {
-        format = format.replace(RegExp.$1, (this.getFullYear() + '').substr(4 - RegExp.$1.length));
+    var week = {
+        "0" : "/u65e5",
+        "1" : "/u4e00",
+        "2" : "/u4e8c",
+        "3" : "/u4e09",
+        "4" : "/u56db",
+        "5" : "/u4e94",
+        "6" : "/u516d"
+    };
+    if(/(y+)/.test(fmt)){
+        fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
     }
-    for (var k in date) {
-        if (new RegExp("(" + k + ")").test(format)) {
-            format = format.replace(RegExp.$1, RegExp.$1.length == 1
-                ? date[k] : ("00" + date[k]).substr(("" + date[k]).length));
+    if(/(E+)/.test(fmt)){
+        fmt=fmt.replace(RegExp.$1, ((RegExp.$1.length>1) ? (RegExp.$1.length>2 ? "/u661f/u671f" : "/u5468") : "")+week[this.getDay()+""]);
+    }
+    for(var k in o){
+        if(new RegExp("("+ k +")").test(fmt)){
+            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
         }
     }
-    return format;
+    return fmt;
 }
 var TMap = function () {
     return {
         init:function () {
+            var nodes = parent.mainPlatform.getCheckedNodes();
+            var arr4 = [];
+            nodes.forEach(function (node) {
+                    arr4.push(node.id);
+            });
+            devices = arr4.join(',');
             var clientHeight = document.body.clientHeight || window.innerHeight;
             $('#map').css('height',clientHeight+"px");
             globalMap = new AMap.Map('map',{
@@ -52,20 +71,26 @@ var TMap = function () {
                }
             });
             $('#start').click(function () {
-                if(interval!=null)
-                    clearInterval(interval);
-                intervalTime = $('#intervalTime').val();
-                totalMin = $('#totelMin').val();
-                currentSeconds = totalMin*60;
-                TMap.initInterval();
+                var t = $('#start').text();
+                if(t=='下发') {
+                    $('#start').text('停止');
+                    if (interval != null)
+                        clearInterval(interval);
+                    intervalTime = $('#intervalTime').val();
+                    totalMin = $('#totelMin').val();
+                    currentSeconds = totalMin * 60;
+                    TMap.initInterval();
+                }else{
+                    TMap.EndMap();
+                }
             });
             TMap.initMapAlarm();
         },
         initInterval:function () {
+            runing = true;
+            TMap.RequestData()
             interval = setInterval(function () {
-                if(totalMin * 60 == currentSeconds) {
-                    TMap.RequestData();
-                }
+                TMap.RequestData()
                 currentSeconds--;
                 TMap.CalcCountDownTime(currentSeconds);
                 if(currentSeconds == 0)
@@ -78,6 +103,7 @@ var TMap = function () {
             $('.timebox').text((parseInt(mins)<10?"0"+mins:mins)+":"+(parseInt(sec)<10?"0"+sec:sec));
         },
         EndMap:function () {
+            runing = false;
             $('#start').text('下发');
             $('#totelMin').prop('disabled',false);
             $('#intervalTime').prop('disabled',false);
@@ -167,7 +193,6 @@ var TMap = function () {
                 ]],
                 loadFilter: function (data) {
                     if (data.success) {
-                        tableSource = data.result;
                         return {
                             total: data.result.totalNum,
                             rows: data.result.items
@@ -244,6 +269,7 @@ var TMap = function () {
                 ]],
                 loadFilter: function (data) {
                     if (data.success) {
+                        tableSource = data.result;
                         return {
                             total: data.result.length,
                             rows: data.result
@@ -312,49 +338,56 @@ var TMap = function () {
         },
         //开始请求数据
         RequestData:function () {
-            startTime = new Date().format('yyyy-MM-dd h:m:s');
+            startTime = new Date().pattern('yyyy-MM-dd hh:mm:ss');
             parent.Http.Ajax({
                 url:'/api/v1/map/realtime?devices='+devices+'&time='+startTime,
                 type:'get'
-            },function (result) {
-                for(var i=0;i<result.length;i++){
-                    if(!result[i].GpsOnLine){
-                        TMap.SetMap(result[i],result.length);
+            },function (data) {
+                if(data.success) {
+                    var result = data.result.maps;
+                    for (var i = 0; i < result.length; i++) {
+                        if(runing)
+                            TMap.SetMap(result[i], result.length);
                     }
                 }
             });
         },
         SetMap:function (obj,num) {
-            var loc = TMap.ConvertGpsToAmapLocation(obj.Location);
+            TMap.ClearMarker();
+            var loc = TMap.ConvertGpsToAmapLocation(obj.location);
             var longitude = loc.split(',')[0]
                 ,latitude = loc.split(',')[1];
             var marker = new AMap.Marker({
                 position:[longitude,latitude],
                 autoRotation:true,
-                angle: parseFloat(obj.Rotate),
+                angle: parseFloat(obj.rotate),
                 icon: new AMap.Icon({
                     image:'/images/map/'+obj.iconclass+'.png',
                     size: new AMap.Size(32,32)
                 }),
-                offset:new AMap.Fixel(-16,-5)
+                offset:new AMap.Pixel(-16, -5)
             });
             markerArr.push(marker);
             marker.setMap(globalMap);
             marker.setLabel({
-                offset: (obj.state==1||obj.state==3) ? (obj.dispatch == null ? new AMap.Pixel(33,28):new AMap.Pixel(27,5)): new AMap.Pixel(28,30),
-                content: (obj.state==1||obj.state==3) ? obj.Code+(obj.dispatch == null ? "" : "<br/>"+obj.dispatch):obj.Code
+                offset: new AMap.Pixel(28,30),
+                content: (obj.state==1||obj.state==3) ? obj.code+(obj.dispatch == null ? "" : "<br/>"+obj.dispatch):obj.code
             });
-            marker.setTitle(obj.Code);
+            marker.setTitle(obj.code);
             for(var i=0;i<tableSource.length;i++){
-                if(tableSource[i].devicecode == obj.Code){
-                    tableSource[i].updatetime = obj.UpdateTime;
-                    tableSource[i].speed = obj.Speed;
-                    tableSource[i].dertion = TMap.SunDirect(obj.Rotate);
+                if(tableSource[i].devicecode == obj.code){
+                    tableSource[i].updatetime = obj.updateTime;
+                    tableSource[i].speed = obj.speed;
+                    tableSource[i].dertion = TMap.SunDirect(obj.rotate);
                     tableSource[i].address = TMap.ConvertAmapToAddress(loc);
                     tableSource[i].dispatch = obj.dispatch;
                 }
             }
-            $("#table1").datagrid("loadData",{total:tableSource.length,rows:tableSource});
+            var d2 = {
+                "total": tableSource.length,
+                "rows": tableSource
+            };
+            $("#table1").datagrid("loadData",eval(d2));
             if(num==1)
                 globalMap.setCenter([longitude,latitude]);
             else
