@@ -47,7 +47,7 @@ public class ScheduledTask {
     /**
      * 每天零点10分开始统计单车数据
      */
-    @Scheduled(cron = "0 10 0 * * ?")
+    @Scheduled(cron = "0 0 1 * * *")
     public void EveryDayCanHandle(){
 
         this.iDeviceService.autoCanSignleStatis();

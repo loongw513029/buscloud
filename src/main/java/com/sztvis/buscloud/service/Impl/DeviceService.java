@@ -377,14 +377,14 @@ public class DeviceService implements IDeviceService {
     public void autoDeviceStatus(){
         List<TramDeviceInfo> devices = this.deviceMapper.getAllDevices();
         for(TramDeviceInfo device:devices){
-//            String nowTime = DateUtil.getCurrentTime();
-//            String stTime = DateUtil.addMinute(nowTime,-5);
-//            long deviceHealthCount = this.getDeviceHealthInfo(device.getDevicecode(),stTime,nowTime);
-//            if(deviceHealthCount == 0){
-//                this.UpdateRealTimeInspect(device.getDevicecode(),DeviceStateFiled.OnlineState,false,3);
-//            }else{
-//                this.UpdateRealTimeInspect(device.getDevicecode(),DeviceStateFiled.OnlineState,true,3);
-//            }
+            String nowTime = DateUtil.getCurrentTime();
+            String stTime = DateUtil.addMinute(nowTime,-5);
+            long deviceHealthCount = this.getDeviceHealthInfo(device.getDevicecode(),stTime,nowTime);
+            if(deviceHealthCount == 0){
+                this.UpdateRealTimeInspect(device.getDevicecode(),DeviceStateFiled.OnlineState,false,3);
+            }else{
+                this.UpdateRealTimeInspect(device.getDevicecode(),DeviceStateFiled.OnlineState,true,3);
+            }
             //推送
             PushModel pushModel = new PushModel(1,this.getCurrentDeviceStatus(device.getId()));
             this.iPushService.sendMsg(pushModel);
