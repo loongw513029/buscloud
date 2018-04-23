@@ -96,7 +96,7 @@ var VideoPreview = function () {
                 hd.find("a:eq(0)").hide();
                 hd.find("a:eq(1)").hide();
                 $('.header:eq('+index+')').find("span").text("")
-                clearInterval(VideoPreview.RemoveInterval(index));
+                VideoPreview.RemoveInterval(index);
             }catch(err) {}
         },
         interObj:function (index,interval) {
@@ -119,8 +119,10 @@ var VideoPreview = function () {
         },
         RemoveInterval:function (index) {
             for(var i=0;i<intervalArray.length;i++){
-                if(intervalArray[i].index == index)
+                if(intervalArray[i].index == index) {
                     intervalArray.slice(intervalArray[i]);
+                    clearInterval(intervalArray[i].interval);
+                }
             }
         }
     }
