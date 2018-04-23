@@ -3,6 +3,7 @@ package com.sztvis.buscloud.mapper.provider;
 import org.apache.ibatis.jdbc.SQL;
 
 import java.util.List;
+import java.util.Map;
 
 public class SiteSettingProvider {
     public String GetAppCharts(int type, List<Long> LineArr, Long lineId, String date, String date2)
@@ -36,5 +37,18 @@ public class SiteSettingProvider {
                     (lineId == 0?"":" and deviceId in(select Id from TramDeviceInfo where lineId="+ lineId +")")+"");
         }
         return sql.toString();
+    }
+    //select * from TramSiteSettingInfo where `Key` in (#{key})('5555,5555,555')
+
+    public String GetSiteSettingSQL(Map<String,Object> map){
+        String key = (String)map.get("key");
+        String[] arr = key.split(",");
+        String contdion ="";
+        for(String a:arr){
+            contdion+="'"+a+"',";
+        }
+        contdion = contdion.substring(0,contdion.length()-1);
+        String sql =  "select * from TramSiteSettingInfo where `Key` in ("+contdion+")";
+        return  sql;
     }
 }

@@ -100,7 +100,7 @@ var VideoPreview = function () {
             }catch(err) {}
         },
         interObj:function (index,interval) {
-            this,index = index;
+            this.index = index;
             this.interval = interval;
         },
         CalcTime:function (index,ti,code,cname) {

@@ -7,7 +7,7 @@ import java.util.List;
 public interface ISiteSettingService {
     ChartViewModel GetAppCharts(long userId, long lineId);
 
-    SiteSettingsInfo GetSiteSettings(List<String> key) throws IllegalAccessException, NoSuchFieldException, NoSuchMethodException, InvocationTargetException;
+    SiteSettingsInfo GetSiteSettings() throws Exception;
 
     void SaveSetting(String key, Object value);
 
