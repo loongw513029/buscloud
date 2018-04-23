@@ -2,6 +2,8 @@ package com.sztvis.buscloud.service;
 
 import com.sztvis.buscloud.model.domain.TramPassengerFlow;
 
+import java.util.List;
+
 /**
  * @author longweiqian
  * @company tvis
@@ -10,4 +12,6 @@ import com.sztvis.buscloud.model.domain.TramPassengerFlow;
 public interface IPassengerFlowService {
 
     void insertPassengerFlow(TramPassengerFlow passengerFlow);
+
+    List<TramPassengerFlow> Getinfo(String code);
 }
