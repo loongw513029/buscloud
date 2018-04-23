@@ -51,7 +51,38 @@
             </div>
         </div>
     </div>
-
+</div>
+<div id="infoWindow" style="display: none;">
+    <table class="kv-table" style="width: 350px">
+        <tr>
+            <td class="kv-label" width="100">车牌号码</td>
+            <td class="kv-content">{{busnumber}}</td>
+            <td class="kv-label">设备号</td>
+            <td class="kv-content">{{devicecode}}</td>
+        </tr>
+        <tr>
+            <td class="kv-label">速度</td>
+            <td class="kv-content">{{speed}}</td>
+            <td class="kv-label">方向</td>
+            <td class="kv-content">{{dertion}}</td>
+        </tr>
+        <tr>
+            <td class="kv-label">更新时间</td>
+            <td class="kv-content" colspan="3">{{updatetime}}</td>
+        </tr>
+        <tr>
+            <td class="kv-label">详细地址</td>
+            <td class="kv-content" colspan="3">{{address}}</td>
+        </tr>
+        <tr>
+            <td class="kv-label">调度信息</td>
+            <td class="kv-content" colspan="3">{{dispatch}}</td>
+        </tr>
+        <tr>
+            <td class="kv-label">运营状态</td>
+            <td class="kv-content" colspan="3">{{state}}</td>
+        </tr>
+    </table>
 </div>
 <script type="text/javascript" src="/easyui/jquery.min.js"></script>
 <script type="text/javascript" src="/easyui/jquery.easyui.min.js"></script>

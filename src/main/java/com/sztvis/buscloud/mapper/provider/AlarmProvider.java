@@ -82,7 +82,7 @@ public class AlarmProvider {
         String devices = (String)map.get("devices");
         String starttime = (String)map.get("starttime");
         StringBuilder sb = new StringBuilder();
-        sb.append("select a.id,a.deviceid,a.path,a.devicecode,b.busnumber,c.linename,d.departmentname,e.alarmname,a.updatetime,a.location,a.speed,a.distance,a.isbrake,a.value");
+        sb.append("select a.id,a.deviceid,a.AlarmVideoPath as path,a.devicecode,b.busnumber,c.linename,d.departmentname,e.alarmname,a.updatetime,a.location,a.speed,a.distance,a.isbrake,a.value");
         sb.append(" from TramAlarmInfo a left join TramDeviceInfo g on a.deviceid = g.id left join TramBusInfo b on g.busid = b.id");
         sb.append(" left join TramLineInfo c on g.lineid = c.id left join TramDepartmentInfo d on g.departmentid = d.id left join TramBasicInfo e on a.alarmType=e.customId");
         sb.append(" where 1=1");
@@ -97,7 +97,7 @@ public class AlarmProvider {
     public String getAlarmViewModelSQL(Map<String,Object> map){
         long id = (Long)map.get("id");
         StringBuilder sb = new StringBuilder();
-        sb.append("select a.id,a.deviceid,a.path,a.devicecode,b.busnumber,c.linename,d.departmentname,e.alarmname,a.updatetime,a.location,a.speed,a.distance,a.isbrake,a.value");
+        sb.append("select a.id,a.deviceid,a.AlarmVideoPath as path,a.parentalarmtype,a.devicecode,b.busnumber,c.linename,d.departmentname,e.alarmname,a.updatetime,a.location,a.speed,a.distance,a.isbrake,a.value");
         sb.append(" from TramAlarmInfo a left join TramDeviceInfo g on a.deviceid = g.id left join TramBusInfo b on g.busid = b.id");
         sb.append(" left join TramLineInfo c on g.lineid = c.id left join TramDepartmentInfo d on g.departmentid = d.id left join TramBasicInfo e on a.alarmType=e.customId");
         sb.append(" where a.id="+id);
@@ -137,7 +137,7 @@ public class AlarmProvider {
         String alarmkey=AlarmKeys.size()==0?"":StringHelper.listToString(AlarmKeys,',');
         SQL sql = new SQL();
         sql.SELECT("a.Id,b.DeviceCode,a.Extras,b.Id as DeviceId,c.BusNumber" +
-                ",d.LineName,e.DepartmentName,f.AlarmName,f.Level,a.UpdateTime,a.AlarmValue,a.AlarmKey,a.AlarmType,a.Path");
+                ",d.LineName,e.DepartmentName,f.AlarmName,f.Level,a.UpdateTime,a.AlarmValue,a.AlarmKey,a.AlarmType,a.AlarmVideoPath as path");
         sql.FROM("TramCanAlarmInfo a left join TramDeviceInfo b on a.DeviceId = b.Id left join TramBusInfo c on " +
                 "b.BusId = c.Id left join TramLineInfo d on b.LineId = d.Id left join TramDepartmentInfo e on " +
                 "b.DepartmentId = e.Id left join TramBasicInfo f on a.AlarmKey = f.Id");

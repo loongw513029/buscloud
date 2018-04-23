@@ -1,5 +1,7 @@
 var globalMap;//map对象
 var interval;//定时器对象
+var interval2;
+var interval3;
 var intervalTime = 0;//请求间隔
 var currentSeconds = 0;//请求了多少秒
 var totalMin = 0;//请求总时长
@@ -91,11 +93,13 @@ var TMap = function () {
             TMap.RequestData()
             interval = setInterval(function () {
                 TMap.RequestData()
+            },intervalTime*1000);
+            interval2 = setInterval(function () {
                 currentSeconds--;
                 TMap.CalcCountDownTime(currentSeconds);
                 if(currentSeconds == 0)
                     TMap.EndMap()
-            },intervalTime*1000);
+            },1000);
         },
         CalcCountDownTime:function (seconds) {
             var t = seconds == 0 ? 0 :seconds;
@@ -110,6 +114,7 @@ var TMap = function () {
             $('.timebox').text('00:00');
             TMap.ClearMarker();
             clearInterval(interval);
+            clearInterval(interval2);
         },
         //初始化报警列表
         initMapAlarm:function () {
@@ -310,12 +315,12 @@ var TMap = function () {
         //创建地图窗口
         markerClick:function (e) {
             infoWindow.setContent(e.target.content);
-            infoWindow.open(map, e.target.getPosition());
+            infoWindow.open(globalMap, e.target.getPosition());
             it = 0;
-            interval2 = null;
-            interval2 = setInterval(function () {
+            interval3 = null;
+            interval3 = setInterval(function () {
                 if (it > 4) {
-                    clearInterval(interval2);
+                    clearInterval(interval3);
                     globalMap.clearInfoWindow();
                 }
                 it += 1;
@@ -341,19 +346,21 @@ var TMap = function () {
             startTime = new Date().pattern('yyyy-MM-dd hh:mm:ss');
             parent.Http.Ajax({
                 url:'/api/v1/map/realtime?devices='+devices+'&time='+startTime,
-                type:'get'
+                type:'get',
+                cache:false
             },function (data) {
                 if(data.success) {
                     var result = data.result.maps;
+                    TMap.ClearMarker();
                     for (var i = 0; i < result.length; i++) {
-                        if(runing)
+                        if(runing) {
                             TMap.SetMap(result[i], result.length);
+                        }
                     }
                 }
             });
         },
         SetMap:function (obj,num) {
-            TMap.ClearMarker();
             var loc = TMap.ConvertGpsToAmapLocation(obj.location);
             var longitude = loc.split(',')[0]
                 ,latitude = loc.split(',')[1];
@@ -367,27 +374,33 @@ var TMap = function () {
                 }),
                 offset:new AMap.Pixel(-16, -5)
             });
-            markerArr.push(marker);
             marker.setMap(globalMap);
             marker.setLabel({
                 offset: new AMap.Pixel(28,30),
                 content: (obj.state==1||obj.state==3) ? obj.code+(obj.dispatch == null ? "" : "<br/>"+obj.dispatch):obj.code
             });
             marker.setTitle(obj.code);
-            for(var i=0;i<tableSource.length;i++){
-                if(tableSource[i].devicecode == obj.code){
-                    tableSource[i].updatetime = obj.updateTime;
-                    tableSource[i].speed = obj.speed;
-                    tableSource[i].dertion = TMap.SunDirect(obj.rotate);
-                    tableSource[i].address = TMap.ConvertAmapToAddress(loc);
-                    tableSource[i].dispatch = obj.dispatch;
-                }
-            }
-            var d2 = {
-                "total": tableSource.length,
-                "rows": tableSource
-            };
-            $("#table1").datagrid("loadData",eval(d2));
+            var address = TMap.ConvertAmapToAddress(loc);
+            var html = $('#infoWindow').html().replace('{{busnumber}}', obj.deviceNumber).replace('{{devicecode}}', obj.code)
+                .replace('{{updatetime}}', obj.updateTime).replace('{{speed}}', obj.speed).replace('{{dertion}}', TMap.SunDirect(obj.rotate))
+                .replace('{{address}}', address).replace('{{dispatch}}', obj.dispatch).replace('{{state}}', (obj.state == 1 ||obj.state == 3) ? "运营中" : "停车");
+            marker.content = html;
+            marker.on('click', TMap.markerClick);
+            markerArr.push(marker);
+            // for(var i=0;i<tableSource.length;i++){
+            //     if(tableSource[i].devicecode == obj.code){
+            //         tableSource[i].updatetime = obj.updateTime;
+            //         tableSource[i].speed = obj.speed;
+            //         tableSource[i].dertion = TMap.SunDirect(obj.rotate);
+            //         tableSource[i].address = TMap.ConvertAmapToAddress(loc);
+            //         tableSource[i].dispatch = obj.dispatch;
+            //     }
+            // }
+            // var d2 = {
+            //     "total": tableSource.length,
+            //     "rows": tableSource
+            // };
+            // $("#table1").datagrid("loadData",eval(d2));
             if(num==1)
                 globalMap.setCenter([longitude,latitude]);
             else

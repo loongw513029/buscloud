@@ -1,4 +1,4 @@
-var intervalArray;
+var intervalArray=[];
 var VideoPreview = function () {
     return {
         init:function () {
@@ -56,12 +56,25 @@ var VideoPreview = function () {
                             cache: false
                             }, function (result) {
                                 var data= result.result;
-                                var type = data.hosttype, clientip = data.clientip, code = data.devicecode, time = data.videoplayyime, cl = channel;
-                                VideoPreview.StartPreview(parent.Main.getServerIP(),type,code,clientip,cl,i,node.text,time);
-                                $(items[i]).attr("did", id).attr("channel", channel);
-                            var hd = $('.video-item .header:eq('+i+')');
-                            hd.find("a:eq(0)").show();
-                            hd.find("a:eq(1)").show();
+                                var autoPlay = data.autoplay;
+                                var type = data.hosttype, clientip = data.clientip, code = data.devicecode,time = data.videoplayyime, cl = channel;
+                                if(autoPlay) {
+                                    VideoPreview.StartPreview(parent.Main.getServerIP(), type, code, clientip, cl, i, node.text, time);
+                                    $(items[i]).attr("did", id).attr("channel", channel);
+                                    var hd = $('.video-item .header:eq(' + i + ')');
+                                    //hd.find("a:eq(0)").show();
+                                    hd.find("a:eq(1)").show();
+                                }else{
+                                    var hd = $('.video-item .header:eq(' + i + ')');
+                                    hd.find("a:eq(0)").show();
+                                    hd.find("a:eq(0)").on('click',function () {
+                                        VideoPreview.StartPreview(parent.Main.getServerIP(), type, code, clientip, cl, i, node.text, time);
+                                        $(items[i]).attr("did", id).attr("channel", channel);
+                                        var hd = $('.video-item .header:eq(' + i + ')');
+                                        hd.find("a:eq(0)").hide();
+                                        hd.find("a:eq(1)").show();
+                                    });
+                                }
                             }, function (err) {
                             });
                         num++;
@@ -120,8 +133,8 @@ var VideoPreview = function () {
         RemoveInterval:function (index) {
             for(var i=0;i<intervalArray.length;i++){
                 if(intervalArray[i].index == index) {
-                    intervalArray.slice(intervalArray[i]);
                     clearInterval(intervalArray[i].interval);
+                    intervalArray.slice(intervalArray[i]);
                 }
             }
         }

@@ -20,6 +20,7 @@ public class AlarmViewModel {
     private boolean isbrake;
     private String value;
     private String path;
+    private int parentalarmtype;
 
     public CurrentCanModel getCan() {
         return can;
@@ -140,6 +141,14 @@ public class AlarmViewModel {
 
     public void setDepartmentname(String departmentname) {
         this.departmentname = departmentname;
+    }
+
+    public int getParentalarmtype() {
+        return parentalarmtype;
+    }
+
+    public void setParentalarmtype(int parentalarmtype) {
+        this.parentalarmtype = parentalarmtype;
     }
 
     public static class CurrentCanModel

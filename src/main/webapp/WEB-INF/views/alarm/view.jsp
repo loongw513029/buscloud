@@ -19,7 +19,7 @@
 <input type="hidden" id="Id" value="${obj.id}" />
 <div id="tview" class="easyui-tabs">
     <div title="全景图片" ><img src="${obj.value.split(',')[0]}" width="638px" height="450px"/> </div>
-    <div title="前路面" style="display: none;"><img src="${obj.value.split(',')[1]}" width="638px" height="450px"/></div>
+    <div title="${obj.parentalarmtype==61?'司机正面':'前路面'}" style="display: none;"><img src="${obj.value.split(',')[1]}" width="638px" height="450px"/></div>
     <div title="详细信息" data-options="colsable:true" style="display: none;padding:5px">
                 <table class="kv-table">
                     <tr>
@@ -50,11 +50,11 @@
                         <td class="kv-label">前车车距</td>
                         <td class="kv-content">${obj.distance} M</td>
                     </tr>
-                    <tr style="${obj.path==''?"display:none":"display:block"}">
+                    <tr style="${obj.path==''?"display:none":""}">
                         <td class="kv-label">报警视频</td>
                         <td colspan="3" class="kv-content">
-                            <a href="javascript:;">展开>></a>
-                            <object id="ocx" classid="clsid:4EBC3418-4FF1-3A8F-8D1C-BDB084E6E0D4" style="width: 100%;height: 56.3%;display: none;">
+                            <a href="javascript:;" onclick="expandOCX()">展开>></a>
+                            <object id="ocx" classid="clsid:4EBC3418-4FF1-3A8F-8D1C-BDB084E6E0D4" style="width: 400px;height: 225px;display: none;">
                                 <param name="_Version" value="1.1.0">
                                 <param name="_ExtentX" value="2646">
                                 <PARAM name="_ExtentY" value="1323">
@@ -69,5 +69,20 @@
 <script type="text/javascript" src="/easyui/jquery.min.js"></script>
 <script type="text/javascript" src="/easyui/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="/easyui/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript">
+    var path = '${obj.path}';
+    function expandOCX() {
+        var ocx = document.getElementById('ocx');
+        var block = ocx.style.display;
+        if(block=='block'){
+            ocx.Stop();
+            ocx.style.display = 'none';
+        }else{
+            ocx.style.display = 'block';
+            var serverIp = parent.parent.Main.getServerIP();
+            ocx.StartAlarmRecord(serverIp,'${obj.devicecode}','admin','admin',path);
+        }
+    }
+</script>
 </body>
 </html>

@@ -25,7 +25,8 @@ var Http=function(){
                     }
                 },
                 error:function (err) {
-                    errcallback(err);
+                    if(errcallback!=undefined)
+                        errcallback(err);
                 }
             });
         }
