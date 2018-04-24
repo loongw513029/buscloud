@@ -15,6 +15,7 @@
 </head>
 <body>
 <div class="tips"><input type="text" id="lineId" style="height: 26px;line-height: 26px"/>
+    <input type="text" id="deviceCode" style="height: 26px;line-height: 26px"/>
     <div id="tips" style="display: inline">
         <a href="#" class="active">昨天</a><a href="#">近7天</a><a href="#">本月</a><a href="#">上月</a><a href="#">今年</a><a href="#">上年</a>
     </div>
