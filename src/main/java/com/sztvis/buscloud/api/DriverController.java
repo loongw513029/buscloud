@@ -5,12 +5,14 @@ import com.sztvis.buscloud.api.BaseApiController;
 import com.sztvis.buscloud.model.UnSafeListViewModel;
 import com.sztvis.buscloud.model.UnSafeQuery;
 import com.sztvis.buscloud.model.dto.BicycleViewModel;
+import com.sztvis.buscloud.model.dto.ComboTreeModel;
 import com.sztvis.buscloud.model.dto.DeviceInspectViewModel;
 import com.sztvis.buscloud.model.dto.response.ApiResult;
 import com.sztvis.buscloud.model.entity.PageBean;
 import com.sztvis.buscloud.model.entity.StatusCodeEnum;
 import com.sztvis.buscloud.service.IAlarmService;
 import com.sztvis.buscloud.service.IDeviceService;
+import com.sztvis.buscloud.service.IDriverService;
 import com.sztvis.buscloud.service.IUnSafeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +30,8 @@ public class DriverController extends BaseApiController {
 
     @Autowired
     private IAlarmService iAlarmService;
+    @Autowired
+    private IDriverService iDriverService;
 
     /**
      * 获得不安全行为列表
@@ -76,4 +80,5 @@ public class DriverController extends BaseApiController {
             return ApiResult(false, "获取数据失败", StatusCodeEnum.Error, null);
         }
     }
+
 }

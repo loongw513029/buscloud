@@ -55,7 +55,7 @@ public class AlarmApiController extends BaseApiController{
      * @param keywords search keys contains[alarmname,devicecode]
      * @return
      */
-    @RequestMapping("/gettablelist")
+    @RequestMapping(value = "/gettablelist",method = RequestMethod.POST)
     public ApiResult getAlarmList(long userId,long departmentId,long lineId,long type1,long type2,String date1,String date2,String keywords,int page,int rows){
         List<AlarmViewModel> list = this.iAlarmService.getAlarmTableList(userId,departmentId,lineId,type1,type2,date1,date2,keywords,page,rows);
         int count =  this.iAlarmService.getAlarmTableListCount(userId,departmentId,lineId,type1,type2,date1,date2,keywords);
