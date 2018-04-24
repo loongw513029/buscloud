@@ -21,4 +21,9 @@ public class Constant {
     //点对点消息推送地址后缀，最后的地址为/user/用户识别码/msg
     public static final String P2pPushPath = "/msg";
 
+
+
+
+    public static final String SITESETTINGCACHE_KEY="siteSetting";
+
 }

@@ -118,24 +118,24 @@ public class GpsService implements IGpsService{
 
     @Override
     public int getDeviceCurrentGpsState(long deviceid, String starttime, boolean gpsState,boolean onLineState,String deviceCode) {
-        long gpsCount = this.getGpsCount(deviceid,starttime, DateUtil.getCurrentTime());
+        TramDeviceStateInspectRealtimeInfo realtimeInfo = this.iDeviceService.getDeviceStateInspectRealTimeInfo(deviceid);
         boolean isPark = this.iCanService.IsPark(deviceCode);
         if(!onLineState)
             return 7;
         if(gpsState){
             if(!isPark){
-                if(gpsCount == 0)
+                if(realtimeInfo.isGpsstate())
                     return 1;
                 else
                     return 3;
             }else{
-                if(gpsCount == 0)
+                if(realtimeInfo.isGpsstate())
                     return 2;
                 else
                     return 4;
             }
         }else{
-            if(gpsCount == 0)
+            if(realtimeInfo.isGpsstate())
                 return 5;
             else
                 return 6;

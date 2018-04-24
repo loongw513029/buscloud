@@ -21,7 +21,9 @@ var Welcome = function () {
                 }
                 Welcome.initHighCharts("#chart0","CAN报警",title,xalias,"单位(次)",data1);
                 Welcome.initHighCharts("#chart1","ADAS",title,xalias,"单位(次)",data2);
-            })
+            },function (err) {
+
+            });
         },
         ShowAlarm:function (id) {
             parent.TramDalog.OpenIframeAndNoBtn('报警详情',652,538,'/alarm/view?id='+id);

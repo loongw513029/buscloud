@@ -64,7 +64,7 @@ public class ScheduledTask {
      * 每天一点计算不安全行为指数
      */
     @Scheduled(cron = "0 0 1 * * ?")
-    public void EveryDayUnsafeIndex() throws NoSuchMethodException, NoSuchFieldException, IllegalAccessException, InvocationTargetException { this.iUnSafeService.CalcUnsafeIndex();}
+    public void EveryDayUnsafeIndex() throws Exception { this.iUnSafeService.CalcUnsafeIndex();}
 
     /**
      * 每天两点计算昨天报警视频大小

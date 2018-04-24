@@ -3,8 +3,9 @@ var Alarm = function () {
         init:function () {
             $('#table').datagrid({
                 url: '/api/v1/alarm/gettablelist',
-                method: 'get',
+                method: 'post',
                 idField: 'id',
+                cache:false,
                 fit: true,
                 pagination: true,
                 pageNumber: 1,

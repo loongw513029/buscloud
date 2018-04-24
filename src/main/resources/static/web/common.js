@@ -9,7 +9,7 @@ var Http=function(){
                 url:obj.url,
                 type:obj.type,
                 data:obj.data,
-                cache:obj.cache,
+                cache:obj.cache==undefined?false:obj.cache,
                 contentType:obj.ctype,
                 beforeSend:function (request) {
                     request.setRequestHeader("timespan",Date.parse(new Date())/1000);
@@ -25,7 +25,8 @@ var Http=function(){
                     }
                 },
                 error:function (err) {
-                    errcallback(err);
+                    if(errcallback!=undefined)
+                        errcallback(err);
                 }
             });
         }

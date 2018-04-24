@@ -226,7 +226,7 @@ public class CanService implements ICanService {
                     List<String> key = new ArrayList<>();
                     key.add("IndexUnit");
                     try {
-                        if (this.iSiteSettingService.GetSiteSettings(key).getAlarmTurn()==1){
+                        if (this.iSiteSettingService.GetSiteSettings().getAlarmTurn()==1){
                             String extrias = query.getSpeed() + "|" + query.getDistance() + "|" + (query.isBrake() ? 1 : 0);
                             PushAlarmModel pushAlarmModel = new PushAlarmModel(alarmId, deviceInfo.getDevicecode(), basicInfo.getId().intValue(), updateTime, basicInfo.getAlarmName(), "", query.getPath(), extrias, query.getValue(), StringHelper.isEmpty(basicInfo.getCustomId()) ? 0 : Integer.valueOf(basicInfo.getCustomId()));
                             PushModel pushModel = new PushModel(2, pushAlarmModel);
@@ -236,9 +236,7 @@ public class CanService implements ICanService {
                         e.printStackTrace();
                     } catch (NoSuchFieldException e) {
                         e.printStackTrace();
-                    } catch (NoSuchMethodException e) {
-                        e.printStackTrace();
-                    } catch (InvocationTargetException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }

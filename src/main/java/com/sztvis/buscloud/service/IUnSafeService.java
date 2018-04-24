@@ -9,5 +9,5 @@ import java.util.List;
 public interface IUnSafeService {
     List<UnSafeListViewModel> GetUnsafeList(UnSafeQuery query);
 
-    void CalcUnsafeIndex()throws InvocationTargetException, NoSuchMethodException, NoSuchFieldException, IllegalAccessException;
+    void CalcUnsafeIndex() throws Exception;
 }

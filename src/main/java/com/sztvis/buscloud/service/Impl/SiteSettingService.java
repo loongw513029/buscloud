@@ -1,13 +1,17 @@
 package com.sztvis.buscloud.service.Impl;
 
+import com.alibaba.fastjson.JSON;
+import com.sztvis.buscloud.core.RedisUtil;
 import com.sztvis.buscloud.core.helper.StringHelper;
 import com.sztvis.buscloud.mapper.SiteSettingMapper;
 import com.sztvis.buscloud.model.dto.SelectViewModel;
+import com.sztvis.buscloud.model.dto.SiteSettingViewModel;
 import com.sztvis.buscloud.model.dto.SiteSettingsInfo;
 import com.sztvis.buscloud.model.dto.service.ChartViewModel;
 import com.sztvis.buscloud.service.IBasicService;
 import com.sztvis.buscloud.service.ILineService;
 import com.sztvis.buscloud.service.ISiteSettingService;
+import com.sztvis.buscloud.util.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +39,9 @@ public class SiteSettingService implements ISiteSettingService {
     @Autowired
     private SiteSettingMapper SiteSettingMapper;
     private SiteSettingsInfo info;
+
+    @Autowired
+    private RedisUtil redisUtil;
 
     @Override
     public ChartViewModel GetAppCharts(long userId, long lineId) {
@@ -91,35 +98,27 @@ public class SiteSettingService implements ISiteSettingService {
     }
 
     @Override
-    public SiteSettingsInfo GetSiteSettings(List<String> key) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        SiteSettingsInfo model=new SiteSettingsInfo();
-        List<SiteSettingsInfo> info = this.SiteSettingMapper.GetSiteSettings(StringHelper.listToString(key,','));
-        Field[] field = model.getClass().getFields();
-        for (int i = 0; i < field.length; i++) {
-            Field f = field[i];
-            if (f.getName() != "Id") {
-                String k=f.getName();
-                List<SiteSettingsInfo> info1 = info.stream().filter(item -> item.getKey().equals(f.getName())).collect(Collectors.toList());
-                if (info1.size()>0) {
-                    String name = f.getName().substring(0, 1).toUpperCase() + f.getName().substring(1);
-                    String ftype = f.getGenericType().toString();
-                    if (ftype.equals("Int")) {
-                        Method m = model.getClass().getMethod("set" + name, Integer.class);
-                        m.invoke(model,Integer.valueOf(info1.get(i).getValue()));
-                    }
-                    if (ftype.equals("class java.lang.String")) {
-                        Method m = model.getClass().getMethod("set" + name, String.class);
-                        m.invoke(model,info1.get(0).getValue());
-                    }
-                    if (ftype.equals("Int")) {
-                        Method m = model.getClass().getMethod("set" + name, Integer.class);
-                        m.invoke(model,Integer.valueOf(info1.get(i).getValue()));
-                    }
-                    if (ftype.equals("double")) {
-                        Method m = model.getClass().getMethod("set" + name, double.class);
-                        m.invoke(model,info1.get(0).getValue());
-                    }
-                }
+    public SiteSettingsInfo GetSiteSettings() throws Exception {
+        SiteSettingsInfo model = new SiteSettingsInfo();
+        Class cls = (Class) model.getClass();
+        List<SiteSettingViewModel> list = this.SiteSettingMapper.GetSiteSettings();
+        for (SiteSettingViewModel site : list) {
+            Field fs = cls.getDeclaredField(site.getKey());
+            fs.setAccessible(true);
+            String type = fs.getType().toString().toLowerCase();
+            switch (type) {
+                case "long":
+                    fs.set(model, Long.valueOf(site.getValue()));
+                    break;
+                case "int":
+                    fs.set(model, Integer.valueOf(site.getValue()));
+                    break;
+                case "double":
+                    fs.set(model, Double.valueOf(site.getValue()));
+                    break;
+                case "class java.lang.string":
+                    fs.set(model, site.getValue());
+                    break;
             }
         }
         return model;
