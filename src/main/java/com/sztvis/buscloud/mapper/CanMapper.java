@@ -57,4 +57,11 @@ public interface CanMapper {
 
     @Select("select count(Id) from TramAlarmInfo where deviceId=#{deviceId} and alarmType=#{key} and updateTime=#{updateTime}")
     int getAlarmCountByKeyAndUpdateTime(@Param("deviceId") long deviceId,@Param("key") int key,@Param("updateTime") String updateTime);
+
+    @Select("select * from CanHistoryEveryDayInfo where deviceId=#{deviceId} and updatetime>=#{start} and updatetime<=#{end}")
+    List<CanHistoryEveryDayInfo> getCanHistoryBus(@Param("deviceId") long device,@Param("start") String start,@Param("end") String end);
+
+    @Select("select count(Id) from TramAlarmInfo where deviceId=#{deviceId} and updatetime>=#{start} and updatetime<=#{end} and alarmType=#{type}")
+    int getAlarmTrendsCountBydevice(@Param("deviceId") long deviceId,@Param("start") String startTime,@Param("end") String endTime,@Param("type") int type);
+
 }

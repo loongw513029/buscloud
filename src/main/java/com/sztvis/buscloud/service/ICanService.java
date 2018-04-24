@@ -245,4 +245,6 @@ public interface ICanService {
      * @return
      */
     void autoCalcTravelAtNight(long deviceId, String updateTime);
+
+    CanHistoryViewModel getCanHistoryBus(String code,int dayType);
 }

@@ -31,8 +31,11 @@ public interface DeviceMapper {
     @Select("select Id from TramDeviceInfo where lineId in (#{lineIds})")
     List<Long> getDeviceByLineIds(String lineIds);
 
-    @Select("select DeviceCode from TramDeviceInfo where lineId in #{lineIds}")
-    List<String> getDeviceCodesByLineIds(List<Long> lineIds);
+//    @Select("select DeviceCode from TramDeviceInfo where lineId in #{lineIds}")
+//    List<String> getDeviceCodesByLineIds(List<Long> lineIds);
+
+    @SelectProvider(type = DeviceSqlProvider.class,method = "getDeviceCodesByLineIds")
+    List<String> getDeviceCodesByLineIds(@Param("lineIds") List<Long> lineIds);
 
     @Select("select DeviceCode from TramDeviceInfo where Id in #{Id}")
     List<String> getDeviceCodesBIds(List<Long> Id);

@@ -81,4 +81,6 @@ public interface IBasicService {
     List<Long> GetAlarmKeysByUserId(long userId);
 
     List<BasicViewModel> getBasicList(int type, String keywords);
+
+    List<ComboTreeModel> GetCanHistoryCode(String[] LineIds);
 }

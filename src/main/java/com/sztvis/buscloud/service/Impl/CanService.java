@@ -836,7 +836,99 @@ public class CanService implements ICanService {
             list2.add(list2s);
         }
         viewModel.setUnsafeXalias(unsafeXalias);
-        viewModel.setFaults(list2);
+        viewModel.setUnsafes(list2);
+        return viewModel;
+    }
+
+    @Override
+    public CanHistoryViewModel getCanHistoryBus(String code,int dayType){
+        CanHistoryViewModel viewModel = new CanHistoryViewModel();
+        long deviceId = this.alarmMapper.GetDeviceId(code);
+        DayTypes dayTypes = new DayTypes().getDayByType(dayType);
+        double totalMileage=0D,gasTotal=0D,gaslineTotal=0D,elecTotal=0D,longTime=0D;
+        int f1 =0,f2 =0,f3=0,SpeedingTotal=0;
+        List<CanHistoryEveryDayInfo> list = this.canMapper.getCanHistoryBus(deviceId,dayTypes.getStartTime(),dayTypes.getEndTime());
+        for (CanHistoryEveryDayInfo c:list) {
+            totalMileage+=c.getTotalmileage();
+            gasTotal+=c.getGasavg();
+            gaslineTotal+=c.getGasonlieavg();
+            elecTotal+=c.getElectricavg();
+            longTime+=c.getRuntimelong();
+            SpeedingTotal+=c.getSpeedingtotal();
+            f1+=c.getFaultonelv();
+            f2+=c.getFaultsecondlv();
+            f3+=c.getFaultthreelv();
+        }
+        viewModel.setTotalNumber(1);
+        viewModel.setOperaterNumber(1);
+        viewModel.setElecEconomy(elecTotal);
+        viewModel.setGasEconomy(gasTotal);
+        viewModel.setTotalMileage(totalMileage);
+        viewModel.setFuelEconomy(gaslineTotal);
+        viewModel.setCarBusLongTime(longTime);
+        viewModel.setSpeeding(SpeedingTotal);
+        viewModel.setF1(f1);
+        viewModel.setF2(f2);
+        viewModel.setF3(f3);
+        int day = 0;
+        try {
+            if(dayType<=4) {
+                day = DateUtil.daysBetween(dayTypes.getStartTime(), dayTypes.getEndTime(),DateStyle.YYYY_MM_DD);
+            }else{
+                day = DateUtil.monthsBetween(dayTypes.getStartTime(),dayTypes.getEndTime())+1;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        List<String> xalis = new ArrayList<>();
+        List<List<Integer>> list1 = new ArrayList<>();
+        List<String> faultXalias = new ArrayList<>();
+        int p=0;
+        for (TramBasicInfo b:this.basicMapper.getAlarmTypes(1)) {
+            faultXalias.add(b.getAlarmName());
+            List<Integer> list1s = new ArrayList<>();
+            for(int i=0;i<day;i++){
+                String start = DateUtil.addDay(dayTypes.getStartTime(),i),
+                        end = DateUtil.addDay(start,1);
+                if(dayType==5||dayType==6){
+                    start = DateUtil.addMonth(dayTypes.getStartTime(),i);
+                    end = DateUtil.addMonth(start,1);
+                    if(p==0) {
+                        xalis.add(dayType==6?DateUtil.StringToString(start,DateStyle.YYYY)+"年 "+start.split("-")[1] + "月":start.split("-")[1] + "月");
+                    }
+                }else{
+                    if(p==0) {
+                        xalis.add(start.split("-")[2] + "日");
+                    }
+                }
+                int count = this.canMapper.getAlarmTrendsCountBydevice(deviceId,start,end,b.getId().intValue());
+                list1s.add(count);
+            }
+            p++;
+            list1.add(list1s);
+        }
+        viewModel.setXlias(xalis);
+        viewModel.setFaultXalias(faultXalias);
+        viewModel.setFaults(list1);
+        List<List<Integer>> list2 = new ArrayList<>();
+        List<String> unsafeXalias = new ArrayList<>();
+        for (TramBasicInfo b:this.basicMapper.getAlarmTypes(78)) {
+            unsafeXalias.add(b.getAlarmName());
+            List<Integer> list2s = new ArrayList<>();
+            for(int i=0;i<day;i++){
+                String start = DateUtil.addDay(dayTypes.getStartTime(),i),
+                        end = DateUtil.addDay(start,1);
+                if(dayType==5||dayType==6){
+                    start = DateUtil.addMonth(dayTypes.getStartTime(),i);
+                    end = DateUtil.addMonth(start,1);
+                }
+                int count = this.canMapper.getAlarmTrendsCountBydevice(deviceId,start,end,b.getId().intValue());
+                list2s.add(count);
+            }
+            list2.add(list2s);
+        }
+        viewModel.setUnsafeXalias(unsafeXalias);
+        viewModel.setUnsafes(list2);
         return viewModel;
     }
 

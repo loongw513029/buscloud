@@ -38,6 +38,9 @@ public interface AlarmMapper {
     @SelectProvider(type = AlarmProvider.class,method = "getAlarmViewModelSQL")
     AlarmViewModel getAlarmViewModel(@Param("id") long id);
 
+    @Select("select deviceId from TramAlarmInfo where deviceCode=#{deviceCode} limit 1")
+    long GetDeviceId(@Param("deviceCode") String deviceCode);
+
     @Select("select count(a.id) from TramAlarmInfo a left join trambasicinfo b on a.AlarmType=b.Id where  a.DeviceId = #{deviceId} and b.Level=#{level}")
     long getCountByDeviceAndLevel(@Param("deviceId") long deviceId,@Param("level") int level);
 

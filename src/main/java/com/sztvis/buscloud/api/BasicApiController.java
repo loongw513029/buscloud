@@ -3,6 +3,7 @@ package com.sztvis.buscloud.api;
 import com.github.pagehelper.PageHelper;
 import com.sztvis.buscloud.core.TramException;
 import com.sztvis.buscloud.core.helper.ListHelper;
+import com.sztvis.buscloud.core.helper.StringHelper;
 import com.sztvis.buscloud.model.domain.TramDepartmentInfo;
 import com.sztvis.buscloud.model.domain.TramMemberInfo;
 import com.sztvis.buscloud.model.dto.ComboTreeModel;
@@ -213,5 +214,15 @@ public class BasicApiController extends BaseApiController {
         return  ApiResult(true,"获得报警下拉列表成功", StatusCodeEnum.Success, ListHelper.addFirstEleComboTree(list,"-选择报警类型-"));
     }
 
-
+    @RequestMapping(value = "getCanHistoryCode",method = RequestMethod.GET)
+    public ApiResult GetCanHistoryCode(String[] LineIds){
+//        String lineIds = "";
+//        for (int i = 0;i < LineIds.length;i++){
+//            lineIds += LineIds[i];
+//            if (i + 1<LineIds.length)
+//                lineIds += ",";
+//        }
+        List<ComboTreeModel> list = this.iBasicService.GetCanHistoryCode(LineIds);
+        return  ApiResult(true,"获得设备编号列表成功", StatusCodeEnum.Success, ListHelper.addFirstEleComboTree(list,"-选择设备编号-"));
+    }
 }

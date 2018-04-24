@@ -214,6 +214,23 @@ public class BasicService implements IBasicService{
         return this.basicMapper.GetAlarmKeysByUserId(userId,user.getRolelv());
     }
 
-
+    @Override
+    public List<ComboTreeModel> GetCanHistoryCode(String[] LineIds){
+        List<String> Ids = Arrays.asList(LineIds);
+        List<Long> lineId = new  ArrayList<>();
+        for(String str : Ids) {
+            long i = Long.valueOf(str);
+            lineId.add(i);
+        }
+        List<String> list = this.deviceMapper.getDeviceCodesByLineIds(lineId);
+        List<ComboTreeModel> model = new ArrayList<>();
+        for (int i = 0;i<list.size();i++){
+            ComboTreeModel tree = new ComboTreeModel();
+            tree.setId(i+1);
+            tree.setText(list.get(i));
+            model.add(tree);
+        }
+        return model;
+    }
 
 }

@@ -60,4 +60,9 @@ public class CanV1Controller extends BaseApiController {
         return ApiResult(true,"CAN历史获取成功", StatusCodeEnum.Success,null);
     }
 
+    @RequestMapping("getcanhistorybus")
+    public ApiResult getCanHistoryBus(String code,int dayType){
+        CanHistoryViewModel canViewModel = this.iCanService.getCanHistoryBus(code,dayType);
+        return ApiResult(true,"CAN历史获取成功", StatusCodeEnum.Success,canViewModel);
+    }
 }

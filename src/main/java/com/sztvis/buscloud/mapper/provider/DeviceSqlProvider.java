@@ -26,6 +26,19 @@ public class DeviceSqlProvider {
         return SQL();
     }
 
+    public String getDeviceCodesByLineIds(Map<String,Object> map) {
+        List<Long> lineIds = (List<Long>)map.get("lineIds");
+        StringBuilder sb = new StringBuilder();
+        sb.append("select deviceCode from TramDeviceInfo where lineId in (");
+        for (int i = 0;i<lineIds.size();i++){
+            sb.append(lineIds.get(i));
+            if (i + 1<lineIds.size())
+                sb.append(",");
+        }
+        sb.append(")");
+        return sb.toString();
+    }
+
     public String getDeviceViewModel(Map<String,Object> map){
         long id = (Long) map.get("id");
         StringBuilder sb = new StringBuilder();
