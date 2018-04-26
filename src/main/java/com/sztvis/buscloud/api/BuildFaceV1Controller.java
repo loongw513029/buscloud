@@ -5,7 +5,8 @@ import com.sztvis.buscloud.model.dto.DeviceInspectViewModel;
 import com.sztvis.buscloud.model.dto.response.ApiResult;
 import com.sztvis.buscloud.model.entity.PageBean;
 import com.sztvis.buscloud.model.entity.StatusCodeEnum;
-import com.sztvis.buscloud.service.IBuildFaceService;
+import com.sztvis.buscloud.service.*;
+import com.sztvis.buscloud.service.Impl.FlowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,6 +21,8 @@ public class BuildFaceV1Controller extends BaseApiController{
 
     @Autowired
     private IBuildFaceService iBuildFaceService;
+    @Autowired
+    private IUnSafeService iUnSafeService;
 
     @RequestMapping("/getbuildfacelist")
     public ApiResult getBuildFaceList(long userId,String keywords,long departmentId,int sex,int page,int rows){
@@ -42,5 +45,9 @@ public class BuildFaceV1Controller extends BaseApiController{
         }
     }
 
+    @RequestMapping(value = "getCanHistoryCode",method = RequestMethod.GET)
+    public void EveryDayCanHandle() throws Exception {
+        this.iUnSafeService.CalcUnsafeIndex();
+    }
 
 }

@@ -5,14 +5,14 @@ public class Tramadasreportinfo {
   private Long deviceid;
   private String devicecode;
   private java.sql.Timestamp updatetime;
-  private Long cardistanceremind;
-  private Long dangerdistance;
-  private Long rollleftroad;
-  private Long roolrightroad;
-  private Long lowspeedbump;
-  private Long facebumpalarm;
-  private Long bumpperson;
-  private java.sql.Timestamp createtime;
+  public Long cardistanceremind;
+  public Long dangerdistance;
+  public Long rollleftroad;
+  public Long roolrightroad;
+  public Long lowspeedbump;
+  public Long facebumpalarm;
+  public Long bumpperson;
+  public java.sql.Timestamp createtime;
 
   public Long getId() {
     return id;

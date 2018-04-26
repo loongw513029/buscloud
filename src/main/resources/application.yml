@@ -2,6 +2,7 @@ serverHost: 120.78.128.247
 forward:
   host: 112.74.192.192
   getfilelisturl: http://${forward.host}:9200/Transmit/Server/
+videourl: E:\Tvis_3.0_Video\
 server:
   port: 8080
   session:
@@ -69,3 +70,4 @@ baiduai:
   appid: 11105943
   api_key: WOeQBwVlQlbGrcnDwbWLOAZy
   secret_key: Xa8Z5jE66C8MGDhMRqEAurmLDuV1cZnG
+

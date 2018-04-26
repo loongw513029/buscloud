@@ -1009,9 +1009,11 @@ public class CanService implements ICanService {
 
     @Override
     public void CalcDeviceCanHistorys(){
-        long[] behaviors = new long[]{ 99, 100, 101, 102, 103, 104, 105, 106, 107, 108 };
-        String start = DateUtil.addDay(DateUtil.getCurrentTime(DateStyle.YYYY_MM_DD),-1);
-        String end = DateUtil.addDay(DateUtil.getCurrentTime(DateStyle.YYYY_MM_DD_23_59_59),-1);
+        int[] behaviors = new int[]{ 99, 100, 101, 102, 103, 104, 105, 106, 107, 108 };
+       // String start = DateUtil.addDay(DateUtil.getCurrentTime(DateStyle.YYYY_MM_DD_00_00_00),-1);
+        String start = "2018-04-11 00:00:00";
+        //String end = DateUtil.addDay(DateUtil.getCurrentTime(DateStyle.YYYY_MM_DD_23_59_59),-1);
+        String end = "2018-04-11 23:59:59";
         List<TramDeviceInfo> list = this.deviceMapper.getTramDeviceCodeId();
         for (TramDeviceInfo item : list){
             try{
@@ -1019,11 +1021,21 @@ public class CanService implements ICanService {
                 model.setDeviceid(item.getId());
                 model.setUpdatetime(start);
                 model.setTotalcarfaultnumber((long)1);
-                String FirstMilage = this.canMapper.GetTop1CanInfo("FirstmilageSql",item.getId(),start);
-                String LastMilage = this.canMapper.GetTop1CanInfo("LastMilage",item.getId(),end);
+                Query query = new  Query();
+                Query query1 = new  Query();
+                TramCanInfo Info1 = mongoTemplate.findOne(query.addCriteria(Criteria.where("deviceid").is(item.getId())).addCriteria(Criteria.where("updatetime").gte(start)).with(new Sort(new Sort.Order(Sort.Direction.ASC,"updatetime"))).limit(1),TramCanInfo.class);
+                String FirstMilage = null;
+                String LastMilage = null;
+                if (Info1!=null){
+                    FirstMilage = Info1.getShortmileage();
+                }
+                TramCanInfo Info2 = mongoTemplate.findOne(query1.addCriteria(Criteria.where("deviceid").is(item.getId())).addCriteria(Criteria.where("updatetime").lte(end)).with(new Sort(new Sort.Order(Sort.Direction.DESC,"updatetime"))).limit(1),TramCanInfo.class);
+                if (Info2!=null){
+                    LastMilage = Info2.getShortmileage();
+                }
                 //里程
                 if (!StringHelper.isNotEmpty(FirstMilage) && !StringHelper.isNotEmpty(LastMilage)){
-                    model.setTotalmileage(Math.abs(Double.parseDouble(LastMilage) - Double.parseDouble(FirstMilage)));
+                    model.setTotalmileage(Math.abs(Double.parseDouble(LastMilage==null?String.valueOf(0):LastMilage) - Double.parseDouble(FirstMilage==null?String.valueOf(0):FirstMilage)));
                 }
                 else
                     model.setTotalmileage(0.0);
@@ -1034,17 +1046,16 @@ public class CanService implements ICanService {
                 //气耗
                 model.setGasavg(0.0);
                 //故障次数报警数
-                long faultSql2 = new Long(this.canMapper.GetTop1CanInfo("faultSql2",item.getId(),start,end));
-                model.setTotalfaultnumber(new Long(this.canMapper.GetTop1CanInfo("faultSql",item.getId(),start,end)));
-                model.setFaultthreelv(faultSql2);
-                model.setFaultsecondlv(faultSql2);
-                model.setFaultonelv(faultSql2);
-                model.setUnsafenumber(new Long(this.canMapper.GetTop1CanInfo("unsafeSql",item.getId(),start,end)));
-                model.setUnsafedriver(new Long(this.canMapper.GetTop1CanInfo("undriversql",item.getId(),start,end)));
+                model.setTotalfaultnumber((this.canMapper.GetTop1CanInfo("faultSql",item.getId(),start,end)));
+                model.setFaultthreelv(this.canMapper.GetTop1CanInfo("faultSql2",item.getId(),start,end,2));
+                model.setFaultsecondlv(this.canMapper.GetTop1CanInfo("faultSql2",item.getId(),start,end,1));
+                model.setFaultonelv(this.canMapper.GetTop1CanInfo("faultSql2",item.getId(),start,end,0));
+                model.setUnsafenumber(this.canMapper.GetTop1CanInfo("unsafeSql",item.getId(),start,end));
+                model.setUnsafedriver(this.canMapper.GetTop1CanInfo("undriversql",item.getId(),start,end,behaviors));
                 Double ss = this.canMapper.GetTop1CanInfo("timelongsql",item.getDevicecode(),start,end);
-                model.setRuntimelong(StringHelper.isNotEmpty(ss)? 0 : ss);
+                model.setRuntimelong(StringHelper.isEmpty(ss)? 0 : ss);
                 model.setSpeedingtotal(new Long(this.canMapper.GetTop1CanInfo("speedingSQL",item.getId(),start,end)));
-                int c = this.canMapper.GetTop1CanInfo("isexitsql",item.getId(),start,end);
+                Long c = this.canMapper.GetTop1CanInfo("isexitsql",item.getId(),start,end);
                 if (c == 0){
                     this.canMapper.GetTop1CanInfo("sql",model);
                 }

@@ -5,20 +5,20 @@ public class Tramunsafereportinfo {
   private Long deviceid;
   private String devicecode;
   private java.sql.Timestamp updatetime;
-  private Long carunstopingthenopendoor;
-  private Long cargoingthenunclosedoor;
-  private Long neutralandtravel;
-  private Long reversingspeeding;
-  private Long travelatnight;
-  private Long starttravelspeeding;
-  private Long enginestalledtravel;
-  private Long revvingup;
-  private Long quickslowdown;
-  private Long emergencybrake;
-  private Long uncivilizedwhistle;
-  private Long zebracrossinguncomity;
-  private Long speedingtravel;
-  private java.sql.Timestamp createtime;
+  public Long carunstopingthenopendoor;
+  public Long cargoingthenunclosedoor;
+  public Long neutralandtravel;
+  public Long reversingspeeding;
+  public Long travelatnight;
+  public Long starttravelspeeding;
+  public Long enginestalledtravel;
+  public Long revvingup;
+  public Long quickslowdown;
+  public Long emergencybrake;
+  public Long uncivilizedwhistle;
+  public Long zebracrossinguncomity;
+  public Long speedingtravel;
+  public java.sql.Timestamp createtime;
 
   public Long getId() {
     return id;

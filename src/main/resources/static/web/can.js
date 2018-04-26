@@ -3,6 +3,7 @@ var map;
 var interval;
 var tinterval;
 var marker;
+var markers = [];
 var busType=0;
 var intervalTime = 0;//请求间隔
 var currentSeconds = 0;//请求了多少秒
@@ -693,11 +694,11 @@ var Can=function () {
             $('.uptime').text(data.time);
             var obj = data.caninfo;
             if (obj.shortmileage)
-                $("#subTotalMileage-3").html(obj.shortmileage + "<i>km</i>");
+                $("#subTotalMileage-3").html(alert( obj.shortmileage.toFixed(2)) + "<i>km</i>");
             if (obj.totalmileage)
-                $("#totalMileage-3").html(obj.totalmileage + "<i>km</i>");
+                $("#totalMileage-3").html(alert( obj.totalmileage.toFixed(2)) + "<i>km</i>");
             if (obj.oilconsumption)
-                $("#totalEnergy-3").html(obj.oilconsumption + "<i>L</i>");
+                $("#totalEnergy-3").html(alert( obj.oilconsumption.toFixed(2)) + "<i>L</i>");
             var act = data.canstatinfo;
             Can.setLightStyle("#mixin-energe .icon-flag1", act.leftturn);
             Can.setLightStyle("#mixin-energe .icon-flag9", act.rightturn);
@@ -952,7 +953,8 @@ var Can=function () {
          * @constructor
          */
         SetMap:function (obj) {
-            var location = obj.location;
+            map.remove(markers);
+            var location = obj.caninfo.location;
             var angle = obj.roate;
             if(location != '')
             {
@@ -971,8 +973,9 @@ var Can=function () {
                     offset:new AMap.Pixel(-15,0),
                     autoRotation:false
                 });
+                markers.push(marker);
             }
-        },
+            },
         /**
          * 播放视频
          * @constructor
@@ -998,6 +1001,7 @@ var Can=function () {
                     Can.loadBMSDataView(data);
                 else
                     Can.loadNormalView(data);
+                //Can.removeMap();
                 Can.SetMap(result.result);
             })
         },

@@ -43,11 +43,11 @@ public interface CanMapper {
     int GetTotal(@Param("date1") String date1,@Param("date2") String date2,@Param("DeviceIds") String DeviceIds,@Param("AlarmKeys") String AlarmKeys);
 
     @SelectProvider(type = CanProvider.class,method = "CalcDeviceCanHistorysSQL")
-    void GetTop1CanInfo(@Param("type")String type,@Param("info")CanHistoryEveryDayInfo info);
-    String GetTop1CanInfo(@Param("type")String type,@Param("deviceId")long deviceId,@Param("start")String start);
-    int GetTop1CanInfo(@Param("type")String type,@Param("deviceId")long deviceId,@Param("start")String start,@Param("end")String end);
+    Long GetTop1CanInfo(@Param("type")String type,@Param("deviceId")long deviceId,@Param("start")String start,@Param("end")String end);
+    Long GetTop1CanInfo(@Param("type")String type,@Param("deviceId")long deviceId,@Param("start")String start,@Param("end")String end,@Param("level") int level);
     Double GetTop1CanInfo(@Param("type")String type,@Param("devicecode")String devicecode,@Param("start")String start,@Param("end")String end);
-    int GetTop1CanInfo(@Param("type")String type,@Param("deviceId")long deviceId,@Param("start")String start,@Param("end")String end,@Param("arr")int[] arr);
+    Long GetTop1CanInfo(@Param("type")String type,@Param("deviceId")long deviceId,@Param("start")String start,@Param("end")String end,@Param("arr")int[] arr);
+    void GetTop1CanInfo(@Param("type")String type,@Param("info")CanHistoryEveryDayInfo info);
 
     @SelectProvider(type = CanProvider.class,method = "GetAlarmChartList")
     int GetAlarmChartList(@Param("code") String code,@Param("lineId") long lineId,@Param("type")int type,@Param("type1")String type1,@Param("start")String start,@Param("end")String end,@Param("departmentId")long departmentId);

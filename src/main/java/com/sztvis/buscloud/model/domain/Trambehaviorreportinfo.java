@@ -5,17 +5,17 @@ public class Trambehaviorreportinfo {
   private Long deviceid;
   private String devicecode;
   private java.sql.Timestamp updatetime;
-  private Long levelonefatigue;
-  private Long leveltwofatigue;
-  private Long smoking;
-  private Long calling;
-  private Long stareddown;
-  private Long yawn;
-  private Long gazedaround;
-  private Long chating;
-  private Long leavepost;
-  private Long occlusion;
-  private java.sql.Timestamp createtime;
+  public Long levelonefatigue;
+  public Long leveltwofatigue;
+  public Long smoking;
+  public Long calling;
+  public Long stareddown;
+  public Long yawn;
+  public Long gazedaround;
+  public Long chating;
+  public Long leavepost;
+  public Long occlusion;
+  public java.sql.Timestamp createtime;
 
   public Long getId() {
     return id;

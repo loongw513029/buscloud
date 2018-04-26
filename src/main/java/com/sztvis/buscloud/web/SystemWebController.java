@@ -13,4 +13,10 @@ public class SystemWebController extends BaseController{
         ModelAndView modelAndView = new ModelAndView("/system/set");
         return modelAndView;
     }
+
+    @RequestMapping("/about")
+    public ModelAndView about(){
+        ModelAndView modelAndView = new ModelAndView("/system/about");
+        return modelAndView;
+    }
 }

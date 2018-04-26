@@ -30,4 +30,34 @@ public class UnSafeProvider {
         sql.ORDER_BY("a.ApplyTime desc");
         return sql.toString();
     }
+
+    public String GetCanExtrasSQL(Map<String, Object> map){
+        List<String> codes = (List<String>)map.get("codes");
+        List<String> key = StringHelper.IntegersToStrings((int[])map.get("key"));
+        String start = (String)map.get("start");
+        String end = (String)map.get("end");
+        SQL sql = new SQL();
+        sql.SELECT("Extras")
+        .FROM("TramCanAlarmInfo")
+        .WHERE("deviceCode in ('"+StringHelper.listToString(codes,"','")+"')")
+        .AND().WHERE("AlarmKey in ("+ StringHelper.listToString(key,',') +")")
+        .AND().WHERE("UpdateTime>='"+ start +"'")
+        .AND().WHERE("UpdateTime<='"+ end +"'");
+        return sql.toString();
+    }
+
+    public String GetUnSafeBehaviorIdSQL(Map<String, Object> map){
+        List<String> codes = (List<String>)map.get("codes");
+        String start = (String)map.get("start");
+        String end = (String)map.get("end");
+        SQL sql = new SQL();
+        sql.SELECT("count(Id)")
+                .FROM("TramUnSafeBehaviorInfo")
+                .WHERE("deviceCode in ('"+StringHelper.listToString(codes,"','")+"')")
+                .AND().WHERE("UnSafeType=13")
+                .AND().WHERE("Speed>=60")
+                .AND().WHERE("CreateTime>='"+ start +"'")
+                .AND().WHERE("CreateTime<='"+ end +"'");
+        return sql.toString();
+    }
 }

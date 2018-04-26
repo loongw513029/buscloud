@@ -138,7 +138,7 @@ public class StringHelper {
 
     /**
      * 按字节截取字符串
-     * @param str
+     * @param o
      * @param len
      * @return
      */
@@ -473,7 +473,7 @@ public class StringHelper {
 
     /**
      * 去掉字符串中、前、后的空格
-     * @param args
+     * @param name
      * @throws IOException
      */
     public static String extractBlank(String name) {
@@ -518,10 +518,28 @@ public class StringHelper {
         }
         return list2;
     }
+    public static List<String> IntegersToStrings(int[] lists){
+        List<String> list2 = new ArrayList<>();
+        for(int i=0;i<lists.length;i++){
+            list2.add(String.valueOf(lists[i]));
+        }
+        return list2;
+    }
+
     public static String listToString(List list, char separator) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < list.size(); i++) {
             sb.append(list.get(i)).append(separator);
+        }
+        return sb.toString().substring(0,sb.toString().length()-1);
+    }
+
+    public static String listToString(List list, String separator) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < list.size(); i++) {
+            sb.append(list.get(i));
+            if (i<list.size()-1)
+                sb.append(separator);
         }
         return sb.toString().substring(0,sb.toString().length()-1);
     }

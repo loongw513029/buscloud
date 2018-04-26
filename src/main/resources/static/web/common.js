@@ -232,7 +232,7 @@ var Main =function () {
          */
         ConvertGpsToAmapLocation:function (gpsLocation) {
             var loc = "";
-            var url = "http://restapi.amap.com/v3/assistant/coordinate/convert?locations=" + location + "&coordsys=gps&output=json&key=e30e5e9f5e8b3132a56321bd016aa1e3";
+            var url = "http://restapi.amap.com/v3/assistant/coordinate/convert?locations=" + gpsLocation + "&coordsys=gps&output=json&key=e30e5e9f5e8b3132a56321bd016aa1e3";
             $.ajaxSettings.async = false;
             $.getJSON(url, function (data) {
                 loc = data.locations;
