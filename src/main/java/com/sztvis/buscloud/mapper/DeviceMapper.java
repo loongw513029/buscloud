@@ -31,9 +31,6 @@ public interface DeviceMapper {
     @Select("select Id from TramDeviceInfo where lineId in (#{lineIds})")
     List<Long> getDeviceByLineIds(String lineIds);
 
-//    @Select("select DeviceCode from TramDeviceInfo where lineId in #{lineIds}")
-//    List<String> getDeviceCodesByLineIds(List<Long> lineIds);
-
     @SelectProvider(type = DeviceSqlProvider.class,method = "getDeviceCodesByLineIds")
     List<String> getDeviceCodesByLineIds(@Param("lineIds") List<Long> lineIds);
 
@@ -260,4 +257,7 @@ public interface DeviceMapper {
 
     @Select("select count(Id) from Deviceonlinerecords where devicecode=#{devicecode} and updatetime=#{updatetime}")
     long getDeviceOnlineRecordCount(@Param("devicecode") String devicecode,@Param("updatetime") String updatetime);
+
+    @Update("update PayTerminalRecords set passengerImage=#{image} where deviceCode=#{deviceCode} and updateTime=#{updateTime}")
+    void updatePayTerminalImage(@Param("image") String image,@Param("deviceCode") String deviceCode,@Param("updateTime") String updateTime);
 }

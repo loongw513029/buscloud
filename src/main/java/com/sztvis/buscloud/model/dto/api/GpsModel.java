@@ -1,5 +1,7 @@
 package com.sztvis.buscloud.model.dto.api;
 
+import java.util.Map;
+
 /**
  * @author longweiqian
  * @company tvis
@@ -12,6 +14,8 @@ public class GpsModel {
     private Double Lat;
     private Double Speed;
     private Double Direct;
+    private double altitude;
+    private Map<Integer,Double> signal;
 
     public String getCode() {
         return Code;
@@ -71,4 +75,19 @@ public class GpsModel {
 
     private String Model;
 
+    public double getAltitude() {
+        return altitude;
+    }
+
+    public void setAltitude(double altitude) {
+        this.altitude = altitude;
+    }
+
+    public Map<Integer, Double> getSignal() {
+        return signal;
+    }
+
+    public void setSignal(Map<Integer, Double> signal) {
+        this.signal = signal;
+    }
 }

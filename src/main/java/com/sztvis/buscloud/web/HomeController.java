@@ -10,6 +10,8 @@ import com.sztvis.buscloud.service.IHomeService;
 import com.sztvis.buscloud.service.IMaintenanceService;
 import com.sztvis.buscloud.service.IMenuService;
 import com.sztvis.buscloud.service.ISiteSettingService;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

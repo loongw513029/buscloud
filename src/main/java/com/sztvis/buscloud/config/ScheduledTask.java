@@ -51,26 +51,23 @@ public class ScheduledTask implements SchedulingConfigurer {
     /**
      * 每天零点10分开始统计单车数据
      */
-    @Scheduled(cron = "0 1 0 * * ?")
-    //@Scheduled(cron = "0 0/1 * * ? *")
+    @Scheduled(cron = "0 10 0 * * ?")
     public void EveryDayCanHandle(){
-        System.out.println("当前时间为：" + DateUtil.getCurrentTime());
         this.iDeviceService.autoCanSignleStatis();
         this.iDeviceService.autoClacOnlineResult();
     }
 
-    /**
-     * 每天零点30分统计每辆车的CAN分析
-     */
-    @Scheduled(cron = "0 30 0 * * ?")
-    //@Scheduled(cron = "0 0/1 * * * ?")
-    public void EveryDayCanHistorys(){ this.iCanService.CalcDeviceCanHistorys();}
+//    /**
+//     * 每天零点30分统计每辆车的CAN分析
+//     */
+//    @Scheduled(cron = "0 30 0 * * ?")
+//    //@Scheduled(cron = "0 0/1 * * * ?")
+//    public void EveryDayCanHistorys(){ this.iCanService.CalcDeviceCanHistorys();}
 
     /**
      * 每天一点计算不安全行为指数
      */
     @Scheduled(cron = "0 0 1 * * ?")
-    //@Scheduled(cron = "0 0/1 * * * ?")
     public void EveryDayUnsafeIndex() throws Exception {
         System.out.println("当前时间为：" + DateUtil.getCurrentTime());
         this.iUnSafeService.CalcUnsafeIndex();}
@@ -79,7 +76,6 @@ public class ScheduledTask implements SchedulingConfigurer {
      * 每天两点计算昨天报警视频大小
      */
     @Scheduled(cron = "0 0 2 * * ?")
-    //@Scheduled(cron = "0 0/1 * * * ?")
     public void EveryDayAlarmVideo(){
         System.out.println("当前时间为：" + DateUtil.getCurrentTime());
         this.iFlowService.SensusAlarmVideo();}

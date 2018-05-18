@@ -2,16 +2,17 @@ package com.sztvis.buscloud.model.dto.api;
 
 public class BuildFaceModel {
 
-    private String code;//设备编码
+    private String deviceCode;//设备编码
     private String image;//base64编码图片
     private String updateTime;//数据时间
+    private int channel;//拍摄通道，哪个摄像头拍摄的
 
-    public String getCode() {
-        return code;
+    public String getDeviceCode() {
+        return deviceCode;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setDeviceCode(String deviceCode) {
+        this.deviceCode = deviceCode;
     }
 
     public String getImage() {
@@ -28,5 +29,13 @@ public class BuildFaceModel {
 
     public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public int getChannel() {
+        return channel;
+    }
+
+    public void setChannel(int channel) {
+        this.channel = channel;
     }
 }

@@ -65,4 +65,6 @@ public interface IBuildFaceService {
      */
     void saveComparisonRecord(TramBuildFaceComparsionRecord record);
 
+    void updateBuildFaceImage(String image,String deviceCode,String updateTime);
+
 }

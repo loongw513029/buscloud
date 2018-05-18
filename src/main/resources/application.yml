@@ -35,6 +35,8 @@ spring:
       max-wait: 10000
       min-idle: 5
       initial-size: 5
+  profiles:
+    active: prod
 
 mybatis:
   type-aliases-package: com.sztvis.buscloud.model.domain
@@ -70,4 +72,9 @@ baiduai:
   appid: 11105943
   api_key: WOeQBwVlQlbGrcnDwbWLOAZy
   secret_key: Xa8Z5jE66C8MGDhMRqEAurmLDuV1cZnG
+amap:
+  webapikey: e30e5e9f5e8b3132a56321bd016aa1e3
+shiro:
+  cas: http://localhost:8080
+  server: http://localhost:8080
 

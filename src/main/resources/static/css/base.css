@@ -71,3 +71,26 @@ body.panel-noscroll{padding: 5px}
 .ds-item i{
     color: #dedede;
 }
+.alarmPic,.alarmInfo,.alarmVideo{
+    width: 17px;
+    height: 17px;
+    background-size: 17px;
+}
+.alarmPic{
+    background-image: url("/images/white_pic.png");
+}
+.alarmInfo{
+    background-image: url("/images/info.png");
+}
+.alarmVideo{
+    background-image: url("/images/alarm_video.png");
+}
+.tabs-selected .alarmPic{
+    background-image: url('/images/pic_active.png');
+}
+.tabs-selected .alarmInfo{
+    background-image: url("/images/info_active.png");
+}
+.tabs-selected .alarmVideo{
+    background-image: url("/images/video_active.png");
+}

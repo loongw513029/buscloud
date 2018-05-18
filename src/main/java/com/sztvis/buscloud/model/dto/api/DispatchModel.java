@@ -11,6 +11,8 @@ public class DispatchModel {
     private int Num;
     private int Value1;
     private int Value2;
+    private int dtype;
+    private int linetype;
 
     public String getCode() {
         return Code;
@@ -62,4 +64,19 @@ public class DispatchModel {
 
     private String Value3;
 
+    public int getDtype() {
+        return dtype;
+    }
+
+    public void setDtype(int dtype) {
+        this.dtype = dtype;
+    }
+
+    public int getLinetype() {
+        return linetype;
+    }
+
+    public void setLinetype(int linetype) {
+        this.linetype = linetype;
+    }
 }

@@ -26,7 +26,7 @@ public class AlarmProvider {
         int offset = (Integer)map.get("offset");
         int limit = (Integer)map.get("limit");
         StringBuilder sb = new StringBuilder();
-        sb.append("select a.id,a.deviceid,a.AlarmVideoPath as path,a.devicecode,b.busnumber,c.linename,d.departmentname,e.alarmname,a.updatetime,a.location,a.speed,a.distance,a.isbrake,a.value");
+        sb.append("select a.id,a.deviceid,a.AlarmVideoPath,a.path,a.devicecode,b.busnumber,c.linename,d.departmentname,e.alarmname,a.updatetime,a.location,a.speed,a.distance,a.isbrake,a.value");
         sb.append(" from TramAlarmInfo a left join TramDeviceInfo g on a.deviceid = g.id left join TramBusInfo b on g.busid = b.id");
         sb.append(" left join TramLineInfo c on g.lineid = c.id left join TramDepartmentInfo d on g.departmentid = d.id left join TramBasicInfo e on a.alarmType=e.customId");
         sb.append(" where a.departmentId in ("+departments+")");
@@ -82,7 +82,7 @@ public class AlarmProvider {
         String devices = (String)map.get("devices");
         String starttime = (String)map.get("starttime");
         StringBuilder sb = new StringBuilder();
-        sb.append("select a.id,a.deviceid,a.AlarmVideoPath as path,a.devicecode,b.busnumber,c.linename,d.departmentname,e.alarmname,a.updatetime,a.location,a.speed,a.distance,a.isbrake,a.value");
+        sb.append("select a.id,a.deviceid,a.AlarmVideoPath,a.path,a.devicecode,b.busnumber,c.linename,d.departmentname,e.alarmname,a.updatetime,a.location,a.speed,a.distance,a.isbrake,a.value");
         sb.append(" from TramAlarmInfo a left join TramDeviceInfo g on a.deviceid = g.id left join TramBusInfo b on g.busid = b.id");
         sb.append(" left join TramLineInfo c on g.lineid = c.id left join TramDepartmentInfo d on g.departmentid = d.id left join TramBasicInfo e on a.alarmType=e.customId");
         sb.append(" where 1=1");
@@ -97,7 +97,7 @@ public class AlarmProvider {
     public String getAlarmViewModelSQL(Map<String,Object> map){
         long id = (Long)map.get("id");
         StringBuilder sb = new StringBuilder();
-        sb.append("select a.id,a.deviceid,a.AlarmVideoPath as path,a.parentalarmtype,a.devicecode,b.busnumber,c.linename,d.departmentname,e.alarmname,a.updatetime,a.location,a.speed,a.distance,a.isbrake,a.value");
+        sb.append("select a.id,a.deviceid,a.AlarmVideoPath,a.path,a.parentalarmtype,a.devicecode,b.busnumber,c.linename,d.departmentname,e.alarmname,a.updatetime,a.location,a.speed,a.distance,a.isbrake,a.value");
         sb.append(" from TramAlarmInfo a left join TramDeviceInfo g on a.deviceid = g.id left join TramBusInfo b on g.busid = b.id");
         sb.append(" left join TramLineInfo c on g.lineid = c.id left join TramDepartmentInfo d on g.departmentid = d.id left join TramBasicInfo e on a.alarmType=e.customId");
         sb.append(" where a.id="+id);
@@ -138,19 +138,19 @@ public class AlarmProvider {
         SQL sql = new SQL();
         sql.SELECT("a.Id,b.DeviceCode,a.Extras,b.Id as DeviceId,c.BusNumber" +
                 ",d.LineName,e.DepartmentName,f.AlarmName,f.Level,a.UpdateTime,a.AlarmValue,a.AlarmKey,a.AlarmType,a.AlarmVideoPath as path");
-        sql.FROM("TramCanAlarmInfo a left join TramDeviceInfo b on a.DeviceId = b.Id left join TramBusInfo c on " +
+        sql.FROM("TramAlarmInfo a left join TramDeviceInfo b on a.DeviceId = b.Id left join TramBusInfo c on " +
                 "b.BusId = c.Id left join TramLineInfo d on b.LineId = d.Id left join TramDepartmentInfo e on " +
-                "b.DepartmentId = e.Id left join TramBasicInfo f on a.AlarmKey = f.Id");
-        sql.WHERE("a.IsShow=1 and a.deviceId in("+device+") and AlarmKey in("+alarmkey+")");
+                "b.DepartmentId = e.Id left join TramBasicInfo f on a.AlarmType = f.Id");
+        sql.WHERE("a.IsShow=1 and a.deviceId in("+device+") and AlarmType in("+alarmkey+")");
         if (String.valueOf(dayType)!=null&&dayType!=0)
         {
             DayTypes types = DayTypes.getDayByType(dayType);
             sql.AND().WHERE("and datediff(dd,'"+ types.getStartTime() +"',a.UpdateTime)>=0  and datediff(dd,'"+ types.getEndTime() +"',a.UpdateTime)<=0");
         }
         if (String.valueOf(typeId)!=null&&typeId!=0)
-            sql.AND().WHERE("and a.AlarmKey in (select Id from TramBasicInfo where AlarmType="+ typeId +"");
+            sql.AND().WHERE("and a.AlarmType in (select Id from TramBasicInfo where AlarmType="+ typeId +"");
         if (String.valueOf(alarmType)!=null&&alarmType!=0)
-            sql.AND().WHERE("and a.AlarmKey="+ alarmType +"");
+            sql.AND().WHERE("and a.AlarmType="+ alarmType +"");
         if (code!=null&&code!="")
             sql.AND().WHERE("and (b.DeviceCode like '%"+ code +"%' or c.BusNumber like '"+ code +"%')");
         if (String.valueOf(lineId)!=null&&lineId!=0)
@@ -169,11 +169,11 @@ public class AlarmProvider {
         List<Long> deviceIds=(List<Long>)map.get("deviceIds");
         SQL sql=new SQL();
         sql.SELECT("count(Id)");
-        sql.FROM("TramCanAlarmInfo");
+        sql.FROM("TramAlarmInfo");
         if (type==1)
-            sql.WHERE("AlarmKey in (select Id from TramBasicInfo where AlarmType="+ Id +") and CreateTime>='"+ startTime +"' and CreateTime<='"+ endTime +"' and isShow=1 and deviceId in ("+ deviceIds +")");
+            sql.WHERE("AlarmType in (select Id from TramBasicInfo where AlarmType="+ Id +") and CreateTime>='"+ startTime +"' and CreateTime<='"+ endTime +"' and isShow=1 and deviceId in ("+ deviceIds +")");
         else
-            sql.WHERE("AlarmKey in(select Id from TramBasicInfo where AlarmType in (select id from TramAlarmTypeInfo where parentId="+ Id +")) and CreateTime>='"+ startTime +"' and CreateTime<='"+ endTime +"' and isShow=1 and deviceId in ("+ deviceIds +")");
+            sql.WHERE("AlarmType in(select Id from TramBasicInfo where AlarmType in (select id from TramAlarmTypeInfo where parentId="+ Id +")) and CreateTime>='"+ startTime +"' and CreateTime<='"+ endTime +"' and isShow=1 and deviceId in ("+ deviceIds +")");
         if (StringHelper.isNotEmpty(lineId))
             sql.AND().WHERE("DeviceId in(select Id from TramDeviceInfo where LineId=" + lineId + ")");
         return sql.toString();
@@ -197,6 +197,60 @@ public class AlarmProvider {
         }
         else
             sql.WHERE("parentId="+Id);
+        return sql.toString();
+    }
+
+    public String GetAppAlarmListSQL(Map<String,Object> map){
+        List<Long> departments = (List<Long>)map.get("departments");
+        int dayType = (Integer)map.get("dayType");
+        long lineId = (Long)map.get("lineId");
+        int type = (Integer)map.get("type");
+        String code = (String)map.get("code");
+        int page = (Integer)map.get("page");
+        int limit = (Integer)map.get("limit");
+        SQL sql = new SQL();
+        sql.SELECT("a.id,a.deviceCode,b.busNumber,c.lineName,d.departmentName,a.AlarmType as AlarmKey,e.alarmName,e.level,a.updateTime,a.Value as AlarmValue,a.location,a.speed,a.distance,a.isBrake");
+        String condition = "a.departmentId in ("+StringHelper.listToString(departments,",")+")";
+        if (String.valueOf(dayType)!=null&&dayType!=0)
+        {
+            DayTypes types = DayTypes.getDayByType(dayType);
+            sql.AND().WHERE("and datediff(dd,'"+ types.getStartTime() +"',a.UpdateTime)>=0  and datediff(dd,'"+ types.getEndTime() +"',a.UpdateTime)<=0");
+        }
+        if (String.valueOf(type)!=null&&type!=0)
+            sql.AND().WHERE("and a.AlarmType="+ type +"");
+        if (code!=null&&code!="")
+            sql.AND().WHERE("and (b.DeviceCode like '%"+ code +"%' or b.BusNumber like '"+ code +"%')");
+        if (String.valueOf(lineId)!=null&&lineId!=0)
+            sql.AND().WHERE("and c.Id="+ lineId +"");
+        sql.WHERE(condition);
+        sql.FROM("TramAlarmInfo a left join TramDeviceInfo g on a.deviceId = g.Id left join TramBusInfo b on g.busId = b.id left join TramLineInfo c on g.lineId = c.id left join TramDepartmentInfo d on a.departmentId = d.id");
+        sql.ORDER_BY("a.updateTime desc");
+        String where = sql.toString() + " limit "+(page-1)*limit+","+limit;
+        return where;
+    }
+
+    public String GetAppAlarmListCountSQL(Map<String,Object> map){
+        List<Long> departments = (List<Long>)map.get("departments");
+        int dayType = (Integer)map.get("dayType");
+        long lineId = (Long)map.get("lineId");
+        int type = (Integer)map.get("type");
+        String code = (String)map.get("code");
+        SQL sql = new SQL();
+        sql.SELECT("count(a.id)");
+        String condition = "a.departmentId in ("+StringHelper.listToString(departments,",")+")";
+        if (String.valueOf(dayType)!=null&&dayType!=0)
+        {
+            DayTypes types = DayTypes.getDayByType(dayType);
+            sql.AND().WHERE("and datediff(dd,'"+ types.getStartTime() +"',a.UpdateTime)>=0  and datediff(dd,'"+ types.getEndTime() +"',a.UpdateTime)<=0");
+        }
+        if (String.valueOf(type)!=null&&type!=0)
+            sql.AND().WHERE("and a.AlarmType="+ type +"");
+        if (code!=null&&code!="")
+            sql.AND().WHERE("and (b.DeviceCode like '%"+ code +"%' or b.BusNumber like '"+ code +"%')");
+        if (String.valueOf(lineId)!=null&&lineId!=0)
+            sql.AND().WHERE("and c.Id="+ lineId +"");
+        sql.WHERE(condition);
+        sql.FROM("TramAlarmInfo a left join TramDeviceInfo g on a.deviceId = g.Id left join TramBusInfo b on g.busId = b.id left join TramLineInfo c on g.lineId = c.id left join TramDepartmentInfo d on a.departmentId = d.id");
         return sql.toString();
     }
 }

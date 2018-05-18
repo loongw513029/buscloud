@@ -36,7 +36,7 @@
     <div class="expand up"></div>
     <div id="box" class="easyui-tabs" style="width:100%;height:200px;">
         <div title="车辆列表">
-            <table id="table1"></table>
+            <table id="table1" class="device-list"></table>
         </div>
         <div title="实时报警">
             <div class="easyui-layout">

@@ -8,10 +8,13 @@ package com.sztvis.buscloud.model.entity;
 public enum  DeviceStateFiled {
     Videotape("Videotape"),Video("Video"),HardDisk("HardDisk"),SDCard("SDCard"),
     CPUUseRate("CPUUseRate"),CPUTemp("CPUTemp"),MemoryUseRate("MemoryUseRate"),DiskTemp("DiskTemp"),GpsState("GpsState"),
-    CanState("CanState"),InternetState("InternetState"),GpsSignelState("GpsSignelState"),SIMBalance("SIMBalance"),
+    CanState("CanState"),InternetState("InternetState"),GpsSignalState("GpsSignalState"),SIMBalance("SIMBalance"),
     GpsInspectState("GpsInspectState"),CanInspectState("CanInspectState"),BehaviorInspectState("BehaviorInspectState"),
     RadarInspectState("RadarInspectState"),AdasInspectState("AdasInspectState"),TimingState("TimingState"),OnlineState("OnlineState"),
-    SurplusDiskSize("SurplusDiskSize"),SurplusSdcardSize("SurplusSdcardSize"),SIMCardNo("SimCardNo"),IsCanIntegrity("IsCanIntegrity");
+    SurplusDiskSize("SurplusDiskSize"),SurplusSdcardSize("SurplusSdcardSize"),SIMCardNo("SimCardNo"),IsCanIntegrity("IsCanIntegrity"),
+    SSDTemp("SSDTemp"),BoxTemp("BoxTemp"),ExtendTemp1("ExtendTemp1"),ExtendTemp2("ExtendTemp2"),ExtendTemp3("ExtendTemp3"),ExtendTemp4("ExtendTemp4"),
+    FiveGModeType("FiveGModeType"),Voltage1("Voltage1"),Voltage2("Voltage2"),GpsSignal("GpsSignal"),InternetSignal("InternetSignal"),
+    SIMOperator("SIMOperator");
     private DeviceStateFiled(String value){
         this.value = value;
     }

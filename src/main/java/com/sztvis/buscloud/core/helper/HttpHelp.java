@@ -6,9 +6,7 @@ import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.*;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
@@ -130,6 +128,77 @@ public class HttpHelp {
     }
 
     /**
+     * 发送Delete请求
+     * @param httpDelete
+     * @return
+     */
+    private static String sendHttpDelete(HttpDelete httpDelete)
+    {
+        CloseableHttpClient httpClient=null;
+        CloseableHttpResponse response=null;
+        String responseContent=null;
+        try {
+            httpClient = getHttpClient();   //创建默认的httpClient实例
+            httpDelete.setConfig(requestConfig);   //配置请求信息
+            response = httpClient.execute(httpDelete);   //执行请求
+            HttpEntity entity = response.getEntity();   //得到响应实例
+            if (response.getStatusLine().getStatusCode()>=300){
+                throw new Exception("Http请求不成功!错误码："+ response.getStatusLine().getStatusCode());
+            }
+            if (response.getStatusLine().getStatusCode()==200){
+                responseContent = EntityUtils.toString(entity,CHARSET_UTF_8);
+                EntityUtils.consume(entity);
+            }
+        }  catch (Exception e) {
+            e.printStackTrace();
+        }  finally {
+            try {
+                if (response!=null){   //释放资源
+                    response.close();;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return responseContent;
+    }
+
+    /**
+     * 发送Patch请求
+     * @param httpPatch
+     * @return
+     */
+    private static String sendHttpPatch(HttpPatch httpPatch)
+    {
+        CloseableHttpClient httpClient=null;
+        CloseableHttpResponse response=null;
+        String responseContent=null;
+        try {
+            httpClient = getHttpClient();   //创建默认的httpClient实例
+            httpPatch.setConfig(requestConfig);   //配置请求信息
+            response = httpClient.execute(httpPatch);   //执行请求
+            HttpEntity entity = response.getEntity();   //得到响应实例
+            if (response.getStatusLine().getStatusCode()>=300){
+                throw new Exception("Http请求不成功!错误码："+ response.getStatusLine().getStatusCode());
+            }
+            if (response.getStatusLine().getStatusCode()==200){
+                responseContent = EntityUtils.toString(entity,CHARSET_UTF_8);
+                EntityUtils.consume(entity);
+            }
+        }  catch (Exception e) {
+            e.printStackTrace();
+        }  finally {
+            try {
+                if (response!=null){   //释放资源
+                    response.close();;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return responseContent;
+    }
+    /**
      * 发送Post请求
      *
      * @param httpGet
@@ -219,5 +288,39 @@ public class HttpHelp {
          HttpGet httpGet = new HttpGet(httpUrl);
          return sendHttpGet(httpGet);
      }
+
+     public static String sendHttp(String httpUrl,String jsonStr,String method){
+         String result ="";
+         switch (method.toLowerCase()) {
+             case "get":
+                 result = sendHttpGet(httpUrl);
+                 break;
+             case "post":
+                 if (jsonStr != null && jsonStr.trim().length() > 0) {
+                     HttpPost httpPost = new HttpPost(httpUrl);
+                     StringEntity stringEntity = new StringEntity(jsonStr, "UTF-8");
+                     stringEntity.setContentType(CONTENT_TYPE_JSON_URL);
+                     httpPost.setEntity(stringEntity);
+                     result = sendHttpPost(httpPost);
+                 }
+                 break;
+             case "patch":
+                 if (jsonStr != null && jsonStr.trim().length() > 0) {
+                     HttpPatch httpPatch = new HttpPatch(httpUrl);
+                     StringEntity stringEntity = new StringEntity(jsonStr, "UTF-8");
+                     stringEntity.setContentType(CONTENT_TYPE_JSON_URL);
+                     httpPatch.setEntity(stringEntity);
+                     result = sendHttpPatch(httpPatch);
+                 }
+                 break;
+             case "delete":
+                 HttpDelete httpDelete = new HttpDelete(httpUrl);
+                 result = sendHttpDelete(httpDelete);
+                 break;
+
+         }
+         return result;
+     }
+
 }
 

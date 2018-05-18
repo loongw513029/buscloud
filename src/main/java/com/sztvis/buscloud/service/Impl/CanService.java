@@ -16,7 +16,11 @@ import com.sztvis.buscloud.model.dto.push.PushModel;
 import com.sztvis.buscloud.model.dto.service.SaveAlarmQuery;
 import com.sztvis.buscloud.model.entity.UnSafeBehaviorTypes;
 import com.sztvis.buscloud.service.*;
+import com.sztvis.buscloud.util.BeanRefUtil;
 import com.sztvis.buscloud.util.DayTypes;
+import com.sztvis.buscloud.util.LogUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -25,7 +29,11 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import java.beans.IntrospectionException;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -69,13 +77,43 @@ public class CanService implements ICanService {
         return this.mongoTemplate.findOne(query,TramCanInfo.class);
     }
 
+    /**
+     * 获得当前时间点之前的的最后一条CAN数据，目的是想这个CAN数据，赋值给新的CAN数据,包含纯电动车数据
+     * @return
+     */
+    private TramCanInfo getBeforeCurrentTimeLastCanInfo(TramCanInfo canInfo){
+        Query query = new Query();
+        query.addCriteria(new Criteria("devicecode").is(canInfo.getDevicecode()));
+        query.addCriteria(new Criteria("updatetime").lt(canInfo.getUpdatetime()));
+        query.with(new Sort(new Sort.Order(Sort.Direction.DESC,"updatetime")));
+        TramCanInfo lastCanInfo = this.mongoTemplate.findOne(query,TramCanInfo.class);
+        try {
+            Map<String, String> valueMap = BeanRefUtil.getFieldValueMap(canInfo);
+            BeanRefUtil.setFieldValue(lastCanInfo,valueMap);
+            if(canInfo.getElectricCanInfo()!=null){
+                if(lastCanInfo.getElectricCanInfo()==null)
+                    lastCanInfo.setElectricCanInfo(canInfo.getElectricCanInfo());
+                else{
+                    Map<String, String> valueMap2 = BeanRefUtil.getFieldValueMap(canInfo.getElectricCanInfo());
+                    ElectricCanInfo electricCanInfo = lastCanInfo.getElectricCanInfo();
+                    BeanRefUtil.setFieldValue(electricCanInfo,valueMap2);
+                    lastCanInfo.setElectricCanInfo(electricCanInfo);
+                }
+            }
+        }catch (Exception ex){
+            LogUtil.printLog(ex,this.getClass());
+        }
+        return lastCanInfo;
+    }
+
     @Override
     public void Save(TramCanInfo canInfo) {
         TramCanInfo obj = this.GetCanInfo(canInfo.getDevicecode(),canInfo.getUpdatetime());
+        TramCanInfo newCanInfo = this.getBeforeCurrentTimeLastCanInfo(canInfo);
         if(obj == null)
-            this.mongoTemplate.save(canInfo);
+            this.mongoTemplate.save(newCanInfo);
         else
-            this.Update(canInfo);
+            this.Update(newCanInfo);
     }
 
     @Override
@@ -215,7 +253,8 @@ public class CanService implements ICanService {
                 alarmInfo.setBrake(query.isBrake());
                 alarmInfo.setDepartmentId(deviceInfo.getDepartmentid());
                 alarmInfo.setState(basicInfo.isEnable() ? 1 : 0);
-                alarmInfo.setPath("");
+                alarmInfo.setPath(query.getPath2());
+                alarmInfo.setSystemInsertTime(Timestamp.valueOf(DateUtil.getCurrentTime()));
                 if (gpsInfo != null)
                     alarmInfo.setLocation(gpsInfo.getLongitude() + "," + gpsInfo.getLatitude());
                 this.alarmMapper.SaveAlarmInfo(alarmInfo);
@@ -223,12 +262,12 @@ public class CanService implements ICanService {
                 long alarmId = alarmInfo.getId();
                 //是否需要推送（推送到App,推送到页面）
                 if (basicInfo.isPush()) {
-                    List<String> key = new ArrayList<>();
-                    key.add("IndexUnit");
                     try {
-                        if (this.iSiteSettingService.GetSiteSettings().getAlarmTurn()==1){
+                        if (this.iSiteSettingService.GetSiteSettings().getAlarmTurn()==1&&(alarmType!=12||alarmType!=14)){
                             String extrias = query.getSpeed() + "|" + query.getDistance() + "|" + (query.isBrake() ? 1 : 0);
                             PushAlarmModel pushAlarmModel = new PushAlarmModel(alarmId, deviceInfo.getDevicecode(), basicInfo.getId().intValue(), updateTime, basicInfo.getAlarmName(), "", query.getPath(), extrias, query.getValue(), StringHelper.isEmpty(basicInfo.getCustomId()) ? 0 : Integer.valueOf(basicInfo.getCustomId()));
+                            pushAlarmModel.setLongitude(gpsInfo!=null?gpsInfo.getLongitude():"");
+                            pushAlarmModel.setLatitude(gpsInfo!=null?gpsInfo.getLatitude():"");
                             PushModel pushModel = new PushModel(2, pushAlarmModel);
                             this.iPushService.SendToMsgByDeviceCode(deviceInfo.getDevicecode(), pushModel);
                         }
@@ -295,7 +334,7 @@ public class CanService implements ICanService {
         query.with(new Sort(new Sort.Order(Sort.Direction.DESC,"updatetime")));
         return this.mongoTemplate.findOne(query,TramCanInfo.class);
     }
-    public SaveAlarmQuery getAlarmQuery(String deviceCode,long deviceId,String updateTime,int type,String value,String extras,String path){
+    public SaveAlarmQuery getAlarmQuery(String deviceCode,long deviceId,String updateTime,int type,String value,String extras,String path,String path2){
         SaveAlarmQuery query = new SaveAlarmQuery();
         String[] extraArray =extras.equals("")?null:extras.split(",");
         TramGpsInfo gpsInfo = this.iGpsService.getLastGpsInfo(deviceCode,updateTime);
@@ -312,6 +351,7 @@ public class CanService implements ICanService {
         query.setAlarmType(type);
         query.setDeviceCode(deviceCode);
         query.setPath(path);
+        query.setPath2(path2);
         query.setDeviceId(deviceId);
         query.setValue(value);
         return query;

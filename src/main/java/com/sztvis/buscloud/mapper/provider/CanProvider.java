@@ -38,7 +38,7 @@ public class CanProvider {
                 int level = (int)map.get("level");
                 String start = (String)map.get("start");
                 String end = (String)map.get("end");
-                sql.SELECT("count(a.Id)").FROM("TramCanAlarmInfo a left join TramBasicInfo b on a.AlarmKey=b.Id")
+                sql.SELECT("count(a.Id)").FROM("TramAlarmInfo a left join TramBasicInfo b on a.AlarmType=b.Id")
                 .WHERE(" a.deviceId="+ deviceId +" and a.UpdateTime>='"+ start +"' and a.UpdateTime<='"+ end +"' and b.Level="+ level +" and a.state=0 and a.isshow=1");
             }
             else{
@@ -47,11 +47,11 @@ public class CanProvider {
                     long deviceId = (long)map.get("deviceId");
                     String start = (String)map.get("start");
                     String end = (String)map.get("end");
-                    sql.FROM("TramCanAlarmInfo")
+                    sql.FROM("TramAlarmInfo")
                             .WHERE("deviceId="+ deviceId +" and UpdateTime>='"+ start +"' and UpdateTime<='"+ end +"' and state=0 and isshow=1");
                     if (type=="undriversql"){
                         int[] arr = (int[])map.get("arr");
-                        sql.AND().WHERE("AlarmKey in ("+ StringHelper.listToString(StringHelper.IntegersToStrings(arr),',') +")");
+                        sql.AND().WHERE("AlarmType in ("+ StringHelper.listToString(StringHelper.IntegersToStrings(arr),',') +")");
                     }
                 }
                 if (type=="isexitsql"){

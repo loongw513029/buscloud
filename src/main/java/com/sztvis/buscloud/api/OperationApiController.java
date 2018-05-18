@@ -4,14 +4,12 @@ import com.github.pagehelper.PageHelper;
 import com.sztvis.buscloud.core.helper.ListHelper;
 import com.sztvis.buscloud.model.domain.TramBasicInfo;
 import com.sztvis.buscloud.model.domain.TramDriverInfo;
+import com.sztvis.buscloud.model.domain.TramElectronicFenceInfo;
 import com.sztvis.buscloud.model.dto.*;
 import com.sztvis.buscloud.model.dto.response.ApiResult;
 import com.sztvis.buscloud.model.entity.PageBean;
 import com.sztvis.buscloud.model.entity.StatusCodeEnum;
-import com.sztvis.buscloud.service.IBasicService;
-import com.sztvis.buscloud.service.IDeviceService;
-import com.sztvis.buscloud.service.IDriverService;
-import com.sztvis.buscloud.service.ILineService;
+import com.sztvis.buscloud.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +37,8 @@ public class OperationApiController extends BaseApiController{
     private IBasicService iBasicService;
     @Autowired
     private IDriverService iDriverService;
+    @Autowired
+    private IElecFenceService iElecFenceService;
     /**
      * get line collections show web page
      * @param userId
@@ -187,7 +187,7 @@ public class OperationApiController extends BaseApiController{
         basicInfo.setParentId((long)viewModel.getParentid());
         basicInfo.setPush(viewModel.getIspush().equals("1"));
         basicInfo.setTurn(viewModel.getTurn().equals("1"));
-        basicInfo.setThreShold("");
+        basicInfo.setThreShold(viewModel.getThreshold());
         try{
             this.iBasicService.updateBasicInfo(basicInfo);
             return ApiResult(true,"修改记录成功",StatusCodeEnum.Success,null);
@@ -225,6 +225,33 @@ public class OperationApiController extends BaseApiController{
         }
         catch (Exception ex){
             return ApiResult(false,"删除车辆失败",StatusCodeEnum.Error,null);
+        }
+    }
+
+    @RequestMapping("/elecfencelist")
+    public ApiResult getElecFenceList(int page,int rows){
+        PageHelper.startPage(page,rows);
+        List<TramElectronicFenceInfo> list = this.iElecFenceService.getElecFenceList();
+        int count = list.size();
+        PageBean<TramElectronicFenceInfo> pageData = new PageBean<>(page, rows, count);
+        pageData.setItems(list);
+        return ApiResult(true,"电子围栏列表获取成功",StatusCodeEnum.Success,pageData);
+    }
+
+    @RequestMapping("/elecfenceinfo")
+    public ApiResult getElecFenceInfo(long id){
+        TramElectronicFenceInfo info = this.iElecFenceService.getElecFenceInfo(id);
+        return ApiResult(true,"电子列表信息获取成功",StatusCodeEnum.Success,info);
+    }
+
+    @RequestMapping("/saveElecFence")
+    public ApiResult saveElecFenceInfo(TramElectronicFenceInfo info){
+        try{
+            this.iElecFenceService.insertElecFanceInfo(info);
+            return ApiResult(true,"保存电子围栏成功",StatusCodeEnum.Success,null);
+        }
+        catch (Exception ex){
+            return ApiResult(false,"保存电子围栏失败",StatusCodeEnum.Error,ex.getMessage());
         }
     }
 }

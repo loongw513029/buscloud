@@ -125,6 +125,12 @@ public interface IDeviceService {
      * @param hvnvrModel
      */
     void updateDeviceNvrStatus(TramDeviceInfo deviceInfo, HVNVRModel hvnvrModel);
+    /**
+     * 修改设备的NVR巡检实时状态信息，或产生报警,新协议
+     * @param deviceInfo
+     * @param hvnvrModel
+     */
+    void updateDeviceNvrStatusV2(TramDeviceInfo deviceInfo,HVNVRModel hvnvrModel);
 
     /**
      * 获得设备的实时巡检数据
@@ -256,4 +262,6 @@ public interface IDeviceService {
      * 统计车辆昨天是否在线过
      */
     void autoClacOnlineResult();
+
+    void updatePayTerminalImage(String image,String deviceCode,String updateTime);
 }

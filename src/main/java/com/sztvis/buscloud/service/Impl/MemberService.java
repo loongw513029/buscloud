@@ -134,6 +134,11 @@ public class MemberService implements IMemberService{
     }
 
     @Override
+    public TramMemberInfo getMemberInfoByUserName(String username) {
+        return this.memberMapper.getMemberByUsername(username);
+    }
+
+    @Override
     public TramMemberInfo getMemberInfo(long userId) {
         return this.memberMapper.getMemberById(userId);
     }

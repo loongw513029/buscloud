@@ -35,8 +35,14 @@
                 </td>
                 <td class="kv-label" style="width: 16.5%">车辆类型</td>
                 <td class="kv-content" style="width: 16.5%">
-                    <input type="text" class="easyui-textbox" id="bustype"/>
-                    <input type="hidden" id="hdBusType" value="${obj.bustype}" />
+                    <select class="easyui-combobox" id="bustype">
+                        <option value="0" ${obj.bustype==0?"selected='selected'":""}>-请选择车辆类型-</option>
+                        <option value="1" ${obj.bustype==1?"selected='selected'":""}>传统车辆</option>
+                        <option value="2" ${obj.bustype==2?"selected='selected'":""}>油电混合车</option>
+                        <option value="3" ${obj.bustype==3?"selected='selected'":""}>气电混合车</option>
+                        <option value="4" ${obj.bustype==4?"selected='selected'":""}>纯电动车</option>
+                        <option value="5" ${obj.bustype==5?"selected='selected'":""}>双路BMS纯电车辆</option>
+                    </select>
                 </td>
             </tr>
             <tr>

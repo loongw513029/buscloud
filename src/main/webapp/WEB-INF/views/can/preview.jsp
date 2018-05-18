@@ -525,6 +525,7 @@
 
 <script type="text/javascript" src="/easyui/jquery.min.js"></script>
 <script type="text/javascript" src="/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/easyui/jquery.easing.min.js"></script>
 <script type="text/javascript" src="/dist/jquery.cookie.js"></script>
 <script type="text/javascript" src="/layer/layer.js"></script>
 <script type="text/javascript" src="/dist/highcharts.js"></script>

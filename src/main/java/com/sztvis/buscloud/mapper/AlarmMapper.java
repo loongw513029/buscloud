@@ -9,6 +9,7 @@ import com.sztvis.buscloud.model.dto.AlarmViewModel;
 import com.sztvis.buscloud.model.dto.CanAlarmInfo;
 import com.sztvis.buscloud.model.dto.HomeAlarmViewModel;
 import com.sztvis.buscloud.model.dto.api.AppAlarmChartModel;
+import com.sztvis.buscloud.model.dto.api.app.AppAlarmViewModel;
 import com.sztvis.buscloud.model.entity.PageBean;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
@@ -23,7 +24,7 @@ import java.util.List;
 @Repository
 public interface AlarmMapper {
 
-    @Insert("insert into TramAlarmInfo(deviceId,deviceCode,departmentId,updateTime,parentAlarmType,alarmType,value,speed,distance,isBrake,alarmVideoPath,location,state)values(#{deviceId},#{deviceCode},#{departmentId},#{updateTime},#{parentAlarmType},#{alarmType},#{value},#{speed},#{distance},#{isBrake},#{alarmVideoPath},#{location},#{state})")
+    @Insert("insert into TramAlarmInfo(deviceId,deviceCode,departmentId,updateTime,parentAlarmType,alarmType,value,speed,distance,isBrake,alarmVideoPath,location,state,path,systemInsertTime)values(#{deviceId},#{deviceCode},#{departmentId},#{updateTime},#{parentAlarmType},#{alarmType},#{value},#{speed},#{distance},#{isBrake},#{alarmVideoPath},#{location},#{state},#{path},#{systemInsertTime})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void SaveAlarmInfo(TramAlarmInfo alarmInfo);
 
@@ -53,10 +54,10 @@ public interface AlarmMapper {
     @SelectProvider(type = AlarmProvider.class,method = "GetListSQL")
     List<AlarmViewModel> GetList(@Param("DeviceIds") List<Long> DeviceIds,@Param("AlarmKeys") List<Long> AlarmKeys,@Param("userId") Long userId,@Param("dayType") int dayType,@Param("typeId") Long typeId,@Param("alarmType") Long alarmType,@Param("code") String code,@Param("lineId") Long lineId);
 
-    @Select("select * from TramCanAlarmInfo where Id=#{Id}")
+    @Select("select * from TramAlarmInfo where Id=#{Id}")
     CanAlarmInfo GetCanAlarmInfo(int Id);
 
-    @Select("select count(Id) from TramCanAlarmInfo where deviceId=#{deviceId} and AlarmKey=#{AlarmKey} and UpdateTime>='#{UpdateTime}' and UpdateTime<='#{UpdateTime1}'")
+    @Select("select count(Id) from TramAlarmInfo where deviceId=#{deviceId} and AlarmType=#{AlarmKey} and UpdateTime>='#{UpdateTime}' and UpdateTime<='#{UpdateTime1}'")
     int CountId(@Param("deviceId") Long deviceId,@Param("AlarmKey") Long AxisId,@Param("UpdateTime") String UpdateTime,@Param("UpdateTime1") String UpdateTime1);
 
     @SelectProvider(type = AlarmProvider.class,method = "GetAppAlarmChartsSQL")
@@ -68,7 +69,16 @@ public interface AlarmMapper {
     @SelectProvider(type = AlarmProvider.class,method = "xValCharsSQL")
     List<AppAlarmChartModel.xVal> xValCharsSQL(@Param("roleLv") Long roleLv,@Param("type") int type,@Param("Id") Long Id);
 
-    @Select("select Id,DeviceCode as Code,AlarmKey,updateTime from TramCanAlarmInfo where UpdateTime>=#{Date1} and UpdateTime<=#{Date2} and IsShow=1 and state=0 and DeviceId in (#{DeviceIds}) and AlarmKey in (#{AlarmKeys}) order by updateTime desc limit 10")
+    @Select("select Id,DeviceCode as Code,AlarmType as AlarmKey,updateTime from TramAlarmInfo where UpdateTime>=#{Date1} and UpdateTime<=#{Date2} and IsShow=1 and state=0 and DeviceId in (#{DeviceIds}) and AlarmKey in (#{AlarmKeys}) order by updateTime desc limit 10")
     List<HomealramViewModel> GetTop10Alarms(@Param("Date1") String date1,@Param("Date2") String date2,@Param("DeviceIds") String DeviceIds,@Param("AlarmKeys") String AlarmKeys);
+
+    @Update("update TramAlarmInfo set Value=#{images} where deviceCode=#{deviceCode} and updateTime=#{updateTime}")
+    void updateAlarmImages(@Param("images") String images,@Param("deviceCode") String deviceCode,@Param("updateTime") String updateTime);
+
+    @SelectProvider(type = AlarmProvider.class,method = "GetAppAlarmListSQL")
+    List<AppAlarmViewModel> getAppAlarmList(@Param("departments") List<Long> departments,@Param("dayType") int dayType,@Param("lineId") long lineId,@Param("type") int type,@Param("code") String code,@Param("page") int page,@Param("limit") int limit);
+
+    @SelectProvider(type = AlarmProvider.class,method = "GetAppAlarmListCountSQL")
+    int getAppAlarmCount(@Param("departments") List<Long> departments,@Param("dayType") int dayType,@Param("lineId") long lineId,@Param("type") int type,@Param("code") String code);
 }
 

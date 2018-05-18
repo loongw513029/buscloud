@@ -3,6 +3,7 @@ package com.sztvis.buscloud.service;
 import com.sztvis.buscloud.model.HomealramViewModel;
 import com.sztvis.buscloud.model.dto.*;
 import com.sztvis.buscloud.model.dto.api.AppAlarmChartModel;
+import com.sztvis.buscloud.model.dto.api.app.AppAlarmViewModel;
 
 import java.util.List;
 
@@ -23,7 +24,9 @@ public interface IAlarmService {
 
     List<HomeAlarmViewModel> getTop6HomePageAlarms(long userId);
 
-    List<AlarmViewModel> GetList(long userId, int dayType, long typeId, long alarmType, String code, long lineId);
+    List<AppAlarmViewModel> GetList(long userId, int dayType, long typeId, int alarmType, String code, long lineId,int page,int limit);
+
+    int getAppAlarmListCount(long userId, int dayType, long typeId, int alarmType, String code, long lineId);
 
     CanAlarmInfo GetCanAlarmInfo(int Id);
 
@@ -34,4 +37,6 @@ public interface IAlarmService {
     HomealramViewModel.ViewModel GetTop10Alarms(long userId);
 
     WelcomeTrendModel getAlarmChartList(long lineId,int type ,String type1,String date2,String date3, String code,long departmentId);
+
+    void updateAlarmImage(String images,String deviceCode,String updateTime);
 }

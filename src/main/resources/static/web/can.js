@@ -12,6 +12,10 @@ var serverIp,hosttype,code,clientIp,channel;
 var Can=function () {
     return{
         init:function () {
+            var node= parent.mainPlatform.getCheckedNodes();
+            if(node.length == 1){
+                deviceId = node[0].id;
+            }
             totalMin = $('#totelMin').val();
             intervalTime = $('#intervalTime').val();
             Can.initHighCharts();
@@ -42,7 +46,10 @@ var Can=function () {
                     $('#totelMin').prop('disabled',true);
                     $('#intervalTime').prop('disabled',true);
                     interval = setInterval(function () {
-                        Can.RequestData();
+                        if(currentSeconds <= 0)
+                            Can.EndCan();
+                        else
+                            Can.RequestData();
                     },intervalTime*1000);
                 }
                 else {
@@ -177,7 +184,7 @@ var Can=function () {
             ///初始化传统车辆图表
             $('#container-speed-3').highcharts(Can.getGaugeOptions({
                 min: 0,
-                max: 100,
+                max: 180,
                 center: ['50%','65%'],
                 size: '125%',
                 startAngle: -120,
@@ -324,7 +331,7 @@ var Can=function () {
         SetSpeed:function (value) {
             var chart = $('#container-speed-3').highcharts(), point = chart.series[0].points[0];
             point.update(parseInt(value));
-            $('#speed-text-3').empty().append(value + '<span> <i>/</i> 限' + 55 + '</span>');
+            $('#speed-text-3').empty().append(parseInt(value) + '<span> <i>/</i> 限' + 55 + '</span>');
         },
         /**
          * 设置转速
@@ -336,7 +343,7 @@ var Can=function () {
             var rote = parseFloat(value) / 1000;
             //console.log(rote)
             point.update(rote);
-            $('#rpm-text-3').text(value);
+            $('#rpm-text-3').text(parseInt(value));
         },
         /**
          * 动力电池电压
@@ -375,7 +382,7 @@ var Can=function () {
                 frontAirPoint = frontAirChart.series[0].points[0];
             var press1 = parseFloat(value) / 1000;
             frontAirPoint.update(press1);
-            $('#frontAir-p-3').text(press1.toFixed(2));
+            $('#frontAir-p-3').text(press1.toFixed(2)*100);
         },
         /**
          * 设置后气压
@@ -386,7 +393,7 @@ var Can=function () {
                 backAirPoint = backAirChart.series[0].points[0];
             var press = parseFloat(value) / 1000;
             backAirPoint.update(press);
-            $('#backAir-p-3').text(press.toFixed(2));
+            $('#backAir-p-3').text(press.toFixed(2)*100);
         },
         /**
          * 电池电压图表
@@ -694,11 +701,11 @@ var Can=function () {
             $('.uptime').text(data.time);
             var obj = data.caninfo;
             if (obj.shortmileage)
-                $("#subTotalMileage-3").html(alert( obj.shortmileage.toFixed(2)) + "<i>km</i>");
+                $("#subTotalMileage-3").html(obj.shortmileage + "<i>km</i>");
             if (obj.totalmileage)
-                $("#totalMileage-3").html(alert( obj.totalmileage.toFixed(2)) + "<i>km</i>");
+                $("#totalMileage-3").html(obj.totalmileage+ "<i>km</i>");
             if (obj.oilconsumption)
-                $("#totalEnergy-3").html(alert( obj.oilconsumption.toFixed(2)) + "<i>L</i>");
+                $("#totalEnergy-3").html(obj.oilconsumption+ "<i>L</i>");
             var act = data.canstatinfo;
             Can.setLightStyle("#mixin-energe .icon-flag1", act.leftturn);
             Can.setLightStyle("#mixin-energe .icon-flag9", act.rightturn);

@@ -11,7 +11,10 @@ var startTime="";//地图下发时间
 var devices="";//当前设备id集合
 var tableSource;
 var runing =false;
+var alarmMarker=[];
+var startGetTime=parent.Main.getCurrentDate();
 var infoWindow = new AMap.InfoWindow({offset: new AMap.Pixel(0, -6) });
+var deviceTables = null;
 Date.prototype.pattern = function (fmt) {
     var o = {
         "M+" : this.getMonth()+1, //月份
@@ -76,17 +79,18 @@ var TMap = function () {
                 var t = $('#start').text();
                 if(t=='下发') {
                     $('#start').text('停止');
+                    startGetTime = parent.Main.getCurrentDate();
                     if (interval != null)
                         clearInterval(interval);
                     intervalTime = $('#intervalTime').val();
                     totalMin = $('#totelMin').val();
                     currentSeconds = totalMin * 60;
                     TMap.initInterval();
+                    TMap.initMapAlarm(devices,startGetTime);
                 }else{
                     TMap.EndMap();
                 }
             });
-            TMap.initMapAlarm();
         },
         initInterval:function () {
             runing = true;
@@ -113,11 +117,14 @@ var TMap = function () {
             $('#intervalTime').prop('disabled',false);
             $('.timebox').text('00:00');
             TMap.ClearMarker();
+            for(var i=0;i<alarmMarker.length;i++){
+                globalMap.remove(alarmMarker[i]);
+            }
             clearInterval(interval);
             clearInterval(interval2);
         },
         //初始化报警列表
-        initMapAlarm:function () {
+        initMapAlarm:function (devices,starttime) {
             $('#table2').datagrid({
                 url: '/api/v1/alarm/getmapalarmlist',
                 method: 'get',
@@ -129,7 +136,7 @@ var TMap = function () {
                 singleSelect: false,
                 pageSize: 15,
                 pageList: [15, 20, 50, 100],
-                queryParams: {devices:'',starttime:''},
+                queryParams: {devices:devices,starttime:starttime},
                 columns: [[
                     {
                         field: 'id',
@@ -248,12 +255,12 @@ var TMap = function () {
                     }, {
                         field: 'updatetime',
                         title: '更新时间',
-                        width: 100,
+                        width: 120,
                         align: 'center'
                     }, {
                         field: 'speed',
                         title: '车速',
-                        width: 200,
+                        width: 30,
                         align: 'center'
                     }, {
                         field: 'dertion',
@@ -268,17 +275,21 @@ var TMap = function () {
                     }, {
                         field: 'dispatch',
                         title: '调度',
-                        width: 50,
+                        width: 100,
                         align: 'center'
                     }
                 ]],
                 loadFilter: function (data) {
                     if (data.success) {
-                        tableSource = data.result;
-                        return {
-                            total: data.result.length,
-                            rows: data.result
-                        };
+                        if(deviceTables!=null)
+                            return deviceTables;
+                        else {
+                            tableSource = data.result;
+                            return {
+                                total: data.result.length,
+                                rows: data.result
+                            };
+                        }
                     }
                 }
             });
@@ -333,13 +344,37 @@ var TMap = function () {
             }
         },
         //接受从父框架传下来的报警推送
-        ReviceParentAlarm:function (obj) {
+        ReviceParentCheck:function (obj) {
             var deviceIdArr = [];
             for(var i=0;i<obj.length;i++){
                 deviceIdArr.push(obj[i].id);
             }
             devices = deviceIdArr.join(',');
             TMap.initDeviceList();
+        },
+        ReviceParentAlarm:function (obj) {
+            var location = TMap.ConvertGpsToAmapLocation(obj.longitude+","+obj.latitude);
+            var loc = location.split(',');
+            var marker = new AMap.Marker({
+                position:[loc[0],loc[1]],
+                autoRotation:true,
+                icon: new AMap.Icon({
+                    image:'/images/notice.png',
+                    size: new AMap.Size(24,24)
+                }),
+                offset:new AMap.Pixel(-16, -5)
+            });
+            marker.setMap(globalMap);
+            marker.setLabel({
+                offset: new AMap.Pixel(24,4),
+                content: obj.deviceCode
+            });
+            marker.setTitle(obj.code);
+            marker.on('click',function () {
+                parent.TramDalog.OpenIframeAndNoBtn(obj.alarmName+"-"+obj.deviceCode,652,538,"/alarm/view?id="+obj.id);
+            });
+            alarmMarker.push(marker);
+            TMap.initMapAlarm(devices,startGetTime);
         },
         //开始请求数据
         RequestData:function () {
@@ -387,19 +422,21 @@ var TMap = function () {
             marker.content = html;
             marker.on('click', TMap.markerClick);
             markerArr.push(marker);
-            // for(var i=0;i<tableSource.length;i++){
-            //     if(tableSource[i].devicecode == obj.code){
-            //         tableSource[i].updatetime = obj.updateTime;
-            //         tableSource[i].speed = obj.speed;
-            //         tableSource[i].dertion = TMap.SunDirect(obj.rotate);
-            //         tableSource[i].address = TMap.ConvertAmapToAddress(loc);
-            //         tableSource[i].dispatch = obj.dispatch;
-            //     }
-            // }
-            // var d2 = {
-            //     "total": tableSource.length,
-            //     "rows": tableSource
-            // };
+            for(var i=0;i<tableSource.length;i++){
+                if(tableSource[i].devicecode == obj.code){
+                    tableSource[i].updatetime = obj.updateTime;
+                    tableSource[i].speed = obj.speed;
+                    tableSource[i].dertion = TMap.SunDirect(obj.rotate);
+                    tableSource[i].address = TMap.ConvertAmapToAddress(loc);
+                    tableSource[i].dispatch = obj.dispatch;
+                }
+            }
+            var d2 = {
+                "total": tableSource.length,
+                "rows": tableSource
+            };
+            deviceTables = d2;
+            $('#table1').datagrid('reload');
             // $("#table1").datagrid("loadData",eval(d2));
             if(num==1)
                 globalMap.setCenter([longitude,latitude]);

@@ -6,6 +6,7 @@ import com.sztvis.buscloud.model.dto.SchoolFaceViewModel;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,5 +22,8 @@ public interface SchoolFaceMapper {
 
     @SelectProvider(type = SchoolFaceProvider.class,method = "getSchoolFaceListCountSQL")
     int getSchoolFaceCount(@Param("name") String name);
+
+    @Update("update TramDriverSimilarRecord set driverPics=#{image} where deviceCode=#{deviceCode} and updateTime=#{updateTime}")
+    void updateSchoolFaceImage(@Param("image") String image,@Param("deviceCode") String deviceCode,@Param("updateTime") String updateTime);
 
 }

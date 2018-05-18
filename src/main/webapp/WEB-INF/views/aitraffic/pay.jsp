@@ -25,9 +25,8 @@
 <div id="toolbar" style="padding:5px;height:auto">
     <div style="margin-bottom:5px">
         <div style="display: inline-block">
-            <input style="width:12%" id="CardNo" prompt="卡号">
-            <input class="easyui-datebox" style="width:12%" id="date1" placeholder="开始时间"/>
-            <input class="easyui-datebox" style="width:12%" id="date2" placeholder="截止时间"/>
+            <input class="easyui-datebox" style="width:130px" id="date1" data-options="prompt:'开始时间'" placeholder="开始时间"/>
+            <input class="easyui-datebox" style="width:130px" id="date2" data-options="prompt:'截止时间'" placeholder="截止时间"/>
             <input id="txtkey"/>
         </div>
     </div>

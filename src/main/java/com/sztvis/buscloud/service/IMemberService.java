@@ -34,4 +34,6 @@ public interface IMemberService {
     CurrentUserInfo Logins(LoginParams loginParams);
 
     String getpwd(String username);
+
+    TramMemberInfo getMemberInfoByUserName(String username);
 }

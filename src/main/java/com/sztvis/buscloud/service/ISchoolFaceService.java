@@ -18,4 +18,6 @@ public interface ISchoolFaceService {
     List<SchoolFaceViewModel> getSchoolFaceList(String name,int page,int rows);
 
     int getSchoolFaceCountList(String name);
+
+    void updateSchoolFaceImage(String image,String deviceCode,String updateTime);
 }

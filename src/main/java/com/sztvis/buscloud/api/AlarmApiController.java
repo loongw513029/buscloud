@@ -11,6 +11,7 @@ import com.sztvis.buscloud.model.domain.TramGpsInfo;
 import com.sztvis.buscloud.model.dto.AlarmViewModel;
 import com.sztvis.buscloud.model.dto.WelcomeTrendModel;
 import com.sztvis.buscloud.model.dto.api.AppAlarmChartModel;
+import com.sztvis.buscloud.model.dto.api.app.AppAlarmViewModel;
 import com.sztvis.buscloud.model.dto.response.ApiResult;
 import com.sztvis.buscloud.model.entity.PageBean;
 import com.sztvis.buscloud.model.entity.StatusCodeEnum;
@@ -55,7 +56,7 @@ public class AlarmApiController extends BaseApiController{
      * @param keywords search keys contains[alarmname,devicecode]
      * @return
      */
-    @RequestMapping(value = "/gettablelist",method = RequestMethod.GET)
+    @RequestMapping(value = "/gettablelist",method = RequestMethod.POST)
     public ApiResult getAlarmList(long userId,long departmentId,long lineId,long type1,long type2,String date1,String date2,String keywords,int page,int rows){
         List<AlarmViewModel> list = this.iAlarmService.getAlarmTableList(userId,departmentId,lineId,type1,type2,date1,date2,keywords,page,rows);
         int count =  this.iAlarmService.getAlarmTableListCount(userId,departmentId,lineId,type1,type2,date1,date2,keywords);
@@ -87,15 +88,9 @@ public class AlarmApiController extends BaseApiController{
             long lid=0;
             if (lineId!=0)
                 lid=lineId;
-            List<AlarmViewModel> list=this.iAlarmService.GetList(userId,Integer.valueOf(dayType),Integer.valueOf(type),0,code,lid);
-            for(AlarmViewModel r:list) {
-                AlarmViewModel model=new AlarmViewModel();
-                TramGpsInfo info = this.iGpsService.getLastGpsInfo(String.valueOf(r.getDeviceid()),r.getUpdatetime());
-                model.setLocation(info==null?"":info.getLongitude()+","+info.getLatitude());
-                list.add(model);
-            }
-            int count = list.size();
-            PageBean<AlarmViewModel> pageData=new PageBean<>(page, limit, count);
+            List<AppAlarmViewModel> list=this.iAlarmService.GetList(userId,dayType,0,type,code,lineId,page,limit);
+            int count = this.iAlarmService.getAppAlarmListCount(userId,dayType,0,type,code,lineId);
+            PageBean<AppAlarmViewModel> pageData=new PageBean<>(page, limit, count);
             pageData.setItems(list);
             return ApiResult(true, "获取数据成功", StatusCodeEnum.Success, pageData);
         }

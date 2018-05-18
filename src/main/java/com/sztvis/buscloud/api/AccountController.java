@@ -1,6 +1,5 @@
 package com.sztvis.buscloud.api;
 
-import com.sztvis.buscloud.config.ShiroCasConfiguration;
 import com.sztvis.buscloud.core.RedisUtil;
 import com.sztvis.buscloud.core.TramException;
 import com.sztvis.buscloud.core.helper.StringHelper;
@@ -10,8 +9,6 @@ import com.sztvis.buscloud.model.dto.api.ModifyPwdForm;
 import com.sztvis.buscloud.model.dto.response.ApiResult;
 import com.sztvis.buscloud.model.entity.StatusCodeEnum;
 import com.sztvis.buscloud.service.IMemberService;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

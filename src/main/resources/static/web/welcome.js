@@ -26,7 +26,7 @@ var Welcome = function () {
             });
         },
         ShowAlarm:function (id) {
-            parent.TramDalog.OpenIframeAndNoBtn('报警详情',652,538,'/alarm/view?id='+id);
+            parent.TramDalog.OpenIframeAndNoBtn('报警详情',700,538,'/alarm/view?id='+id);
         },
         initHighCharts:function (container,title,subtitle,categories,ytitle,data) {
             $(container).highcharts({

@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface FlowMapper {
 
-    @Select("select Path from TramCanAlarmInfo where deviceCode=#{code} and updateTime>=#{start} and updateTime<#{end}")
+    @Select("select Path from TramAlarmInfo where deviceCode=#{code} and updateTime>=#{start} and updateTime<#{end}")
     List<String> GetCanPath(@Param("code") String code,@Param("start") String start,@Param("end") String end);
 
     @Update("update TramHostFlowCensus set alarmVideo=#{size} where deviceId=#{deviceId} and updateTime=#{time}")

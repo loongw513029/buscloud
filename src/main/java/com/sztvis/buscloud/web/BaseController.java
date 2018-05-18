@@ -1,6 +1,8 @@
 package com.sztvis.buscloud.web;
 
 import com.sztvis.buscloud.model.dto.CurrentUserInfo;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;

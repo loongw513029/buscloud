@@ -15,6 +15,7 @@ public class SaveAlarmQuery {
     private double distance;
     private boolean isBrake;
     private String path;
+    private String path2;
     public String getAlarmTime() {
         return alarmTime;
     }
@@ -87,5 +88,13 @@ public class SaveAlarmQuery {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public String getPath2() {
+        return path2;
+    }
+
+    public void setPath2(String path2) {
+        this.path2 = path2;
     }
 }

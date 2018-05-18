@@ -32,7 +32,7 @@ public class SiteSettingProvider {
         }
         if(type==5)
         {
-            sql.FROM("TramCanAlarmInfo");
+            sql.FROM("TramAlarmInfo");
             sql.WHERE("deviceId in "+ Line +" and updateTime>=('"+ date +"') and updateTime<=('"+ date2 +"')"+
                     (lineId == 0?"":" and deviceId in(select Id from TramDeviceInfo where lineId="+ lineId +")")+"");
         }

@@ -20,4 +20,10 @@ public class AitrafficController extends BaseController{
         ModelAndView modelAndView = new ModelAndView("/aitraffic/face");
         return modelAndView;
     }
+
+    @RequestMapping("/flow")
+    public ModelAndView flow(){
+        ModelAndView modelAndView = new ModelAndView("/aitraffic/flow");
+        return modelAndView;
+    }
 }

@@ -12,6 +12,7 @@ public class AlarmModel {
     private Object Value1;
     private Object Value2;
     private String Path;
+    private String path2;
 
     public String getCode() {
         return Code;
@@ -59,5 +60,13 @@ public class AlarmModel {
 
     public void setPath(String path) {
         Path = path;
+    }
+
+    public String getPath2() {
+        return path2;
+    }
+
+    public void setPath2(String path2) {
+        this.path2 = path2;
     }
 }

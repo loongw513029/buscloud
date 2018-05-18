@@ -13,6 +13,9 @@ import com.sztvis.buscloud.service.IDepartmentService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -95,5 +98,14 @@ public class BuildFaceService implements IBuildFaceService {
     @Override
     public void saveComparisonRecord(TramBuildFaceComparsionRecord record) {
         this.mongoTemplate.save(record);
+    }
+
+    @Override
+    public void updateBuildFaceImage(String image, String deviceCode, String updateTime) {
+        Query query =new Query();
+        query.addCriteria(new Criteria("deviceCode").is(deviceCode));
+        query.addCriteria(new Criteria("updateTime").is(updateTime));
+        Update update = Update.update("imagePath", image);
+        this.mongoTemplate.updateFirst(query,update,TramBuildFaceComparsionRecord.class);
     }
 }

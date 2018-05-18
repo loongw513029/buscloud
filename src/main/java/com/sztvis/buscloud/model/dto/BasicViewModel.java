@@ -14,7 +14,7 @@ public class BasicViewModel {
     private String ispush;
     private int customid;
     private String isenable;
-
+    private String threshold;
     public int getId() {
         return id;
     }
@@ -79,4 +79,11 @@ public class BasicViewModel {
         this.customid = customid;
     }
 
+    public String getThreshold() {
+        return threshold;
+    }
+
+    public void setThreshold(String threshold) {
+        this.threshold = threshold;
+    }
 }

@@ -37,7 +37,7 @@ public interface BasicMapper {
     @Select("select * from TramRoleInfo where parentId=#{parentId}")
     List<TramRoleInfo> getRoleList(long parentId);
 
-    @Select("select * from TramMenuInfo where parentId=#{parentId}")
+    @Select("select * from TramMenuInfo where parentId=#{parentId} order by orderBy asc")
     List<TramMenuInfo> getMenuList(long parentId);
 
     @Select("select a.id,a.rolename,a.remark,a.parentId,b.MenuIds as roleIds from TramRoleInfo a left join tramrolemenurelinfo b on a.id=b.RoleId where a.Id=#{id}")
@@ -65,7 +65,7 @@ public interface BasicMapper {
     @SelectProvider(type = BasicProvider.class,method = "getBasicListCount")
     int getBasicListCount(@Param("type") int type,@Param("keywords") String keywords);
 
-    @Update("update TramBasicInfo set alarmname=#{alarmName},level=#{level},fixe=#{fixe},turn=#{turn},isPush=#{isPush},customId=#{customId},isEnable=#{isEnable} where id=#{id}")
+    @Update("update TramBasicInfo set alarmname=#{alarmName},level=#{level},fixe=#{fixe},turn=#{turn},isPush=#{isPush},customId=#{customId},isEnable=#{isEnable},threShold=#{threShold} where id=#{id}")
     void updateAlarmConfig(TramBasicInfo basicInfo);
 
     @Insert("insert into TramBasicInfo(alarmName,level,type,fixe,turn,isPush,threShold,customId,isEnable)values(#{alarmName},#{level},#{type},#{fixe},#{turn},#{isPush},#{threShold},#{customId},#{isEnable})")

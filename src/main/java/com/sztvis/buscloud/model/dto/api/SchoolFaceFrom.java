@@ -3,7 +3,7 @@ package com.sztvis.buscloud.model.dto.api;
 import java.util.List;
 
 public class SchoolFaceFrom {
-    private String code;
+    private String deviceCode;
     private String updateTime;
     //指纹通过?
     private boolean fingerPrint;
@@ -13,14 +13,13 @@ public class SchoolFaceFrom {
     private boolean faceCompair;
     //相似度
     private double similar;
-    private List<String> images;
 
-    public String getCode() {
-        return code;
+    public String getDeviceCode() {
+        return deviceCode;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setDeviceCode(String deviceCode) {
+        this.deviceCode = deviceCode;
     }
 
     public String getUpdateTime() {
@@ -53,14 +52,6 @@ public class SchoolFaceFrom {
 
     public void setFaceCompair(boolean faceCompair) {
         this.faceCompair = faceCompair;
-    }
-
-    public List<String> getImages() {
-        return images;
-    }
-
-    public void setImages(List<String> images) {
-        this.images = images;
     }
 
     public double getSimilar() {

@@ -27,7 +27,7 @@ public interface UnSafeMapper {
     @Select("select count(Id) from TramUnSafeReportInfo where deviceId=#{deviceId} and UpdateTime>=#{start} and UpdateTime<=#{end}")
     int CountTramUnSafeReportInfo(@Param("deviceId")long deviceId,@Param("start")String start,@Param("end") String end);
 
-    @Select("select count(Id) from TramCanAlarmInfo where deviceId=#{deviceId} and AlarmKey=#{key} and UpdateTime>=#{start} and UpdateTime<=#{end}")
+    @Select("select count(Id) from TramAlarmInfo where deviceId=#{deviceId} and AlarmType=#{key} and UpdateTime>=#{start} and UpdateTime<=#{end}")
     int CountCanAlarm(@Param("deviceId")long deviceId,@Param("key")int key,@Param("start")String start,@Param("end") String end);
 
     @Insert("insert into TramUnSafeReportInfo(DeviceId,DeviceCode,UpdateTime,CarUnStopingThenOpenDoor,CarGoingThenUnCloseDoor,NeutralAndTravel,ReversingSpeeding,TravelAtNight, StartTravelSpeeding, EngineStalledTravel, RevvingUp, QuickSlowDown, EmergencyBrake, UncivilizedWhistle, ZebraCrossingUnComity, SpeedingTravel, CreateTime) values(#{deviceid},#{devicecode},#{updatetime},#{carunstopingthenopendoor},#{cargoingthenunclosedoor},#{neutralandtravel},#{reversingspeeding},#{travelatnight},#{starttravelspeeding},#{enginestalledtravel},#{revvingup},#{quickslowdown},#{emergencybrake},#{uncivilizedwhistle},#{zebracrossinguncomity},#{speedingtravel},#{createtime})")

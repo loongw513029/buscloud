@@ -200,7 +200,7 @@ shape.highcharts-background {
 }
 
 .generous-meter-wrap .light-flag-wrap .icon-flag1.active {
-    background-image: url(../images/../img/turn-left.gif)
+    background-image: url(../images/turn-left.gif)
 }
 
 .generous-meter-wrap .light-flag-wrap .icon-flag2 {
@@ -259,7 +259,7 @@ shape.highcharts-background {
 
 .generous-meter-wrap .light-flag-wrap .icon-flag9.active {
     background-position: 0;
-    background-image: url(../images/../img/turn-right.gif)
+    background-image: url(../images/turn-right.gif)
 }
 
 .generous-meter-wrap .light-flag-wrap .row1 {

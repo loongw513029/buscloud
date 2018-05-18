@@ -39,4 +39,5 @@ public interface BuildFaceMapper {
 
     @Insert("insert into TramPersonPics(filePath,personId)values(#{filePath},#{personId})")
     void insertPersonPics(TramPersonPics personPics);
+
 }

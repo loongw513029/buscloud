@@ -15,7 +15,7 @@ public class TramBuildFaceComparsionRecord implements Serializable {
     private long personId;
     private String uid;
     private String userInfo;
-
+    private String updateTime;
     public long getDeviceId() {
         return deviceId;
     }
@@ -86,5 +86,13 @@ public class TramBuildFaceComparsionRecord implements Serializable {
 
     public void setUserInfo(String userInfo) {
         this.userInfo = userInfo;
+    }
+
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
     }
 }

@@ -1,6 +1,7 @@
 package com.sztvis.buscloud.service.Impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.sztvis.buscloud.core.DateStyle;
 import com.sztvis.buscloud.core.DateUtil;
 import com.sztvis.buscloud.core.helper.EnumHelper;
@@ -14,6 +15,8 @@ import com.sztvis.buscloud.model.dto.push.PushModel;
 import com.sztvis.buscloud.model.entity.*;
 import com.sztvis.buscloud.service.*;
 import com.sztvis.buscloud.util.DayTypes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -25,9 +28,7 @@ import java.beans.IntrospectionException;
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.text.ParseException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author longweiqian
@@ -37,7 +38,7 @@ import java.util.UUID;
 
 @Service
 public class DeviceService implements IDeviceService {
-
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private DeviceMapper deviceMapper;
     @Autowired
@@ -62,6 +63,8 @@ public class DeviceService implements IDeviceService {
     private UnSafeMapper unSafeMapper;
     @Autowired
     private IMemberService iMemberService;
+    @Autowired
+    private CanMapper canMapper;
 
     @Override
     public TramDeviceInfo getDeviceInfoByCode(String deviceCode) {
@@ -199,7 +202,7 @@ public class DeviceService implements IDeviceService {
                 this.UpdateRealTimeInspect(hvnvrModel.getCode(),DeviceStateFiled.Videotape,videotapState,3);
                 if(!videotapState)
                     this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(),deviceInfo.getId(),
-                            hvnvrModel.getUpdateTime(),1001,"录像状态异常:"+(diskType?"主盘":"副盘"),"",""));
+                            hvnvrModel.getUpdateTime(),1001,"录像状态异常:"+(diskType?"主盘":"副盘"),"","",""));
                 break;
             case 2://视频状态
                 //状态
@@ -207,21 +210,21 @@ public class DeviceService implements IDeviceService {
                 this.UpdateRealTimeInspect(hvnvrModel.getCode(),DeviceStateFiled.Video,videoState,3);
                 if(!videoState)
                     this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(),deviceInfo.getId(),
-                            hvnvrModel.getUpdateTime(),1002,"视频状态异常","",""));
+                            hvnvrModel.getUpdateTime(),1002,"视频状态异常","","",""));
                 break;
             case 3://硬盘状态
                 boolean diskState = Boolean.valueOf(hvnvrModel.getValue1());
                 this.UpdateRealTimeInspect(hvnvrModel.getCode(),DeviceStateFiled.HardDisk,diskState,3);
                 if(!diskState)
                     this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(),deviceInfo.getId(),
-                            hvnvrModel.getUpdateTime(),1003,"硬盘状态异常","",""));
+                            hvnvrModel.getUpdateTime(),1003,"硬盘状态异常","","",""));
                 break;
             case 4://SdCard状态
                 boolean sdcardState = Boolean.valueOf(hvnvrModel.getValue1());
                 this.UpdateRealTimeInspect(hvnvrModel.getCode(),DeviceStateFiled.SDCard,sdcardState,3);
                 if(!sdcardState)
                     this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(),deviceInfo.getId(),
-                            hvnvrModel.getUpdateTime(),1004,"SD卡状态异常","",""));
+                            hvnvrModel.getUpdateTime(),1004,"SD卡状态异常","","",""));
                 break;
             case 5://硬盘空间
                 String surplusDiskSize = hvnvrModel.getValue2();//剩余空间
@@ -230,7 +233,7 @@ public class DeviceService implements IDeviceService {
                 Double thrshold = Double.valueOf(basicInfo.getThreShold());
                 if(Double.valueOf(surplusDiskSize)<=thrshold)
                     this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(),deviceInfo.getId(),
-                            hvnvrModel.getUpdateTime(),1003,"硬盘剩余空间不足"+thrshold+"G","",""));
+                            hvnvrModel.getUpdateTime(),1003,"硬盘剩余空间不足"+thrshold+"G","","",""));
                 break;
             case 6://SD卡空间
                 String surplusSdcardSize = hvnvrModel.getValue2();//剩余空间
@@ -239,7 +242,7 @@ public class DeviceService implements IDeviceService {
                 Double thrshold2 = Double.valueOf(basicInfo2.getThreShold());
                 if(Double.valueOf(surplusSdcardSize)<=thrshold2)
                     this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(),deviceInfo.getId(),
-                            hvnvrModel.getUpdateTime(),1003,"SD卡剩余空间不足"+thrshold2+"G","",""));
+                            hvnvrModel.getUpdateTime(),1003,"SD卡剩余空间不足"+thrshold2+"G","","",""));
                 break;
             case 7://时间校准
                 Boolean timingState = Boolean.valueOf(hvnvrModel.getValue1());
@@ -255,7 +258,7 @@ public class DeviceService implements IDeviceService {
                 Double cpuUseRateThrshold = Double.valueOf(basic.getThreShold());
                 if(cpuUseRate>=cpuUseRateThrshold)
                     this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(),deviceInfo.getId(),
-                            hvnvrModel.getUpdateTime(),1005,"CPU使用率过高","",""));
+                            hvnvrModel.getUpdateTime(),1005,"CPU使用率过高","","",""));
                 break;
             case 11:
                 Double cpuTemp = Double.valueOf(hvnvrModel.getValue2());
@@ -264,7 +267,7 @@ public class DeviceService implements IDeviceService {
                 Double cpuTempThrshold = Double.valueOf(basic1.getThreShold());
                 if(cpuTemp>=cpuTempThrshold)
                     this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(),deviceInfo.getId(),
-                            hvnvrModel.getUpdateTime(),1006,"CPU温度过高","",""));
+                            hvnvrModel.getUpdateTime(),1006,"CPU温度过高","","",""));
                 break;
             case 12:
                 Double memoryTemp = Double.valueOf(hvnvrModel.getValue2());
@@ -273,7 +276,7 @@ public class DeviceService implements IDeviceService {
                 Double memoryThrshold = Double.valueOf(basic2.getThreShold());
                 if(memoryTemp>=memoryThrshold)
                     this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(),deviceInfo.getId(),
-                            hvnvrModel.getUpdateTime(),1007,"内存使用率过高","",""));
+                            hvnvrModel.getUpdateTime(),1007,"内存使用率过高","","",""));
                 break;
             case 13:
                 Double diskTemp = Double.valueOf(hvnvrModel.getValue2());
@@ -282,7 +285,7 @@ public class DeviceService implements IDeviceService {
                 Double diskTemphrshold = Double.valueOf(basic3.getThreShold());
                 if(diskTemp>=diskTemphrshold)
                     this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(),deviceInfo.getId(),
-                            hvnvrModel.getUpdateTime(),1008,"硬盘温度过高","",""));
+                            hvnvrModel.getUpdateTime(),1008,"硬盘温度过高","","",""));
                 break;
             case 14://主机网络状态
 
@@ -298,6 +301,249 @@ public class DeviceService implements IDeviceService {
 
         }
     }
+
+    @Override
+    public void updateDeviceNvrStatusV2(TramDeviceInfo deviceInfo, HVNVRModel hvnvrModel) {
+        switch (hvnvrModel.getType()){
+            case 1://状态信息
+                Map<Integer,Integer> map = JSON.parseObject(hvnvrModel.getValue1(),new TypeReference<Map<Integer,Integer>>(){});
+                Set<Integer> keys = map.keySet();
+                for(Integer key:keys){
+                    boolean state  = map.get(key)==1;
+                    switch (key){
+                        case 1://录像状态
+                            this.UpdateRealTimeInspect(hvnvrModel.getCode(),DeviceStateFiled.Videotape,state,3);
+                            if(!state){
+                                this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(),deviceInfo.getId(),
+                                        hvnvrModel.getUpdateTime(),1001,"录像状态异常:"+(hvnvrModel.getValue2()=="1"?"主盘":"副盘"),"","",""));
+                            }
+                            break;
+                        case 2://视频状态
+                            this.UpdateRealTimeInspect(hvnvrModel.getCode(),DeviceStateFiled.Video,state,3);
+                            if(!state){
+                                this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(),deviceInfo.getId(),
+                                        hvnvrModel.getUpdateTime(),1002,"视频状态异常","","",""));
+                            }
+                            break;
+                        case 3://硬盘状态
+                            this.UpdateRealTimeInspect(hvnvrModel.getCode(),DeviceStateFiled.HardDisk,state,3);
+                            if(!state){
+                                this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(),deviceInfo.getId(),
+                                        hvnvrModel.getUpdateTime(),1003,"硬盘状态异常","","",""));
+                            }
+                            break;
+                        case 4://SD卡状态
+                            this.UpdateRealTimeInspect(hvnvrModel.getCode(),DeviceStateFiled.SDCard,state,3);
+                            if(!state){
+                                this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(),deviceInfo.getId(),
+                                        hvnvrModel.getUpdateTime(),1004,"SD卡状态异常","","",""));
+                            }
+                            break;
+                        case 5://主机网络状态
+                            this.UpdateRealTimeInspect(hvnvrModel.getCode(),DeviceStateFiled.InternetState,state,3);
+                            if(!state){
+                                this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(),deviceInfo.getId(),
+                                        hvnvrModel.getUpdateTime(),1001,"主机网络状态异常","","",""));
+                            }
+                            break;
+                        case 6://GPS天线状态
+                            this.UpdateRealTimeInspect(hvnvrModel.getCode(),DeviceStateFiled.GpsSignalState, map.get(key),4);
+                            break;
+                    }
+                }
+                break;
+            case 2://空间信息
+                Map<Integer,Double> map2 = JSON.parseObject(hvnvrModel.getValue1(),new TypeReference<Map<Integer,Double>>(){});
+                Set<Integer> keys2 = map2.keySet();
+                for(Integer key:keys2){
+                    switch (key){
+                        case 1://硬盘空间
+                            String surplusDiskSize = hvnvrModel.getValue2();//剩余空间
+                            this.UpdateRealTimeInspect(hvnvrModel.getCode(),DeviceStateFiled.SurplusDiskSize,surplusDiskSize,1);
+                            TramBasicInfo basicInfo = this.iBasicService.getBasicInfoByCustomId(1003);
+                            Double thrshold = Double.valueOf(basicInfo.getThreShold());
+                            if(Double.valueOf(surplusDiskSize)<=thrshold)
+                                this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(),deviceInfo.getId(),
+                                        hvnvrModel.getUpdateTime(),1003,"硬盘剩余空间不足"+thrshold+"G","","",""));
+                            break;
+                        case 2://SD卡空间
+                            String surplusSdcardSize = hvnvrModel.getValue2();//剩余空间
+                            this.UpdateRealTimeInspect(hvnvrModel.getCode(),DeviceStateFiled.SurplusSdcardSize,surplusSdcardSize,1);
+                            TramBasicInfo basicInfo2 = this.iBasicService.getBasicInfoByCustomId(1004);
+                            Double thrshold2 = Double.valueOf(basicInfo2.getThreShold());
+                            if(Double.valueOf(surplusSdcardSize)<=thrshold2)
+                                this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(),deviceInfo.getId(),
+                                        hvnvrModel.getUpdateTime(),1003,"SD卡剩余空间不足"+thrshold2+"G","","",""));
+                            break;
+                    }
+                }
+                break;
+            case 3://SIM卡信息
+                Map<Integer,String> map3 = JSON.parseObject(hvnvrModel.getValue1(),new TypeReference<Map<Integer,String>>(){});
+                for(Integer key:map3.keySet()) {
+                    switch (key) {
+                        case 1:
+                            this.UpdateRealTimeInspect(hvnvrModel.getCode(), DeviceStateFiled.SIMCardNo, map3.get(key), 1);
+                            break;
+                        case 2:
+                            this.UpdateRealTimeInspect(hvnvrModel.getCode(), DeviceStateFiled.SIMBalance, map3.get(key), 1);
+                            break;
+                        case 3:
+                            this.UpdateRealTimeInspect(hvnvrModel.getCode(), DeviceStateFiled.SIMOperator, map3.get(key), 1);
+                            break;
+                    }
+                }
+                break;
+            case 4://使用率信息
+                Map<Integer,Double> map4 = JSON.parseObject(hvnvrModel.getValue1(),new TypeReference<Map<Integer,Double>>(){});
+                for(Integer key:map4.keySet()){
+                    switch (key){
+                        case 1:
+                            this.UpdateRealTimeInspect(hvnvrModel.getCode(),DeviceStateFiled.CPUUseRate,map4.get(key),2);
+                            TramBasicInfo basic = this.iBasicService.getBasicInfoByCustomId(1005);
+                            Double cpuUseRateThrshold = Double.valueOf(basic.getThreShold());
+                            if(map4.get(key)>=cpuUseRateThrshold)
+                                this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(),deviceInfo.getId(),
+                                        hvnvrModel.getUpdateTime(),1005,"CPU使用率过高","","",""));
+                            break;
+                        case 2:
+                            this.UpdateRealTimeInspect(hvnvrModel.getCode(),DeviceStateFiled.MemoryUseRate,map4.get(key),2);
+                            TramBasicInfo basic2 = this.iBasicService.getBasicInfoByCustomId(1007);
+                            Double cpuUseRateThrshold2 = Double.valueOf(basic2.getThreShold());
+                            if(map4.get(key)>=cpuUseRateThrshold2)
+                                this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(),deviceInfo.getId(),
+                                        hvnvrModel.getUpdateTime(),1007,"内存使用率过高","","",""));
+                            break;
+                    }
+                }
+                break;
+            case 5://温度信息
+                Map<Integer,Double> map5 = JSON.parseObject(hvnvrModel.getValue1(),new TypeReference<Map<Integer,Double>>(){});
+                for(Integer key:map5.keySet()){
+                    int type = 0;
+                    DeviceStateFiled field =null;
+                    switch (key){
+                        case 1:
+                            type = 1006;
+                            field = DeviceStateFiled.CPUTemp;
+                            break;
+                        case 2:
+                            type = 1008;
+                            field = DeviceStateFiled.DiskTemp;
+                            break;
+                        case 3:
+                            type = 1010;
+                            field = DeviceStateFiled.SSDTemp;
+                            break;
+                        case 4:
+                            type = 1011;
+                            field = DeviceStateFiled.BoxTemp;
+                            break;
+                        case 5:
+                            field = DeviceStateFiled.ExtendTemp1;
+                            break;
+                        case 6:
+                            field = DeviceStateFiled.ExtendTemp2;
+                            break;
+                        case 7:
+                            field = DeviceStateFiled.ExtendTemp3;
+                            break;
+                        case 8:
+                            field = DeviceStateFiled.ExtendTemp4;
+                            break;
+                    }
+                    this.UpdateRealTimeInspect(hvnvrModel.getCode(),field,map5.get(key),1);
+                    if(type>0) {
+                        TramBasicInfo basic2 = this.iBasicService.getBasicInfoByCustomId(type);
+                        Double cpuUseRateThrshold2 = Double.valueOf(basic2.getThreShold());
+                        if (map5.get(key) >= cpuUseRateThrshold2)
+                            this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(), deviceInfo.getId(),
+                                    hvnvrModel.getUpdateTime(), type, basic2.getAlarmName(), "", "", ""));
+                    }
+
+                }
+                break;
+            case 6://信号信息
+                Map<Integer,Double> map6 = JSON.parseObject(hvnvrModel.getValue1(),new TypeReference<Map<Integer,Double>>(){});
+                for(Integer key:map6.keySet()){
+                    switch (key){
+                        case 1:
+                            this.UpdateRealTimeInspect(hvnvrModel.getCode(),DeviceStateFiled.GpsSignal,map6.get(key),2);
+                            break;
+                        case 2:
+                            this.UpdateRealTimeInspect(hvnvrModel.getCode(),DeviceStateFiled.InternetSignal,map6.get(key),2);
+                            break;
+                    }
+                }
+                break;
+            case 7://电压信息
+                Map<Integer,Double> map7 = JSON.parseObject(hvnvrModel.getValue1(),new TypeReference<Map<Integer,Double>>(){});
+                for(Integer key:map7.keySet()){
+                    switch (key){
+                        case 1:
+                            this.UpdateRealTimeInspect(hvnvrModel.getCode(),DeviceStateFiled.Voltage1,map7.get(key),2);
+                            break;
+                        case 2:
+                            this.UpdateRealTimeInspect(hvnvrModel.getCode(),DeviceStateFiled.Voltage2,map7.get(key),2);
+                            break;
+                    }
+                }
+                break;
+            case 8://硬件信息
+                Map<Integer,String> map8 = JSON.parseObject(hvnvrModel.getValue1(),new TypeReference<Map<Integer,String>>(){});
+                for(Integer key:map8.keySet()){
+                    switch (key){
+                        case 1:
+                            this.UpdateRealTimeInspect(hvnvrModel.getCode(),DeviceStateFiled.FiveGModeType,map8.get(key),1);
+                            break;
+                        case 2://倾斜角
+                            TramBasicInfo qxbasicInfo = this.iBasicService.getBasicInfoByCustomId(11);
+                            String[] hostQx = map8.get(key).split(",");
+                            double x = Double.valueOf(hostQx[0]),y = Double.valueOf(hostQx[1]);
+                            if(!StringHelper.isEmpty(qxbasicInfo.getThreShold())){
+                                double thrshold = Double.valueOf(qxbasicInfo.getThreShold());
+                                boolean isTilt = false;
+                                String str = "";
+                                if(x>-thrshold&&x<thrshold)
+                                {
+                                    if (y > thrshold){
+                                        str = "左倾"; isTilt = true;
+                                    }else if (y < -thrshold){
+                                        str = "右倾"; isTilt = true;
+                                    }
+                                }
+                                else if (x > -thrshold)
+                                {
+                                    if (y > thrshold){
+                                        str = "左后倾";isTilt = true;
+                                    }else if (y < -thrshold){
+                                        str = "右后倾"; isTilt = true;
+                                    }else{
+                                        str = "右倾"; isTilt = true;
+                                    }
+                                }
+                                else
+                                {
+                                    if (y > thrshold){
+                                        str = "左前倾"; isTilt = true;
+                                    }else if (y < -thrshold) {
+                                        str = "右前倾"; isTilt = true;
+                                    }else{
+                                        str = "前倾"; isTilt = true;
+                                    }
+                                }
+                                if(isTilt)
+                                    this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(),
+                                            deviceInfo.getId(),hvnvrModel.getUpdateTime(),11,"车辆发生"+str+"斜，角度："+map8.get(key),"","",""));
+                            }
+                            break;
+                    }
+                }
+                break;
+
+        }
+    }
+
 
     @Override
     public TramDeviceStateInspectRealtimeInfo getDeviceStateInspectRealTimeInfo(long deviceid) {
@@ -346,10 +592,10 @@ public class DeviceService implements IDeviceService {
             TramCanInfo firstCanInfo = this.mongoTemplate.findOne(query2,TramCanInfo.class);
             if(firstCanInfo != null && lastCanInfo != null){
                 TramBusInfo busInfo = this.deviceMapper.getBusInfo(device.getBusid());
-                String updateTime = DateUtil.getCurrentTime(DateStyle.YYYY_MM_DD);
+                String updateTime = firstTime;
                 CanHistoryEveryDayInfo everyDayInfo = new CanHistoryEveryDayInfo();
                 everyDayInfo.setUpdatetime(updateTime);
-                Double mileage = Double.valueOf(lastCanInfo.getTotalmileage())-Double.valueOf(firstCanInfo.getTotalmileage()==null? String.valueOf(0) : firstCanInfo.getTotalmileage());
+                Double mileage = Double.valueOf(lastCanInfo.getTotalmileage()==null?"0":lastCanInfo.getTotalmileage())-Double.valueOf(firstCanInfo.getTotalmileage()==null? String.valueOf(0) : firstCanInfo.getTotalmileage());
                 everyDayInfo.setTotalmileage(mileage);
                 double avg =0D;
                 if(!StringHelper.isEmpty(lastCanInfo.getBaterysoc())&&!StringHelper.isEmpty(firstCanInfo.getBaterysoc())){
@@ -369,6 +615,13 @@ public class DeviceService implements IDeviceService {
                 everyDayInfo.setFaultthreelv(this.alarmMapper.getCountByDeviceAndLevel(device.getId(),3));
                 long unsafeNum = this.deviceMapper.getUnsafeCountByDeviceIdEveryDay(device.getId(),firstTime,lastTime);
                 everyDayInfo.setUnsafenumber(unsafeNum);
+                Double ss = this.canMapper.GetTop1CanInfo("timelongsql",device.getDevicecode(),firstTime,lastTime);
+                everyDayInfo.setRuntimelong(StringHelper.isEmpty(ss)? 0 : ss);
+                try {
+                    this.deviceMapper.insertCanHistoryEveryDayData(everyDayInfo);
+                }catch (Exception ex){
+                    logger.debug(ex.getMessage());
+                }
             }
         }
     }
@@ -384,6 +637,13 @@ public class DeviceService implements IDeviceService {
                 this.UpdateRealTimeInspect(device.getDevicecode(),DeviceStateFiled.OnlineState,false,3);
             }else{
                 this.UpdateRealTimeInspect(device.getDevicecode(),DeviceStateFiled.OnlineState,true,3);
+                String time = DateUtil.StringToString(nowTime,DateStyle.YYYY_MM_DD);
+                if(this.deviceMapper.getDeviceOnlineRecordCount(device.getDevicecode(),time)==0) {
+                    Deviceonlinerecords records = new Deviceonlinerecords();
+                    records.setUpdatetime(time);
+                    records.setDevicecode(device.getDevicecode());
+                    this.deviceMapper.insertDeviceOnlineRecord(records);
+                }
             }
             //推送
             PushModel pushModel = new PushModel(1,this.getCurrentDeviceStatus(device.getId()));
@@ -561,30 +821,6 @@ public class DeviceService implements IDeviceService {
 
     @Override
     public void AutoInspectDeviceADAS(){
-//        long[] beahviorArr = { 99, 100, 101, 102, 103, 104, 105, 106, 107, 108 },
-//                adasArr = { 118, 119, 120, 121, 122, 123, 124 };
-//        String now = DateUtil.getCurrentTime(DateStyle.YYYY_MM_DD_HH_MM_SS);
-//        List<TramDeviceInfo> devices=this.deviceMapper.AutoInspectDeviceADAS("devicesql");
-//        for(TramDeviceInfo item : devices){
-//            int count = this.deviceMapper.AutoInspectDeviceADAS("adassql",beahviorArr,Long.valueOf(item.getDevicecode()),DateUtil.addDay(now,-3),now);
-//            TramDeviceStatusInfo statusInfo=this.deviceMapper.AutoInspectDeviceADAS("csql",Long.valueOf(item.getDevicecode()),DeviceStateTypes.ADASState.getValue());
-//            if (statusInfo==null|| DateUtil.getIntervalDays(DateUtil.addDay(statusInfo.getCreatetime(),3),now)>=0){
-//                String statusFag = "False";
-//                if (count > 0)
-//                    statusFag = "True";
-//                this.AddDeviceInspectState(item.getId(),item.getDevicecode(),DeviceStateTypes.BehaviorInspectState.getValue(),statusFag,"BehaviorInspectState");
-//            }
-//            else
-//                this.AddDeviceInspectState(item.getId(),item.getDevicecode(),DeviceStateTypes.BehaviorInspectState.getValue(),"False","BehaviorInspectState");
-//            int radarCount = this.deviceMapper.AutoInspectDeviceADAS("radarSql",item.getId(),DateUtil.addDay(now,-1),now);
-//            this.AddDeviceInspectState(item.getId(),item.getDevicecode(),DeviceStateTypes.RadarInspectState.getValue(),String.valueOf(radarCount>0),"RadarInspectState");
-//            int adasCount = this.deviceMapper.AutoInspectDeviceADAS("adassql",adasArr,Long.valueOf(item.getDevicecode()),DateUtil.addDay(now,-1),now);
-//            this.AddDeviceInspectState(item.getId(),item.getDevicecode(),DeviceStateTypes.AdasInspectState.getValue(),String.valueOf(adasCount>0),"AdasInspectState");
-//            int canCount = this.deviceMapper.AutoInspectDeviceADAS("canSql",item.getId(),DateUtil.addDay(now,-1),now);
-//            this.AddDeviceInspectState(item.getId(),item.getDevicecode(),DeviceStateTypes.CanInspectState.getValue(),String.valueOf(canCount>0),"CanInspectState");
-//            int gpsCount = this.deviceMapper.AutoInspectDeviceADAS("gpsSql",item.getId(),DateUtil.addDay(now,-1),now);
-//            this.AddDeviceInspectState(item.getId(),item.getDevicecode(),DeviceStateTypes.GpsInspectState.getValue(),String.valueOf(gpsCount>0),"GpsInspectState");
-//        }
     }
 
     @Override
@@ -641,5 +877,10 @@ public class DeviceService implements IDeviceService {
                 }
             }
         }
+    }
+
+    @Override
+    public void updatePayTerminalImage(String image, String deviceCode, String updateTime) {
+        this.deviceMapper.updatePayTerminalImage(image,deviceCode,updateTime);
     }
 }

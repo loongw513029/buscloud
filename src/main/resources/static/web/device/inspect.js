@@ -117,7 +117,7 @@ var Inspect = function () {
                     {
                         field: 'internetstate',title: '网络状态',width: 70,align: 'center',
                         formatter:function (value,row) {
-                            return row.onlineState?value?"正常":"<font color='red'>异常</font>":"--";
+                            return row.onlineState?"正常":"<font color='red'>异常</font>";
                         }
                     },
                     {
@@ -129,7 +129,7 @@ var Inspect = function () {
                     {
                         field: 'simbalance',title: 'SIM余额',width: 70,align: 'center',
                         formatter:function (value,row) {
-                            return row.onlineState?"￥"+value:"--";
+                            return row.onlineState?"￥"+(value==undefined?"--":value):"--";
                         }
                     },
                     {
@@ -158,12 +158,6 @@ var Inspect = function () {
                     },
                     {
                         field: 'radarinspectstate',title: '雷达',width: 70,align: 'center',
-                        formatter:function (value,row) {
-                            return row.onlineState?value?"正常":"<font color='red'>异常</font>":"--";
-                        }
-                    },
-                    {
-                        field: 'timingstate',title: '校时状态',width: 70,align: 'center',
                         formatter:function (value,row) {
                             return row.onlineState?value?"正常":"<font color='red'>异常</font>":"--";
                         }

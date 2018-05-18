@@ -16,6 +16,8 @@ public class PushAlarmModel {
     private String extras;
     private String images;
     private int customId;
+    private String longitude;
+    private String latitude;
 
     public long getId() {
         return id;
@@ -97,8 +99,23 @@ public class PushAlarmModel {
         this.customId = customId;
     }
 
+    public String getLongitude() {
+        return longitude;
+    }
 
-    public PushAlarmModel(long id, String deviceCode, int alarmType, String time, String alarmName, String busNumber, String path, String extras, String images,int customId) {
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public PushAlarmModel(long id, String deviceCode, int alarmType, String time, String alarmName, String busNumber, String path, String extras, String images, int customId) {
         this.id = id;
         this.deviceCode = deviceCode;
         this.alarmType = alarmType;

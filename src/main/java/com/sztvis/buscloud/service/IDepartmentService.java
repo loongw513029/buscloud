@@ -20,6 +20,12 @@ public interface IDepartmentService {
     TramDepartmentInfo GetParentPartmentIdsByUserId(long userId);
 
     /**
+     * 获得所有顶级机构
+     * @return
+     */
+    List<TramDepartmentInfo> getDepartmentList();
+
+    /**
      * 获得机构列表
      * @param departmentId
      * @return

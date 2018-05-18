@@ -98,6 +98,9 @@ public class DeviceSqlProvider {
             case 3:
                 sql+="="+((Boolean)value?1:0);
                 break;
+            case 4:
+                sql+="="+(Integer)value;
+                break;
         }
         sql+=" where devicecode='"+devicecode+"'";
         return sql;
@@ -244,7 +247,7 @@ public class DeviceSqlProvider {
         else{
             sql.SELECT("count(Id)");
             if (SqlType=="adassql")
-                sql.FROM("TramCanAlarmInfo").WHERE(" AlarmKey in ("+ Arr +") and deviceCode='"+ deviceId +"' and updatetime>='"+ start +"' and updatetime<='"+ end +"'");
+                sql.FROM("TramAlarmInfo").WHERE(" AlarmType in ("+ Arr +") and deviceCode='"+ deviceId +"' and updatetime>='"+ start +"' and updatetime<='"+ end +"'");
             else {
                 if (SqlType=="radarSql")
                     sql.FROM("TramRadarInfo");

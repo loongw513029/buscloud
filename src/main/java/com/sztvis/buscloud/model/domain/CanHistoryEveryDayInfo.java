@@ -4,19 +4,19 @@ public class CanHistoryEveryDayInfo {
   private Long id;
   private Long deviceid;
   private String updatetime;
-  private Double totalmileage;
-  private Double gasonlieavg;
-  private Double electricavg;
-  private Double gasavg;
-  private Long totalfaultnumber;
-  private Long totalcarfaultnumber;
-  private Long faultthreelv;
-  private Long faultsecondlv;
-  private Long faultonelv;
-  private Long unsafenumber;
-  private Long unsafedriver;
-  private Long speedingtotal;
-  private Double runtimelong;
+  private Double totalmileage = 0D;
+  private Double gasonlieavg = 0D;
+  private Double electricavg = 0D;
+  private Double gasavg = 0D;
+  private Long totalfaultnumber = 0L;
+  private Long totalcarfaultnumber = 0L;
+  private Long faultthreelv = 0L;
+  private Long faultsecondlv = 0L;
+  private Long faultonelv = 0L;
+  private Long unsafenumber = 0L;
+  private Long unsafedriver = 0L;
+  private Long speedingtotal = 0L;
+  private Double runtimelong = 0D;
 
   public Long getId() {
     return id;

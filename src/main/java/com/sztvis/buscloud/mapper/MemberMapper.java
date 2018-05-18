@@ -99,4 +99,5 @@ public interface MemberMapper {
 
     @SelectProvider(type = MemberProvider.class,method = "getMemberGuidByDepartmentIds")
     List<String> getMemberUUIDbyDepartmentId(@Param("departments") List<Long> departments);
+
 }

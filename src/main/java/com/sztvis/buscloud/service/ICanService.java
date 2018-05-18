@@ -96,9 +96,10 @@ public interface ICanService {
      * @param value 报警值
      * @param extras 附带数据 车速，车距，刹车
      * @param path 报警视频路径
+     * @param path2 报警视频2
      * @return
      */
-    SaveAlarmQuery getAlarmQuery(String deviceCode,long deviceId,String updateTime,int type,String value,String extras,String path);
+    SaveAlarmQuery getAlarmQuery(String deviceCode,long deviceId,String updateTime,int type,String value,String extras,String path,String path2);
 
     /**
      * 获得最后一条can数据，包含can,can状态，调度，地图数据

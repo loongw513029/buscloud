@@ -24,8 +24,7 @@ public class TreeController extends BaseApiController {
 
     @RequestMapping("/list")
     public List<TreeModel> GetTreeList(long userId){
-        List<TreeModel> list=new ArrayList<>();
-        list.add(treeService.GetTreeList(userId));
+        List<TreeModel> list= treeService.GetTreeList(userId);
         return list;
     }
 }

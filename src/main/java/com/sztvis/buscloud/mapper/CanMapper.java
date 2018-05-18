@@ -39,7 +39,7 @@ public interface CanMapper {
     @Select("select count(Id) from TramCanInfo where DeviceCode=#{devicecode} and UpdateTime>=#{startTime} and UpdateTime<=#{endTime}")
     int GetCanInfoBy10sTime(@Param("devicecode") String DeviceCode,@Param("startTime") String StartTime,@Param("endTime") String EndTime);
 
-    @Select("select count(Id) from TramCanAlarmInfo where UpdateTime>=#{date1} and UpdateTime<=#{date2} and IsShow=1 and state=0 and DeviceId in(#{DeviceIds}) and AlarmKey in (#{AlarmKeys})")
+    @Select("select count(Id) from TramAlarmInfo where UpdateTime>=#{date1} and UpdateTime<=#{date2} and IsShow=1 and state=0 and DeviceId in(#{DeviceIds}) and AlarmKey in (#{AlarmKeys})")
     int GetTotal(@Param("date1") String date1,@Param("date2") String date2,@Param("DeviceIds") String DeviceIds,@Param("AlarmKeys") String AlarmKeys);
 
     @SelectProvider(type = CanProvider.class,method = "CalcDeviceCanHistorysSQL")

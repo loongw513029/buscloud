@@ -63,17 +63,16 @@ var BusFrom = function () {
             $('#hosttypesoft').combotree({data:[{id:1,text:'DVR'},{id:0,text:'NVR'}]});
             var soft = $('#hdHostTypeSoft').val();
             $('#hosttypesoft').combotree('setValue',soft);
-            $('#bustype').combotree({data:[{id:0,text:'-请选择车辆类型-'},{id:1,text:'传统车辆'},{id:2,text:'油电混合车'},{id:3,text:'气电混合车'},{id:4,text:'纯电动车'},{id:5,text:'双路BMS纯电车辆'}]});
-            var devicetype = $('#hdBusType').val();
-            $('#bustype').combotree('setValue',devicetype);
+            // $('#bustype').combotree({data:[{id:0,text:'-请选择车辆类型-'},{id:1,text:'传统车辆'},{id:2,text:'油电混合车'},{id:3,text:'气电混合车'},{id:4,text:'纯电动车'},{id:5,text:'双路BMS纯电车辆'}]});
+            // var devicetype = $('#hdBusType').val();
+            // $('#bustype').combotree('setValue',parseInt(devicetype));
         },
         saveData:function (parenta,Line) {
-
             var busnumber = $('#busnumber').val();
             var busframenumber = $('#busframenumber').val();
             var id = $('#Id').val();
             var busid = $('#busId').val();
-            var bustype = $('#bustype').combotree('getValue');
+            var bustype = $('#bustype').combobox('getValue');
             var departmentid = $('#departmentid').combotree('getValue');
             var lineid = $('#lineid').combotree('getValue');
             var driverid = $('#driverid').combotree('getValue');

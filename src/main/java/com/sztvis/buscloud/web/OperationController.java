@@ -1,10 +1,12 @@
 package com.sztvis.buscloud.web;
 
 import com.sztvis.buscloud.model.domain.TramDriverInfo;
+import com.sztvis.buscloud.model.domain.TramElectronicFenceInfo;
 import com.sztvis.buscloud.model.domain.TramLineInfo;
 import com.sztvis.buscloud.model.dto.BusAndDeviceViewModel;
 import com.sztvis.buscloud.service.IDeviceService;
 import com.sztvis.buscloud.service.IDriverService;
+import com.sztvis.buscloud.service.IElecFenceService;
 import com.sztvis.buscloud.service.ILineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,6 +29,8 @@ public class OperationController  extends BaseController{
     private IDeviceService iDeviceService;
     @Autowired
     private IDriverService iDriverService;
+    @Autowired
+    private IElecFenceService iElecFenceService;
 
     @RequestMapping("/line")
     public ModelAndView lineView(){
@@ -83,5 +87,20 @@ public class OperationController  extends BaseController{
         return modelAndView;
     }
 
+    @RequestMapping("/elecfence")
+    public ModelAndView Elecfence(){
+        ModelAndView modelAndView = new ModelAndView("/operation/elecfence");
+        return modelAndView;
+    }
+
+    @RequestMapping("/elecfrom")
+    public ModelAndView ElecFrom(long id){
+        TramElectronicFenceInfo info = new TramElectronicFenceInfo();
+        if(id != 0)
+            info = this.iElecFenceService.getElecFenceInfo(id);
+        ModelAndView modelAndView = new ModelAndView("/operation/elecfrom");
+        modelAndView.getModel().put("obj",info);
+        return modelAndView;
+    }
 
 }

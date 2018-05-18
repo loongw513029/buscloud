@@ -1,12 +1,12 @@
 package com.sztvis.buscloud.model.domain;
 
-public class Tramelectronicfenceinfo {
+public class TramElectronicFenceInfo {
   private Long id;
   private String lng;
   private String lat;
   private Long radius;
-  private String intrun;
-  private String outtrun;
+  private boolean inTrun;
+  private boolean outTrun;
 
   public Long getId() {
     return id;
@@ -40,19 +40,19 @@ public class Tramelectronicfenceinfo {
     this.radius = radius;
   }
 
-  public String getIntrun() {
-    return intrun;
+  public boolean isInTrun() {
+    return inTrun;
   }
 
-  public void setIntrun(String intrun) {
-    this.intrun = intrun;
+  public void setInTrun(boolean inTrun) {
+    this.inTrun = inTrun;
   }
 
-  public String getOuttrun() {
-    return outtrun;
+  public boolean isOutTrun() {
+    return outTrun;
   }
 
-  public void setOuttrun(String outtrun) {
-    this.outtrun = outtrun;
+  public void setOutTrun(boolean outTrun) {
+    this.outTrun = outTrun;
   }
 }

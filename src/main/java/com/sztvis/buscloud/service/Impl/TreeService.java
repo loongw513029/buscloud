@@ -1,15 +1,9 @@
 package com.sztvis.buscloud.service.Impl;
 
-import com.sztvis.buscloud.model.domain.TramChannelInfo;
-import com.sztvis.buscloud.model.domain.TramDepartmentInfo;
-import com.sztvis.buscloud.model.domain.TramDeviceInfo;
-import com.sztvis.buscloud.model.domain.TramLineInfo;
+import com.sztvis.buscloud.model.domain.*;
 import com.sztvis.buscloud.model.dto.response.TreeAttributeModel;
 import com.sztvis.buscloud.model.dto.response.TreeModel;
-import com.sztvis.buscloud.service.IDepartmentService;
-import com.sztvis.buscloud.service.IDeviceService;
-import com.sztvis.buscloud.service.ILineService;
-import com.sztvis.buscloud.service.ITreeService;
+import com.sztvis.buscloud.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,22 +24,34 @@ public class TreeService implements ITreeService {
     private ILineService iLineService;
     @Autowired
     private IDeviceService iDeviceService;
-
+    @Autowired
+    private IMemberService iMemberService;
     @Override
-    public TreeModel GetTreeList(long userId) {
-        TreeModel treeModel=new TreeModel();
-        TramDepartmentInfo departmentinfo = iDepartmentService.GetParentPartmentIdsByUserId(userId);
-        treeModel.setText(departmentinfo.getDepartmentname());
-        treeModel.setId(departmentinfo.getId());
-        treeModel.setState("open");
-        treeModel.setIconCls("tree-department");
-        treeModel.setEdit(true);
-        TreeAttributeModel m2=new TreeAttributeModel();
-        m2.setState(false);
-        m2.setLevel(1);
-        treeModel.setAttributes(m2);
-        treeModel.setChildren(this.GetChindDepartmentList(departmentinfo.getId()));
-        return  treeModel;
+    public List<TreeModel> GetTreeList(long userId) {
+        List<TreeModel> list =new ArrayList<>();
+        List<TramDepartmentInfo> departments = new ArrayList<>();
+        TramMemberInfo memberInfo = this.iMemberService.getMemberInfo(userId);
+        if(memberInfo.getRoleid()==1){
+            departments = this.iDepartmentService.getDepartmentList();
+        }else {
+            TramDepartmentInfo departmentinfo = iDepartmentService.GetParentPartmentIdsByUserId(userId);
+            departments.add(departmentinfo);
+        }
+        for(int i=0;i<departments.size();i++) {
+            TreeModel treeModel = new TreeModel();
+            treeModel.setText(departments.get(i).getDepartmentname());
+            treeModel.setId(departments.get(i).getId());
+            treeModel.setState(i==0?"open":"closed");
+            treeModel.setIconCls("tree-department");
+            treeModel.setEdit(true);
+            TreeAttributeModel m2 = new TreeAttributeModel();
+            m2.setState(false);
+            m2.setLevel(1);
+            treeModel.setAttributes(m2);
+            treeModel.setChildren(this.GetChindDepartmentList(departments.get(i).getId()));
+            list.add(treeModel);
+        }
+        return list;
     }
     private List<TreeModel> GetChindDepartmentList(long departmentId){
         List<TreeModel> list=new ArrayList<>();

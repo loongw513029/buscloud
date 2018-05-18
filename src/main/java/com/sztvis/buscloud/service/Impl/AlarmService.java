@@ -11,6 +11,7 @@ import com.sztvis.buscloud.model.domain.TramBasicInfo;
 import com.sztvis.buscloud.model.domain.TramMemberInfo;
 import com.sztvis.buscloud.model.dto.*;
 import com.sztvis.buscloud.model.dto.api.AppAlarmChartModel;
+import com.sztvis.buscloud.model.dto.api.app.AppAlarmViewModel;
 import com.sztvis.buscloud.service.*;
 import com.sztvis.buscloud.util.DayTypes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,11 +76,18 @@ public class AlarmService implements IAlarmService{
     }
 
     @Override
-    public List<AlarmViewModel> GetList(long userId, int dayType, long typeId, long alarmType, String code, long lineId) {
-        List<Long> DeviceIds = this.iBasicService.getDeviceIdsByRoleLv(userId);
-        List<Long> AlarmKeys=this.iBasicService.GetAlarmKeysByUserId(userId);
-        return this.alarmMapper.GetList(DeviceIds,AlarmKeys,userId,dayType,typeId,alarmType,code,lineId);
+    public List<AppAlarmViewModel> GetList(long userId, int dayType, long typeId, int alarmType, String code, long lineId,int page,int limit) {
+        List<Long> departments = this.iDepartmentService.GetDepartmentIdsByUserId(userId);
+        List<AppAlarmViewModel> list=this.alarmMapper.getAppAlarmList(departments,dayType,lineId,alarmType,code,page,limit);
+        return list;
     }
+
+    @Override
+    public int getAppAlarmListCount(long userId, int dayType, long typeId, int alarmType, String code, long lineId) {
+        List<Long> departments = this.iDepartmentService.GetDepartmentIdsByUserId(userId);
+        return this.alarmMapper.getAppAlarmCount(departments,dayType,lineId,alarmType,code);
+    }
+
 
     @Override
     public CanAlarmInfo GetCanAlarmInfo(int Id){
@@ -248,5 +256,10 @@ public class AlarmService implements IAlarmService{
         model.setXalias(time);
         model.setUnsafeXalias(title);
         return  model;
+    }
+
+    @Override
+    public void updateAlarmImage(String images, String deviceCode, String updateTime) {
+        this.alarmMapper.updateAlarmImages(images,deviceCode,updateTime);
     }
 }

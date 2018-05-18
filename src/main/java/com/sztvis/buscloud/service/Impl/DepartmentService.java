@@ -37,6 +37,11 @@ public class DepartmentService implements IDepartmentService {
     }
 
     @Override
+    public List<TramDepartmentInfo> getDepartmentList() {
+        return this.departmentMapper.getDepartmentListMapper();
+    }
+
+    @Override
     public List<TramDepartmentInfo> GetParentsByParentId(long departmentId) {
         return departmentMapper.GetDepartmentsByParentId(departmentId);
     }

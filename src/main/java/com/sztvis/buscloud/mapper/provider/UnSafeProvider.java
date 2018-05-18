@@ -38,9 +38,9 @@ public class UnSafeProvider {
         String end = (String)map.get("end");
         SQL sql = new SQL();
         sql.SELECT("Extras")
-        .FROM("TramCanAlarmInfo")
+        .FROM("TramAlarmInfo")
         .WHERE("deviceCode in ('"+StringHelper.listToString(codes,"','")+"')")
-        .AND().WHERE("AlarmKey in ("+ StringHelper.listToString(key,',') +")")
+        .AND().WHERE("AlarmType in ("+ StringHelper.listToString(key,',') +")")
         .AND().WHERE("UpdateTime>='"+ start +"'")
         .AND().WHERE("UpdateTime<='"+ end +"'");
         return sql.toString();

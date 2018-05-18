@@ -20,7 +20,10 @@ import com.sztvis.buscloud.model.dto.service.SaveAlarmQuery;
 import com.sztvis.buscloud.model.entity.DeviceStateFiled;
 import com.sztvis.buscloud.model.entity.StatusCodeEnum;
 import com.sztvis.buscloud.service.*;
+import com.sztvis.buscloud.util.LogUtil;
 import org.apache.ibatis.javassist.bytecode.ClassFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -45,6 +48,7 @@ import java.util.*;
 @RequestMapping("/api/v1/server")
 @RestController
 public class ServerController extends BaseApiController{
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
     private final Map<Integer,String> map1 = new HashMap<Integer, String>(){{
         put(1,"ADAS串口丢失");
         put(2,"CAN串口丢失");
@@ -75,6 +79,8 @@ public class ServerController extends BaseApiController{
     private IBuildFaceService iBuildFaceService;
     @Autowired
     private ISchoolFaceService iSchoolFaceService;
+    @Autowired
+    private IFlowService iFlowService;
 
     /**
      * 处理客户端主机数据
@@ -92,6 +98,7 @@ public class ServerController extends BaseApiController{
                 result = GpsFunc(apiModel);
                 break;
             case CAN:
+                LogUtil.printLog(JSON.toJSONString(apiModel));
                 result = CanFunc(apiModel);
                 break;
             case DISPATCH:
@@ -113,6 +120,7 @@ public class ServerController extends BaseApiController{
                 result = RealTimeStateFunc(apiModel);
                 break;
             case KL:
+                LogUtil.printLog(JSON.toJSONString(apiModel));
                 result = KLFunc(apiModel);
                 break;
             case INSPECT:
@@ -265,6 +273,7 @@ public class ServerController extends BaseApiController{
             this.iDeviceService.UpdateRealTimeInspect(deviceInfo.getDevicecode(), DeviceStateFiled.CanState,true,3);
             return  ApiResult(true,"设备"+deviceInfo.getDevicecode()+"Can增加成功!",StatusCodeEnum.Success,null);
         }catch (Exception ex){
+            LogUtil.printLog(ex,this.getClass());
             return  ApiResult(false,"设备"+deviceInfo.getDevicecode()+"Can增加失败!",StatusCodeEnum.Error,ex.getMessage());
         }
     }
@@ -283,14 +292,14 @@ public class ServerController extends BaseApiController{
         try {
             //串口丢失报警
             if (map1.keySet().contains(alarmModel.getType())) {
-                this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(), deviceInfo.getId(), alarmModel.getUpdateTime(), 1, map1.get(alarmModel.getType()), "", alarmModel.getPath()));
+                this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(), deviceInfo.getId(), alarmModel.getUpdateTime(), 1, map1.get(alarmModel.getType()), "", alarmModel.getPath(),""));
             }
             //雷达报警
             if (alarmModel.getType() == 109) {
                 Map<Integer, Integer> map = JSON.parseObject(alarmModel.getValue1().toString(), new TypeReference<Map<Integer, Integer>>() {
                 });
                 for (Integer i : map.keySet()) {
-                    this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(), deviceInfo.getId(), alarmModel.getUpdateTime(), alarmModel.getType(), map.get(i).toString(), "", alarmModel.getPath()));
+                    this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(), deviceInfo.getId(), alarmModel.getUpdateTime(), alarmModel.getType(), map.get(i).toString(), "", alarmModel.getPath(),""));
                 }
                 //添加雷达数据
                 TramRadarInfo radarInfo = new TramRadarInfo();
@@ -316,7 +325,7 @@ public class ServerController extends BaseApiController{
                 case 125://急加速
                 case 126://急减速
                 case 127://急转弯
-                    this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(), deviceInfo.getId(), alarmModel.getUpdateTime(), alarmModel.getType(), "0", "", alarmModel.getPath()));
+                    this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(), deviceInfo.getId(), alarmModel.getUpdateTime(), alarmModel.getType(), "0", "", alarmModel.getPath(),""));
                     break;
                 case 99:
                 case 100:
@@ -328,6 +337,26 @@ public class ServerController extends BaseApiController{
                 case 106:
                 case 107:
                 case 108://行为识别->END
+                    String[] pics = JSON.parseObject(alarmModel.getValue1().toString(), new TypeReference<String[]>() {
+                    });
+                    String imgFileName = UUID.randomUUID().toString().replaceAll("-", "")+"_"+alarmModel.getCode()+"_"+alarmModel.getUpdateTime().replaceAll(":","").replace(" ","").replaceAll("-","");
+                    String time = DateUtil.StringToString(alarmModel.getUpdateTime(),DateStyle.YYYY_MM_DD);
+                    ImageHelper.generateImage(pics[0], "imgupload/ADAS/"+time+"/", imgFileName + "_0.jpg",request);
+                    ImageHelper.generateImage(pics[1], "imgupload/ADAS/"+time+"/", imgFileName + "_1.jpg",request);
+                    if(pics.length==3){
+                        ImageHelper.generateImage(pics[2], "imgupload/ADAS/"+time+"/", imgFileName + "_2.jpg",request);
+                    }
+                    String imgValue1 = "/imgupload/ADAS/"+time+"/" + imgFileName + "_0.jpg",
+                            imgValue2 = "/imgupload/ADAS/" +time+"/"+ imgFileName + "_1.jpg",
+                            imgValue3 = "/imgupload/ADAS/" +time+"/"+ imgFileName + "_2.jpg";
+                    List<Double> extras = JSON.parseObject(alarmModel.getValue2().toString(), new TypeReference<List<Double>>() {
+                    });
+                    String value = imgValue1+","+imgValue2;
+                    if(pics.length==3)
+                        value =  imgValue1+","+imgValue2+","+imgValue3;
+                    this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(), deviceInfo.getId(), alarmModel.getUpdateTime(), alarmModel.getType(), value, StringHelper.listToString(extras, ','), alarmModel.getPath(),alarmModel.getPath2()));
+                    this.iDeviceService.UpdateRealTimeInspect(alarmModel.getCode(),DeviceStateFiled.BehaviorInspectState,true,3);
+                    break;
                 case 118:
                 case 119:
                 case 120:
@@ -336,16 +365,20 @@ public class ServerController extends BaseApiController{
                 case 123:
                 case 124://ADAS->END
                     //ADAS,行为识别
-                    String[] pics = JSON.parseObject(alarmModel.getValue1().toString(), new TypeReference<String[]>() {
+                    String[] picss = JSON.parseObject(alarmModel.getValue1().toString(), new TypeReference<String[]>() {
                     });
-                    String imgFileName = UUID.randomUUID().toString().replaceAll("-", "")+"_"+alarmModel.getCode()+"_"+alarmModel.getUpdateTime().replaceAll(":","").replace(" ","").replaceAll("-","");
-                    String time = DateUtil.StringToString(alarmModel.getUpdateTime(),DateStyle.YYYY_MM_DD);
-                    ImageHelper.generateImage(pics[0], "imgupload/ADAS/"+time+"/", imgFileName + "_0.jpg",request);
-                    ImageHelper.generateImage(pics[1], "imgupload/ADAS/"+time+"/", imgFileName + "_1.jpg",request);
-                    String imgValue1 = "/imgupload/ADAS/"+time+"/" + imgFileName + "_0.jpg", imgValue2 = "/imgupload/ADAS/" +time+"/"+ imgFileName + "_1.jpg";
-                    List<Double> extras = JSON.parseObject(alarmModel.getValue2().toString(), new TypeReference<List<Double>>() {
+                    String imgFileNamex = UUID.randomUUID().toString().replaceAll("-", "")+"_"+alarmModel.getCode()+"_"+alarmModel.getUpdateTime().replaceAll(":","").replace(" ","").replaceAll("-","");
+                    String timex = DateUtil.StringToString(alarmModel.getUpdateTime(),DateStyle.YYYY_MM_DD);
+                    ImageHelper.generateImage(picss[0], "imgupload/ADAS/"+timex+"/", imgFileNamex + "_0.jpg",request);
+                    ImageHelper.generateImage(picss[1], "imgupload/ADAS/"+timex+"/", imgFileNamex + "_1.jpg",request);
+                    String imgValue1x = "/imgupload/ADAS/"+timex+"/" + imgFileNamex + "_0.jpg", imgValue2x = "/imgupload/ADAS/" +timex+"/"+ imgFileNamex + "_1.jpg";
+                    List<Double> extrasx = JSON.parseObject(alarmModel.getValue2().toString(), new TypeReference<List<Double>>() {
                     });
-                    this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(), deviceInfo.getId(), alarmModel.getUpdateTime(), alarmModel.getType(), imgValue1 + "," + imgValue2, StringHelper.listToString(extras, ','), alarmModel.getPath()));
+                    String img_values = imgValue1x+","+imgValue2x;
+                    if(!StringHelper.isEmpty(alarmModel.getPath2()))
+                        img_values = imgValue2x+","+imgValue1x;
+                    this.iCanService.AddAlarmInfo(this.iCanService.getAlarmQuery(deviceInfo.getDevicecode(), deviceInfo.getId(), alarmModel.getUpdateTime(), alarmModel.getType(), img_values, StringHelper.listToString(extrasx, ','), alarmModel.getPath(),alarmModel.getPath2()));
+                    this.iDeviceService.UpdateRealTimeInspect(alarmModel.getCode(),DeviceStateFiled.AdasInspectState,true,3);
                     break;
                 case 9999:
                     //ADAS恢复，只需要将信息推送给页面
@@ -448,6 +481,7 @@ public class ServerController extends BaseApiController{
                 field.set(radarInfo,radarModel.getValue().get(i));
             }
             this.iDeviceService.insertRadarInfo(radarInfo);
+            this.iDeviceService.UpdateRealTimeInspect(deviceInfo.getDevicecode(),DeviceStateFiled.RadarInspectState,true,3);
             return ApiResult(true,radarModel.getCode()+"雷达数据添加成功",StatusCodeEnum.Success,null);
         }
         catch (Exception ex){
@@ -599,9 +633,9 @@ public class ServerController extends BaseApiController{
     private ApiResult BuildFaceFunc(HostApiModel apiModel,HttpServletRequest request) throws Exception {
         BuildFaceModel buildFaceModel = JSON.parseObject(apiModel.getMsgInfo().toString(),BuildFaceModel.class);
         buildFaceModel.setUpdateTime(DateUtil.StringToString(DateUtil.getTimestampStr(buildFaceModel.getUpdateTime()),DateStyle.YYYY_MM_DD_HH_MM_SS));
-        TramDeviceInfo deviceInfo = this.iDeviceService.getDeviceInfoByCode(buildFaceModel.getCode());
+        TramDeviceInfo deviceInfo = this.iDeviceService.getDeviceInfoByCode(buildFaceModel.getDeviceCode());
         if(deviceInfo == null)
-            return ApiResult(false,"不存在编号为"+buildFaceModel.getCode()+"的设备",StatusCodeEnum.DataNotFound,null);
+            return ApiResult(false,"不存在编号为"+buildFaceModel.getDeviceCode()+"的设备",StatusCodeEnum.DataNotFound,null);
         ComparisonRespModel respModel = this.iBaiduAIService.Comparison(buildFaceModel.getImage(),"group_0");
         String filename= UUID.randomUUID().toString();
         try {
@@ -634,19 +668,19 @@ public class ServerController extends BaseApiController{
     private ApiResult SchoolFaceFunc(HostApiModel apiModel,HttpServletRequest request) throws ParseException, FileNotFoundException {
         SchoolFaceFrom schoolFaceFrom = JSON.parseObject(apiModel.getMsgInfo().toString(),SchoolFaceFrom.class);
         schoolFaceFrom.setUpdateTime(DateUtil.StringToString(DateUtil.getTimestampStr(schoolFaceFrom.getUpdateTime()),DateStyle.YYYY_MM_DD_HH_MM_SS));
-        TramDeviceInfo deviceInfo = this.iDeviceService.getDeviceInfoByCode(schoolFaceFrom.getCode());
+        TramDeviceInfo deviceInfo = this.iDeviceService.getDeviceInfoByCode(schoolFaceFrom.getDeviceCode());
         if(deviceInfo == null)
-            return ApiResult(false,"不存在编号为"+schoolFaceFrom.getCode()+"的设备",StatusCodeEnum.DataNotFound,null);
+            return ApiResult(false,"不存在编号为"+schoolFaceFrom.getDeviceCode()+"的设备",StatusCodeEnum.DataNotFound,null);
         List<String> pics = new ArrayList<>();
-        if(schoolFaceFrom.getImages()!=null) {
-            List<String> images = schoolFaceFrom.getImages();
-            for(String base64:images){
-                String filename= UUID.randomUUID().toString();
-                ImageHelper.generateImage(base64, "imgupload/schoolface/" + DateUtil.StringToString(schoolFaceFrom.getUpdateTime(), DateStyle.YYYY_MM_DD) + "/", filename + ".jpg", request);
-                String imagePath = "/imgupload/schoolface/" + DateUtil.StringToString(schoolFaceFrom.getUpdateTime(), DateStyle.YYYY_MM_DD) + "/" + filename + ".jpg";
-                pics.add(imagePath);
-            }
-        }
+//        if(schoolFaceFrom.getImages()!=null) {
+//            List<String> images = schoolFaceFrom.getImages();
+//            for(String base64:images){
+//                String filename= UUID.randomUUID().toString();
+//                ImageHelper.generateImage(base64, "imgupload/schoolface/" + DateUtil.StringToString(schoolFaceFrom.getUpdateTime(), DateStyle.YYYY_MM_DD) + "/", filename + ".jpg", request);
+//                String imagePath = "/imgupload/schoolface/" + DateUtil.StringToString(schoolFaceFrom.getUpdateTime(), DateStyle.YYYY_MM_DD) + "/" + filename + ".jpg";
+//                pics.add(imagePath);
+//            }
+//        }
         try {
             TramDriverSimilarRecord record = new TramDriverSimilarRecord(deviceInfo.getId(), deviceInfo.getDevicecode(),
                     schoolFaceFrom.isFingerPrint(), schoolFaceFrom.isDrunkDrive(), schoolFaceFrom.isFaceCompair(), schoolFaceFrom.getSimilar(),

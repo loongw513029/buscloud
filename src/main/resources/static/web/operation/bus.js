@@ -103,6 +103,7 @@ var Device = function () {
                         field:'supportBehavior',
                         title:'行为识别',
                         width:70,
+                        align:'center',
                         formatter:function(value,index,row){
                             return value?"支持":"不支持";
                         }

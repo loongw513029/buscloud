@@ -54,10 +54,10 @@ public class HomeService implements IHomeService {
         model.setLineNum(lineMapper.GetLineIdsByDepartmentIds(departmentIds));
         Integer todayNum = deviceMapper.getOnlinePrecent(departmentIds, DateUtil.GetSystemDate("yyyy-MM-dd",0));
         Integer fiveNum = deviceMapper.getOnlinePrecent(departmentIds,DateUtil.GetSystemDate("yyyy-MM-dd",-5));
-        Double todayPrecent = Math.floor(todayNum/deviceNum),
-                fivePrecent = Math.floor(fiveNum/deviceNum);
-        model.setTodayPrecent(new Double(todayPrecent).intValue());
-        model.setFiveDayPrecent(new Double(fivePrecent).byteValue());
+        float todayPrecent = (float)todayNum/(float)deviceNum,
+                fivePrecent = (float)fiveNum/(float)deviceNum;
+        model.setTodayPrecent((int)(todayPrecent*100));
+        model.setFiveDayPrecent((int)(fivePrecent*100));
         Integer unsafeNum = deviceMapper.getUnSafeCountByDepartmentIds(departmentIds,DateUtil.GetSystemDate("yyyy-MM-dd",0));
         model.setUnsafeNum(unsafeNum);
         model.setAlarmList(this.iAlarmService.getTop6HomePageAlarms(userId));

@@ -3,6 +3,8 @@ package com.sztvis.buscloud.model.domain;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Map;
+
 @Document(collection = "TramGpsInfo")
 public class TramGpsInfo {
   private Long deviceid;
@@ -13,7 +15,8 @@ public class TramGpsInfo {
   private Double speed;
   private Double direction;
   private String locationmode;
-
+  private double altitude;
+  private Map<Integer,Double> signal;
   public Long getDeviceid() {
     return deviceid;
   }
@@ -76,5 +79,21 @@ public class TramGpsInfo {
 
   public void setLocationmode(String locationmode) {
     this.locationmode = locationmode;
+  }
+
+  public double getAltitude() {
+    return altitude;
+  }
+
+  public void setAltitude(double altitude) {
+    this.altitude = altitude;
+  }
+
+  public Map<Integer, Double> getSignal() {
+    return signal;
+  }
+
+  public void setSignal(Map<Integer, Double> signal) {
+    this.signal = signal;
   }
 }

@@ -27,4 +27,9 @@ public class SchoolFaceService implements ISchoolFaceService {
     public int getSchoolFaceCountList(String name) {
         return this.SchoolFaceMapper.getSchoolFaceCount(name);
     }
+
+    @Override
+    public void updateSchoolFaceImage(String image, String deviceCode, String updateTime) {
+        this.SchoolFaceMapper.updateSchoolFaceImage(image,deviceCode,updateTime);
+    }
 }

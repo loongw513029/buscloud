@@ -27,6 +27,9 @@ public interface DepartmentMapper {
     @Select("select Id,Guid,Code,DepartmentName,DepartmentType,ParentId,ContactPhone,Sort,IsLookCan,IsHaveVedio,OrgType,AppName,Remark,CreateTime from TramDepartmentInfo where Id=#{Id}")
     TramDepartmentInfo GetDepartmentInfo(Long Id);
 
+    @Select("select Id,Guid,Code,DepartmentName,DepartmentType,ParentId,ContactPhone,Sort,IsLookCan,IsHaveVedio,OrgType,AppName,Remark,CreateTime from TramDepartmentInfo where parentId=0")
+    List<TramDepartmentInfo> getDepartmentListMapper();
+
     /**
      *
      * @param departmentIds

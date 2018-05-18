@@ -6,6 +6,7 @@ var PayCords = function () {
                 method: 'get',
                 idField: 'id',
                 fit: true,
+                fitColumn:true,
                 pagination: true,
                 pageNumber: 1,
                 singleSelect: false,
@@ -31,7 +32,7 @@ var PayCords = function () {
                     }, {
                         field: 'location',
                         title: '站点名称',
-                        width: 200,
+                        width: 100,
                         align: 'center'
                     }, {
                         field: 'siteName',
@@ -41,17 +42,17 @@ var PayCords = function () {
                     }, {
                         field: 'passengerImage',
                         title: '乘客照片',
-                        width: 300,
+                        width: 100,
                         align: 'center'
                     }, {
                         field: 'payTime',
                         title: '支付时间',
-                        width: 200,
+                        width: 150,
                         align: 'center'
                     }, {
                         field: 'updateTime',
                         title: '更新时间',
-                        width: 200,
+                        width: 150,
                         align: 'center'
                     }
                 ]],
@@ -66,7 +67,7 @@ var PayCords = function () {
             });
             PayCords.initComboTree();
             $('#txtkey').searchbox({
-                prompt:'站点名称',
+                prompt:'站点名称/卡号',
                 searcher:function (value,name) {
                     PayCords.Search(value);
                 }

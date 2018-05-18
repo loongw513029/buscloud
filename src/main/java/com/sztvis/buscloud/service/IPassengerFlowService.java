@@ -14,4 +14,5 @@ public interface IPassengerFlowService {
     void insertPassengerFlow(TramPassengerFlow passengerFlow);
 
     List<TramPassengerFlow> Getinfo(String code);
+
 }

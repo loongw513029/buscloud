@@ -21,6 +21,15 @@ public class AlarmViewModel {
     private String value;
     private String path;
     private int parentalarmtype;
+    private String alarmvideopath;
+
+    public String getAlarmvideopath() {
+        return alarmvideopath;
+    }
+
+    public void setAlarmvideopath(String alarmvideopath) {
+        this.alarmvideopath = alarmvideopath;
+    }
 
     public CurrentCanModel getCan() {
         return can;

@@ -97,7 +97,7 @@ var mainPlatform = {
                         }
                         if($.inArray(src,mainPlatform.multiArray())>=0){
                             var nodes = $('#easyui-tree').tree('getChecked');
-                            window.frames[index].TMap.ReviceParentAlarm(nodes);
+                            window.frames[index].TMap.ReviceParentCheck(nodes);
                         }
                         if(src.indexOf('/map/history')>=0){
                             window.frames[index].MapHistory.AcceptParentData(node);
@@ -205,8 +205,18 @@ var mainPlatform = {
     analyAlarm:function (obj) {
         if(obj.type==1)
             mainPlatform.fiterDeviceStatus(obj.msgInfo);
-        if(obj.type==2)
+        if(obj.type==2) {
+            var index = mainPlatform.getCurrentIframeIndex();
+            var src = $('.page-iframe:eq('+index+')').attr("src");
             mainPlatform.filterAlarm(obj.msgInfo);
+            if($.inArray(src,mainPlatform.multiArray())>=0){
+                var nodes = mainPlatform.getCheckedNodes();
+                for(var i=0;i<nodes.length;i++){
+                    if(obj.deviceCode == nodes[i].text)
+                        window.frames[index].TMap.ReviceParentAlarm(obj.msgInfo);
+                }
+            }
+        }
     },
     //执行对数行菜单设备状态的填充
     fiterDeviceStatus:function (obj) {
@@ -237,13 +247,20 @@ var mainPlatform = {
     filterAlarm:function (obj) {
         if(layerIndex)
             layer.close(layerIndex);
-        if(obj.customId==12) {
-            var arr = obj.extras.split(',');
-            var title = obj.alarmName + "-" + obj.deviceCode +"[车速："+arr[0]+"Km/h, 车距："+arr[1]+"米, 刹车："+(arr[2]==1?"有":"没有")+"]";
-            parent.TramDalog.OpenIframeAndNoBtn(title, 652, 538, "/alarm/video?id=" + obj.id);
+        if(obj.customId==12||obj.customId==14) {
+           var index= parent.layer.open({
+                type: 2,
+                content: '/alarm/video?code='+obj.deviceCode,
+                area: ['800px', '195px'],
+                maxmin: true
+            });
+            parent.layer.full(index);
+            // var arr = obj.extras.split(',');
+            // var title = obj.alarmName + "-" + obj.deviceCode +"[车速："+arr[0]+"Km/h, 车距："+arr[1]+"米, 刹车："+(arr[2]==1?"有":"没有")+"]";
+            // parent.TramDalog.OpenIframeAndNoBtn(title, 652, 538, "/alarm/video?id=" + obj.id);
         }
         else
-            parent.TramDalog.OpenIframeAndNoBtn(obj.alarmName+"-"+obj.deviceCode,652,538,"/alarm/view?id="+obj.id);
+            parent.TramDalog.OpenIframeAndNoBtn(obj.alarmName+"-"+obj.deviceCode,700,538,"/alarm/view?id="+obj.id);
     },
     openAdminInfo:function () {
         parent.TramDalog.OpenIframe(650,405,'用户信息',"/basic/memberfrom?id="+User.GetUserInfo().id,function (layerno,index) {
